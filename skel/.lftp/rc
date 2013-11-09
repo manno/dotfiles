@@ -1,0 +1,18 @@
+#debug
+#set ftp:anon-pass bla@
+#set ftp:passive-mode off
+#set ftp:use-site-idle on
+#set ftp:ssl-force off
+#set ftp:ssl-allow on
+#set ftp:ssl-protect-data on
+#set ftp:use-pret off
+#set http:user-agent Mozilla/5.0 (X11\; U\; Linux i686) Gecko/20030527 Galeon/1.3.5 Debian/1.3.5.20030615-1 
+
+alias passiv set ftp:passive-mode on
+alias nopassiv set ftp:passive-mode off
+alias ll ls -alCF
+alias l "cls -l"
+alias qget "queue mget"
+alias qmirror "queue mirror"
+alias qput "queue mirror -R"
+alias qrm "queue rm"

@@ -1,0 +1,46 @@
+#!/bin/sh
+# Description: grep in /var/lib/dpkg/status
+# TODO: implement grep-dctrl
+
+EGREP='/bin/egrep -i'
+
+usage () {
+ echo "$(basename $0) [-glv] string"
+ echo "  -l \tdpkg -l | grep <string>
+  -g \tdpkg --get-selections | grep <string>
+  -v \tapt-show-versions  -r -p <string> -b
+  -h \thelp
+ "
+ exit;
+}
+[ -n "$1" ] || usage;
+
+dpkgl () {
+    arg=$1
+    COL=$COLUMNS
+    export COLUMNS=140
+    dpkg -l | $EGREP $arg
+    #dpkg -l "*${arg}*"
+    export COLUMNS=$COL
+}
+
+while getopts "l:g:v:h" opt; do
+  case $opt in
+      l)
+            dpkgl $OPTARG
+            ;;
+      g)    dpkg --get-selections | $EGREP $OPTARG
+            ;;
+      v)    apt-show-versions -r -p "$OPTARG"
+            ;;
+      h)    usage
+            ;;
+  esac
+  getopt=1
+done
+
+# default action
+if [ ! "$getopt" ]; then
+    #dpkgl $1
+    dpkg --get-selections | $EGREP $1
+fi

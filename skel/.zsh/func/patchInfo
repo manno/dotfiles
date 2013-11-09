@@ -1,0 +1,5 @@
+patchInfo () {
+    for file in $argv[@]; do
+        [ -f $file ] && grep "^+++ " $file | cut -f1 
+    done
+}

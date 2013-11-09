@@ -1,0 +1,59 @@
+#!/bin/sh
+# Description: tail -f on different log files, color support 
+
+usage () {
+    echo "$0    [-n|-c|-W|-M|-S]
+        -n  normal 
+        -c  color (def)
+        -W  www logs
+        -M  mail logs
+        -S  system logs (def)
+    "
+    exit 0
+}
+
+tail_logs () {
+    if [ "x${COLOR}x" = "x1x" -a -x ${CCZE} ]; then
+        tail -f ${FILES} | ${CCZE} -m ansi
+    else
+        tail -f ${FILES} 
+    fi
+}
+
+check () {
+    # readable and not zero size
+    for f in $*; do 
+        if [ -s "$f" ] && [ -r "$f" ]; then
+            echo "$f"
+        fi
+    done
+}
+
+
+# config
+CCZE=$(which ccze || echo none)
+
+SYSFILES="/var/log/syslog /var/log/daemon.log /var/log/messages /var/log/kern.log /var/log/auth.log /var/log/debug /var/log/samba/log.?mbd /var/log/squid/*.log"
+WWWFILES="/var/log/apache*/*log /var/log/mysql.log"
+MAILFILES="/var/log/mail.err /var/log/mail.warn /var/log/mail.info /var/log/mail.log"
+
+# init
+COLOR=0
+FILES=$(check $SYSFILES)
+
+while getopts "ncWMSh" opt; do
+  case $opt in
+      n)  COLOR="0";;
+      c)  COLOR="1";;
+      W)  FILES=$(check $WWWFILES);;
+      M)  FILES=$(check $MAILFILES);;
+      S)  FILES=$(check $SYSFILES);;
+      h) usage;;
+      \?) usage;;
+      *) ;;
+  esac
+done
+
+tail_logs
+
+exit $?

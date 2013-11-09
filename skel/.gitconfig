@@ -1,0 +1,25 @@
+[core]
+  pager = 
+  bigFileThresholdbigFileThreshold = 10m
+[user]
+  name = Mario Manno
+  email = mail@manno.name
+[push]
+  default = current
+[branch "master"]
+  remote = origin
+  merge = refs/heads/master
+[alias]
+  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative -n 30
+  gr = log --graph --oneline -n 30
+  st = status
+  info = remote -v
+  what = whatchanged -n 5
+  commitam = commit -a -m
+  commitm = commit -m
+  tree = log --oneline --decorate --graph
+  unstage = reset HEAD
+[color]
+  ui = auto
+[branch]
+  autosetuprebase = always
