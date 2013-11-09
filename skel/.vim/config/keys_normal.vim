@@ -4,15 +4,66 @@
 " famous paste toggle for xterm vim
 set pastetoggle=<F5>
 
-" Folding - need key
-"map <kMinus>    zC
-"map <kPlus>     zO
-"map -           zc
-"map +           zo
-"map =           gg/{<CR>zM
-
 noremap <C-n>   :bn<CR>
 noremap <C-p>   :bp<CR>
+
+" navigate windows
+noremap <C-Down>  <C-W>j
+noremap <C-Up>    <C-W>k
+noremap <C-Left>  <C-W>h
+noremap <C-Right> <C-W>l
+"-----------------------------------------------------------
+" COMMANDS
+"
+" quit all buffers - qa/wa
+command! Q      :quitall
+" dupe it so :W does nothing
+command! Wq     :call s:writequitall()
+command! WQ     :call s:writequitall()
+
+"-----------------------------------------------------------
+" OTHER
+"
+" Map omnifunc to <Ctrl> + Space:
+inoremap <Nul> <C-x><C-o>
+
+" debug
+map   <F6>      :command
+
+" make
+map !ma       <ESC>:w<CR>:make<CR>
+
+" exchange two letters, like shell <ctrl-t>
+let @t = "xhPll"
+
+" forgot to open as root?
+command! Wsudo  :w !sudo tee > /dev/null %
+
+"-----------------------------------------------------------
+" CONVERTER MAPS
+"
+" convert to html
+map  _th     :source $VIMRUNTIME/syntax/2html.vim
+" convert to colored tex, use TMiniBufExplorer first
+map  _tt     :source $VIMRUNTIME/syntax/2tex.vim
+" convert to colored ansi
+vmap _ta     :TOansi
+
+" SEARCH
+map ,g     :Bgrep /<C-R><C-W>/
+
+"-----------------------------------------------------------
+" MOUSEWHEEL IN XTERM
+"
+map <M-Esc>[62~ <MouseDown>
+map! <M-Esc>[62~ <MouseDown>
+map <M-Esc>[63~ <MouseUp>
+map! <M-Esc>[63~ <MouseUp>
+map <M-Esc>[64~ <S-MouseDown>
+map! <M-Esc>[64~ <S-MouseDown>
+map <M-Esc>[65~ <S-MouseUp>
+map! <M-Esc>[65~ <S-MouseUp>
+
 "-----------------------------------------------------------
 " Fn KEYS
 "
@@ -30,32 +81,4 @@ set     <S-F3>=[25~
 " set     <S-F5>=[28~
 " LOGO set     <S-F6>=[29~
 " set     <S-F7>=[31~
-
-"-----------------------------------------------------------
-" MOUSEWHEEL IN XTERM
-"
-map <M-Esc>[62~ <MouseDown>
-map! <M-Esc>[62~ <MouseDown>
-map <M-Esc>[63~ <MouseUp>
-map! <M-Esc>[63~ <MouseUp>
-map <M-Esc>[64~ <S-MouseDown>
-map! <M-Esc>[64~ <S-MouseDown>
-map <M-Esc>[65~ <S-MouseUp>
-map! <M-Esc>[65~ <S-MouseUp>
-
-"-----------------------------------------------------------
-" OTHER
-"
-" Map omnifunc to <Ctrl> + Space:
-inoremap <Nul> <C-x><C-o>
-
-" debug
-map   <F6>      :command
-
-" Use visual in insert mode
-" imap <S-Up> <C-O>v
-" imap <S-Down> <C-O>v
-
-" load other key config
-" map <F12>       :source $HOME/.vim/fkeys_ide.vim<CR>
 

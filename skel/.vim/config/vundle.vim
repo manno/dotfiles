@@ -5,23 +5,48 @@
 set rtp+=~/.vim/bundle/vundle
 call vundle#rc()
 
-" FIXME directory isn't a git checkout, no update possible
-" rm -fr ~/vim/bundle/vundle && git clone --recursive https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
-"Bundle 'gmarik/vundle'
+Bundle 'gmarik/vundle'
 
 " nerd
 Bundle 'The-NERD-Commenter'
 
-" super-tab
-Bundle 'ervandew/supertab'
+" grep
+Bundle 'vim-scripts/grep.vim'
 
+" taglist
+Bundle 'taglist.vim'
+
+" tango colors
+Bundle 'tango.vim'
+
+" minibufexplorer new
+Bundle 'fholgado/minibufexpl.vim'
+
+" Status line
 Bundle 'Lokaltog/vim-powerline'
 
-" fuzzy
-Bundle 'L9'
-" conflicts with fuzzy_finder_texmate?
-"Bundle 'FuzzyFinder'
+" fuzzy dependency?
+"Bundle 'L9'
+"Bundle 'FuzzyFinder' " conflicts with fuzzy_finder_texmate?
+
+" command-t - replace mbe,fuzzy
+Bundle 'git://git.wincent.com/command-t.git'
+
+" tab completion
+" Bundle 'ervandew/supertab'
 
 " you complete me - needs vim 7.3.584
-" Bundle 'YMC'
+" https://github.com/Valloric/YouCompleteMe
+Bundle 'Valloric/YouCompleteMe'
 
+Bundle 'scrooloose/syntastic'
+
+" Colorscheme
+"Bundle 'Solarized'
+
+" ctags support
+"Bundle 'xolox/vim-easytags'
+"Bundle 'xolox/vim-misc'
+
+" Indent
+Bundle 'IndentAnything'

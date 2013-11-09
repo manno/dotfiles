@@ -40,6 +40,7 @@ alias nl='nl -nln -ba'
 qwhich iftop && alias iftop='iftop -B'
 #qwhich nautilus && alias nautilus='nautilus --no-desktop --browser'
 qwhich pinfo && alias info='pinfo'
+alias vundle='vi ~/.vim/config/vundle.vim'
 qwhich w3m  && alias w3m='w3m -M'
 
 # shortcut aliases
@@ -148,3 +149,5 @@ if qwhich xine; then
     alias xine='LC_ALL=C xine'
     alias xineshuffle='xine -pf -lshuffle -P $HOME/.xine/playlist.tox'
 fi
+
+alias annex='git annex'

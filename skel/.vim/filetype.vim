@@ -9,6 +9,7 @@ autocmd FileType css      set omnifunc=csscomplete#CompleteCSS
 autocmd FileType eruby    set ts=2 sw=2
 autocmd FileType eruby    map _rw i<%= %>
 autocmd FileType html     set omnifunc=htmlcomplete#CompleteTags
+autocmd FileType java     set foldmethod=manual
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType lua      set ts=4 sw=4 noet smartindent foldmethod=syntax
 autocmd FileType nfo      edit ++enc=cp437 

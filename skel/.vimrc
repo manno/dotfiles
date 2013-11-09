@@ -75,9 +75,8 @@ endif
 
 "----- INCLUDES
 source $HOME/.vim/config/functions.vim 
-source $HOME/.vim/config/plugins.vim 
 source $HOME/.vim/config/spelling.vim 
-source $HOME/.vim/config/macros.vim 
 source $HOME/.vim/config/keys_normal.vim 
-source $HOME/.vim/config/statusline.vim 
 source $HOME/.vim/config/vundle.vim 
+source $HOME/.vim/config/statusline.vim 
+source $HOME/.vim/config/plugins.vim 
