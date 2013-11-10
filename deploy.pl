@@ -23,11 +23,12 @@ my $TARBALL_PATH = 'archive';
 my $PATCH_PATH = 'raw/master/patches';
 
 # Config
-my $master_url = 'http://github.com/manno/dotfiles';
 my $dir_prefix = $ENV{'HOME'};
 my $hostname = $ENV{'HOST'} || `/bin/hostname`;
 chomp $hostname;
+my $master_url = 'http://github.com/manno/dotfiles';
 my $master_tarball = 'master.tar.gz';
+my @master_lists = qw/install.lst delete.lst/;
 my $backupdir = '.backup';
 my $date = strftime '%Y%m%d', localtime;
 my $tar_cmd = '/bin/tar';
@@ -36,7 +37,7 @@ my $patchlevel = '0';
 my $cmd;
 
 # Command line options
-our ($opt_h, $opt_u, $opt_d, $opt_m, $opt_g, $opt_v, $opt_U, $opt_D);
+our ($opt_h, $opt_u, $opt_d, $opt_p, $opt_m, $opt_g, $opt_v, $opt_U, $opt_D);
 
 =head1 FUNCTIONS
 
@@ -101,7 +102,6 @@ sub update_deploy_script {
 sub get_dotfiles {
     my @files_get;
     my @files_del;
-    my @master_lists = qw/install.lst delete.lst/;
     for my $listfile (@master_lists) {
         # get and parse file
         say "[+] Loading file list $master_url/$FILELISTS_PATH/$listfile";
@@ -269,24 +269,30 @@ sub apply_host_patch {
 $opt_v = '';
 getopts('hd:U:m:Dugv');
 if ($opt_h) {
-    say "usage: deploy.pl [-h] [-v] [-m method] [-U url] [-d dir] [-u|-g|-D]";
+    say "usage: deploy.pl [-h] [-v] [-p lists] [-m method] [-U url] [-d dir] [-u|-g|-D]";
     say '    -u         : update already deployed machine using vimdiff';
     say '    -D         : diff current dotfiles against tarball';
     say '    -g         : get a fresh deploy script';
     say '';
     say "    -d dir     : target dir ($dir_prefix)";
     say "    -U url     : source url ($master_url)";
+    say "    -p lists   : lists to use (". join(',', @master_lists) .")";
     say '    -m method  : download method (lwp, wget or curl)';
     say "    -v         : verbose\n";
     say 'i.e:';
     say '    deploy.pl -u';
-    say '    deploy.pl -m wget -d "test"';
+    say '    deploy.pl -m wget -d "otherhome/"';
+    say '    deploy.pl -p install.lst,delete.lst"';
     exit 0;
 }
 
 if ($opt_v) { $opt_v = 'v'; }
 if ($opt_U) { $master_url = $opt_U; }
 if ($opt_d) { $dir_prefix = $opt_d; }
+if ($opt_p) {
+    @master_lists = split (/,/, $opt_p);
+    say "fetching [@master_lists]";
+}
 
 # initialization
 chdir( $dir_prefix );
@@ -305,10 +311,9 @@ if ($opt_g) {
     exit 0;
 }
 
-# build file list
+# build file list and tarball
 my $dotfiles = get_dotfiles;
 
-# get tarball (FIXME bad files source, but easy)
 say "[+] Loading deploy tarball";
 my $tarcontent = http_get( "$master_url/$TARBALL_PATH/$master_tarball" );
 die "not found '$master_tarball'" unless $tarcontent;
