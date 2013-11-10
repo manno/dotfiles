@@ -30,7 +30,6 @@ my $master_url = 'http://github.com/manno/dotfiles';
 my $master_tarball = 'master.tar.gz';
 my @master_lists = qw/install.lst delete.lst/;
 my $backupdir = '.backup';
-my $date = strftime '%Y%m%d', localtime;
 my $tar_cmd = '/bin/tar';
 my $patch = '/usr/bin/patch';
 my $patchlevel = '0';
@@ -126,6 +125,7 @@ sub backup_existing_dotfiles {
     my $files = join( ' ', @{$dotfiles->{get_list}}, @{$dotfiles->{delete_list}} );
     say "[+] Backup all old files in $backupdir";
     mkdir ($backupdir) if (not -d $backupdir);
+    my $date = strftime '%Y%m%d%H%M', localtime;
     `$tar_cmd --exclude=.vim/backups --exclude=.vim/tmp -czf $backupdir/$date.dotfiles.tar.gz $files 2>&1 > /dev/null`;
 }
 
