@@ -47,7 +47,9 @@ bin/whichdeb
 .zkbd/linux-pc-linux-gnu
 .zkbd/linux-unknown-linux-gnu
 .zkbd/rxvt-pc-linux-gnu
+.zkbd/screen-bce-unknown-linux-gnu
 .zkbd/screen-pc-linux-gnu
+.zkbd/screen-unknown-linux-gnu
 .zkbd/xterm-pc-linux-gnu
 .zkbd/xterm-portbld-freebsd9.0
 .zkbd/xterm-unknown-linux-gnu
