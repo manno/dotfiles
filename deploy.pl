@@ -37,7 +37,7 @@ my $patchlevel = '0';
 my $cmd;
 
 # Command line options
-our ($opt_h, $opt_u, $opt_d, $opt_p, $opt_m, $opt_g, $opt_v, $opt_U, $opt_D);
+our ($opt_h, $opt_i, $opt_u, $opt_d, $opt_p, $opt_m, $opt_g, $opt_v, $opt_U, $opt_D);
 
 =head1 FUNCTIONS
 
@@ -261,15 +261,9 @@ sub apply_host_patch {
     }
 }
 
-
-=head1 COMMAND LINE INITIALIZATION
-
-=cut
-
-$opt_v = '';
-getopts('hd:U:m:Dugv');
-if ($opt_h) {
-    say "usage: deploy.pl [-h] [-v] [-p lists] [-m method] [-U url] [-d dir] [-u|-g|-D]";
+sub print_usage_and_exit {
+    say "usage: deploy.pl [-h] [-v] [-p lists] [-m method] [-U url] [-d dir] [-i|-u|-g|-D]";
+    say '    -i         : install dotfiles';
     say '    -u         : update already deployed machine using vimdiff';
     say '    -D         : diff current dotfiles against tarball';
     say '    -g         : get a fresh deploy script';
@@ -286,9 +280,20 @@ if ($opt_h) {
     exit 0;
 }
 
-if ($opt_v) { $opt_v = 'v'; }
-if ($opt_U) { $master_url = $opt_U; }
-if ($opt_d) { $dir_prefix = $opt_d; }
+=head1 COMMAND LINE INITIALIZATION
+
+=cut
+
+$opt_v = '';
+$opt_u = 1;
+getopts('hd:U:m:Dugv');
+print_usage_and_exit if $opt_h; 
+
+$opt_u = 0 if $opt_i;
+$opt_v = 'v' if $opt_v;
+$master_url = $opt_U if $opt_U;
+$dir_prefix = $opt_d if $opt_d;
+
 if ($opt_p) {
     @master_lists = split (/,/, $opt_p);
     say "fetching [@master_lists]";
@@ -331,7 +336,7 @@ if ($opt_u) {
 } elsif ($opt_D) { 
     diff_dotfiles( $tarcontent, $dotfiles );
 
-} else {
+} elsif ($opt_i) {
     # unpack wanted files from tarball to correct destination -C /home/user/
     backup_existing_dotfiles( $dotfiles );
     delete_dotfiles( @{$dotfiles->{delete_list}} );
@@ -339,6 +344,8 @@ if ($opt_u) {
     unpack_dotfiles( $dir_prefix, $tarcontent, $dotfiles->{get_list} );
     say "";
     apply_host_patch;
+} else {
+    print_usage_and_exit;
 }
 
 # vim: set ts=4 sw=4:
