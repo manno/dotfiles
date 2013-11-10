@@ -34,3 +34,9 @@ On the target system run `deploy.pl` to download the tarball from github and unp
 
     deploy.pl -u
     deploy.pl -m wget -d "test"
+
+VIM Setup    
+---------
+
+The included VIM environment uses vundle to manage most of the plugins. Ther makefile `./vim/Makefile` can be used
+to install the plugins and dependencies.
