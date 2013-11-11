@@ -10,7 +10,7 @@ export LANG="en_US.UTF-8"
 export LC_ADDRESS="de_DE.UTF-8"
 
 # LC_COLLATE - Collation order.
-#LC_COLLATE=
+LC_COLLATE=C
 
 # LC_CTYPE - Character classification and case conversion.
 #LC_CTYPE=

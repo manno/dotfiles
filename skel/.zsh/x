@@ -15,5 +15,6 @@ case $TERM in
     ;;
 esac
 
+[ -e /etc/profile.d/vte.sh ] && source /etc/profile.d/vte.sh
 
 # vim: ft=zsh ts=4 sw=4

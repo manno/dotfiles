@@ -151,3 +151,5 @@ if qwhich xine; then
 fi
 
 alias annex='git annex'
+alias amend='git commit --amend'
+

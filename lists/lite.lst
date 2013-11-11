@@ -19,7 +19,6 @@
 .vim/config/filetype_ruby.vim
 .vim/config/functions.vim
 .vim/config/keys_normal.vim
-.vim/config/macros.vim
 .vim/config/plugins.vim
 .vim/config/spelling.vim
 .vim/config/statusline.vim

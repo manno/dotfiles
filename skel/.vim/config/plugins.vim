@@ -8,17 +8,19 @@ nnoremap <silent> <C-t> :CommandT<CR>
 set wildignore+=*.o,*.obj,.svn,.git,tags
 let g:CommandTWildIgnore=&wildignore . ",doc/**,tmp/**,test/tmp/**"
 
-
-
 " ----- Minibuf Explorer
 "let g:miniBufExplMapWindowNavArrows = 1 " navigate the buffers with Ctrl+{left,up,down,right}.
 let g:miniBufExplStatusLineText = " "
-"let g:miniBufExplMapWindowNavVim = 1    " navigate the buffers with Ctrl+{j,k,l,m}.
-let g:miniBufExplMapWindowNavArrows = 1 " navigate the buffers with Ctrl+{left,up,down,right}.
-"let g:miniBufExplMapCTabSwitchBuffs = 1 " use Ctrl+Tab or Shift+Control+Tab to switch to the next buffer.
 
-" let g:miniBufExplModSelTarget = 1
-" let g:miniBufExplUseSingleClick = 1
+" ----- Easy Tags Plugin
+let g:easytags_updatetime_min = 20000
+
+" tango
+colorscheme tango
+
+" ----- Powerline Plugin
+set t_Co=256
+let g:Powerline_symbols = 'unicode'
 
 " ----- Tag List Plugin
 "let Tlist_Ctags_Cmd="/usr/bin/ctags"

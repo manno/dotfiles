@@ -1,4 +1,5 @@
 # .zshrc: login, interactive shell, after profile (2)
+# vim: ft=zsh ts=4 sw=4
 
 ## Checks
 [ -d $HOME/.zsh ] || echo "no ressource&config dir: .zsh" 
@@ -30,4 +31,3 @@ if [ -x /usr/bin/ssh-add ] && [ "$SSH_AUTH_SOCK" != "" ] && [ -r "$SSH_AUTH_SOCK
     /usr/bin/ssh-add -l
 fi
 
-# vim: ft=zsh ts=4 sw=4
