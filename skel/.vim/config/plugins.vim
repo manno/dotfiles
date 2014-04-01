@@ -9,7 +9,7 @@ set wildignore+=*.o,*.obj,.svn,.git,tags
 let g:CommandTWildIgnore=&wildignore . ",doc/**,tmp/**,test/tmp/**"
 
 " Syntastic /  Rubocop 
-let g:syntastic_quiet_warnings = 0
+let g:syntastic_quiet_messages = {'level': 'warnings'}
 let g:syntastic_ruby_checkers = ['mri', 'rubocop']
 
 " YCM
