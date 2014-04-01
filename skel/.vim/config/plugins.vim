@@ -8,19 +8,21 @@ nnoremap <silent> <C-t> :CommandT<CR>
 set wildignore+=*.o,*.obj,.svn,.git,tags
 let g:CommandTWildIgnore=&wildignore . ",doc/**,tmp/**,test/tmp/**"
 
-" ----- Minibuf Explorer
-"let g:miniBufExplMapWindowNavArrows = 1 " navigate the buffers with Ctrl+{left,up,down,right}.
-let g:miniBufExplStatusLineText = " "
+" Syntastic /  Rubocop 
+let g:syntastic_quiet_warnings = 0
+let g:syntastic_ruby_checkers = ['mri', 'rubocop']
 
-" ----- Easy Tags Plugin
-let g:easytags_updatetime_min = 20000
+" YCM
+let g:ycm_register_as_syntastic_checker = 0
+
+" fugitive git grep
+autocmd QuickFixCmdPost *grep* cwindow
+
+" airline
+let g:airline#extensions#tabline#enabled = 1
 
 " tango
 colorscheme tango
-
-" ----- Powerline Plugin
-set t_Co=256
-let g:Powerline_symbols = 'unicode'
 
 " ----- Tag List Plugin
 "let Tlist_Ctags_Cmd="/usr/bin/ctags"

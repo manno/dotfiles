@@ -33,7 +33,7 @@ check () {
 # config
 CCZE=$(which ccze || echo none)
 
-SYSFILES="/var/log/syslog /var/log/daemon.log /var/log/messages /var/log/kern.log /var/log/auth.log /var/log/debug /var/log/samba/log.?mbd /var/log/squid/*.log"
+SYSFILES="/var/log/syslog /var/log/daemon.log /var/log/messages /var/log/kern.log /var/log/auth.log /var/log/debug"
 WWWFILES="/var/log/apache*/*log /var/log/mysql.log"
 MAILFILES="/var/log/mail.err /var/log/mail.warn /var/log/mail.info /var/log/mail.log"
 

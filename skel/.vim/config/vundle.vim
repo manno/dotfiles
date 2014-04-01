@@ -11,19 +11,20 @@ Bundle 'gmarik/vundle'
 Bundle 'The-NERD-Commenter'
 
 " grep
-Bundle 'vim-scripts/grep.vim'
+"Bundle 'vim-scripts/grep.vim'
+"Bundle 'yegappan/grep'
+Bundle 'manno/grep'
+
 
 " taglist
 Bundle 'taglist.vim'
 
-" tango colors
-Bundle 'tango.vim'
-
 " minibufexplorer new
-Bundle 'fholgado/minibufexpl.vim'
+"Bundle 'fholgado/minibufexpl.vim'
 
 " Status line
-Bundle 'Lokaltog/vim-powerline'
+"Bundle 'Lokaltog/vim-powerline'
+Bundle 'vim-airline'
 
 " fuzzy dependency?
 "Bundle 'L9'
@@ -39,7 +40,12 @@ Bundle 'git://git.wincent.com/command-t.git'
 " https://github.com/Valloric/YouCompleteMe
 Bundle 'Valloric/YouCompleteMe'
 
+" syntax errors
 Bundle 'scrooloose/syntastic'
+
+" tango colors
+Bundle 'tango.vim'
+Bundle 'baverman/vim-babymate256'
 
 " Colorscheme
 "Bundle 'Solarized'
@@ -50,4 +56,3 @@ Bundle 'scrooloose/syntastic'
 
 " Indent
 Bundle 'IndentAnything'
-

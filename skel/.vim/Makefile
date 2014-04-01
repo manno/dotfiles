@@ -19,4 +19,4 @@ update_doc:
 	vim -c ":helptags ~/.vim/doc" -c ":q" 
 
 vundle_clean:
-	vim -c ":BundleClean L9" -c ":qa" 
+	vim -c ":BundleClean" -c ":qa" 
