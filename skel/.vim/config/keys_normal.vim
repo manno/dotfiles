@@ -14,12 +14,12 @@ noremap <C-Left>  <C-W>h
 noremap <C-Right> <C-W>l
 "-----------------------------------------------------------
 " COMMANDS
-"
+
+" use ; for ex commands
+nnoremap ; :
+
 " quit all buffers - qa/wa
 command! Q      :quitall
-" dupe it so :W does nothing
-command! Wq     :call s:writequitall()
-command! WQ     :call s:writequitall()
 
 "-----------------------------------------------------------
 " OTHER

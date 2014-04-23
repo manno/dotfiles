@@ -15,7 +15,7 @@ zstyle ':completion:*' special-dirs true
 typeset -U hosts
 if [ -f "$HOME/.ssh/known_hosts" ]; then
     hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[0-9]*}%%\ *}%%,*})
- "   zstyle ':completion:*:hosts' hosts $hosts
+    zstyle ':completion:*:hosts' hosts $hosts
 fi
 
 # fuzzy

@@ -17,7 +17,7 @@
 .vim/bundle/vundle/README.md
 .vim/config/filetype_perl.vim
 .vim/config/filetype_ruby.vim
-.vim/config/functions.vim
+-.vim/config/functions.vim
 .vim/config/keys_normal.vim
 .vim/config/plugins.vim
 .vim/config/spelling.vim

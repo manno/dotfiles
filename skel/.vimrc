@@ -24,6 +24,7 @@ filetype plugin on                " Enable filetype-specific plugins
 set hidden                        " Allow hidden buffers
 set noinsertmode                  " don't don't out in insert mode
 set backspace=indent,eol,start    " allow us to backspace before an insert
+set colorcolumn=120
 
 " jump to the last position when reopening a file
 if has("autocmd")
@@ -74,7 +75,6 @@ if &diff
 endif
 
 "----- INCLUDES
-source $HOME/.vim/config/functions.vim 
 source $HOME/.vim/config/spelling.vim 
 source $HOME/.vim/config/keys_normal.vim 
 source $HOME/.vim/config/vundle.vim 

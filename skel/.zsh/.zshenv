@@ -17,4 +17,7 @@ fi
 # host specific, not distributed
 [ -f ~/.env.localhost ] && source ~/.env.localhost
 
+# clean up path
+path=($^path(N))
+
 # vim: ts=4 sw=4

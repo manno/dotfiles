@@ -56,3 +56,11 @@ Bundle 'baverman/vim-babymate256'
 
 " Indent
 Bundle 'IndentAnything'
+
+" Tmux integration
+Bundle 'edkolev/tmuxline.vim'
+
+" Format SQL
+Bundle 'vim-scripts/SQLUtilities'
+Bundle 'vim-scripts/Align'
+

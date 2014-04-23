@@ -23,7 +23,7 @@ bin/whichdeb
 .vim/config/filetype_perl.vim
 .vim/config/filetype_ruby.vim
 .vim/config/filetype_tex.vim
-.vim/config/functions.vim
+-.vim/config/functions.vim
 .vim/config/keys_normal.vim
 .vim/config/plugins.vim
 .vim/config/spelling.vim
@@ -41,7 +41,7 @@ bin/whichdeb
 .vim/syntax/cs.vim
 .vim/syntax/pdf.vim
 .vim/syntax/ragel.vim
-.vim/syntax/SVNAnnotate.vim
+-.vim/syntax/SVNAnnotate.vim
 .vim/syntax/Wikipedia.vim
 .vim/tmp
 .zkbd/linux-pc-linux-gnu

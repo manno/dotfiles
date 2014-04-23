@@ -2,11 +2,12 @@ install:
 	mv ~/.vim/bundle/vundle /tmp
 	git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
 	vim -c ":BundleInstall" -c ":qa" 
+
+compile: debian_dependencies
 	# compile YouCompleteMe
 	cd bundle/YouCompleteMe && ./install.sh
 	# compile Command-T
-	rvm use system --default
-	cd bundle/command-t/ruby/command-t && ruby extconf.rb && make clean && make
+	sh -c 'rvm use system; cd bundle/command-t/ruby/command-t && ruby extconf.rb && make clean && make'
 
 debian_dependencies:
 	sudo apt-get install exuberant-ctags cscope
@@ -23,3 +24,11 @@ update_doc:
 
 vundle_clean:
 	vim -c ":BundleClean" -c ":qa" 
+
+fonts:
+	mkdir -p ~/.config/fontconfig/conf.d/
+	wget https://github.com/Lokaltog/powerline/raw/develop/font/10-powerline-symbols.conf -O ~/.config/fontconfig/conf.d/10-powerline-symbols.conf
+	mkdir -p ~/.fonts
+	wget https://github.com/Lokaltog/powerline/raw/develop/font/PowerlineSymbols.otf -O ~/.fonts/PowerlineSymbols.otf
+	fc-cache -vf ~/.fonts
+
