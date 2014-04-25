@@ -1,0 +1,11 @@
+QTabBar::tab {
+    height: 13px;
+    font-size: 10px;
+    color: #3a3a3a;
+    background: #d0d0d0;
+}
+
+QTabBar::tab::selected {
+    color: #ffffff;
+    background: #0087af;
+}

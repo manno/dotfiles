@@ -1,0 +1,37 @@
+[$Version]
+update_info=konsole.upd:2.9.0-global-options
+
+[Desktop Entry]
+DefaultProfile=Shell.profile
+
+[Favorite Profiles]
+Favorites=Shell.profile
+
+[KFileDialog Settings]
+Height 1200=450
+Height 768=450
+Recent Files[$e]=$HOME/.kde/konsole.css,$HOME/Pictures/empty.png
+Recent URLs[$e]=$HOME/.kde/,$HOME/Pictures/,$HOME/,$HOME/
+Width 1366=720
+Width 1920=720
+
+[KonsoleWindow]
+ShowAppNameOnTitleBar=false
+ShowMenuBarByDefault=false
+ShowWindowTitleOnTitleBar=true
+
+[MainWindow]
+Height 1200=1157
+Height 768=721
+MenuBar=Disabled
+State=AAAA/wAAAAD9AAAAAAAAA7wAAASFAAAABAAAAAQAAAAIAAAACPwAAAAA
+ToolBarsMovable=Disabled
+Width 1024=508
+Width 1366=679
+Width 1920=956
+
+[TabBar]
+TabBarPosition=Top
+TabBarUseUserStyleSheet=true
+TabBarUserStyleSheetFile=file:///home/mma/.kde/konsole.css
+TabBarVisibility=ShowTabBarWhenNeeded
