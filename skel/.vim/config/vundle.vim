@@ -64,3 +64,5 @@ Bundle 'edkolev/tmuxline.vim'
 Bundle 'vim-scripts/SQLUtilities'
 Bundle 'vim-scripts/Align'
 
+" Surround
+Bundle 'tpope/vim-surround.git'
