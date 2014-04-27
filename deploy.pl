@@ -289,7 +289,7 @@ $opt_u = 1;
 getopts('hd:U:m:Dugv');
 print_usage_and_exit if $opt_h; 
 
-$opt_u = 0 if $opt_i;
+$opt_u = 0 if $opt_i or $opt_i or $opt_g or $opt_D;
 $opt_v = 'v' if $opt_v;
 $master_url = $opt_U if $opt_U;
 $dir_prefix = $opt_d if $opt_d;

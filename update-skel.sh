@@ -29,10 +29,10 @@ print_existing_diff() {
   # find all files from . which changed in $HOME
   echo "# [ ] files from skel that changed in home"
   cd skel
-  find . -type f | grep -v $0 | while read f; do diff -q $f ~/$f > /dev/null 2>&1 || echo vimdiff skel/$f ~/$f; done
+  find . -type f | grep -v $0 | grep -v '.vim/bundle/vundle' | grep -v '.gitkeep' | ruby -ne 'h=ENV["HOME"];f=$_.chomp.gsub(/\A\.\//,"");$_=%x(diff -q "#{f}" #{h}/#{f} 2>&1);if /differ/; puts "vimdiff skel/#{f} #{h}/#{f}"; elsif /diff:.*#{h}.*: No such file/; puts "cp skel/#{f} #{h}/#{f}"; end' 
 }
 
 
 print_new_files
 remove_old_files
-print_existing_diff
+print_existing_diff # perl deploy.pl -D

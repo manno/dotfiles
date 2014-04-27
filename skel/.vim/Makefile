@@ -7,7 +7,7 @@ compile: debian_dependencies
 	# compile YouCompleteMe
 	cd bundle/YouCompleteMe && ./install.sh
 	# compile Command-T
-	sh -c 'rvm use system; cd bundle/command-t/ruby/command-t && ruby extconf.rb && make clean && make'
+	bash -l -c 'rvm use system; cd bundle/command-t/ruby/command-t && ruby extconf.rb && make clean && make'
 
 debian_dependencies:
 	sudo apt-get install exuberant-ctags cscope
