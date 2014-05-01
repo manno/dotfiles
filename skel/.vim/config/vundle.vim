@@ -43,12 +43,12 @@ Bundle 'Valloric/YouCompleteMe'
 " syntax errors
 Bundle 'scrooloose/syntastic'
 
+" Colorschemes
 " tango colors
 Bundle 'tango.vim'
-Bundle 'baverman/vim-babymate256'
-
-" Colorscheme
+"Bundle 'baverman/vim-babymate256'
 "Bundle 'Solarized'
+"Bundle 'altercation/vim-colors-solarized.git'
 
 " ctags support
 "Bundle 'xolox/vim-easytags'
@@ -64,5 +64,5 @@ Bundle 'edkolev/tmuxline.vim'
 Bundle 'vim-scripts/SQLUtilities'
 Bundle 'vim-scripts/Align'
 
-" Surround
+" surround - yse' veS'
 Bundle 'tpope/vim-surround.git'
