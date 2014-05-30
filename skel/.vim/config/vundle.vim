@@ -66,3 +66,8 @@ Bundle 'vim-scripts/Align'
 
 " surround - yse' veS'
 Bundle 'tpope/vim-surround.git'
+
+" vim ruby
+" gem install gem-ctags
+Bundle 'tpope/vim-bundler'
+Bundle 'tpope/vim-rake'

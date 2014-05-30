@@ -34,8 +34,15 @@ endif
 
 "----- Backups & Files
 set backup                   " Enable creation of backup file.
-set backupdir=~/.vim/backups " Where backups will go.
 set directory=~/.vim/tmp     " Where temporary files will go.
+set backupdir=~/.vim/tmp/backups " Where backups will go.
+if has('persistent_undo')
+    set undofile                " So is persistent undo ...
+    set undodir=~/.vim/tmp/undos
+    set undolevels=1000         " Maximum number of changes that can be undone
+    set undoreload=10000        " Maximum number lines to save for undo on a buffer reload
+endif
+
 
 augroup NoSimultaneousEdits
     autocmd!

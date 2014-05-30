@@ -1,4 +1,5 @@
 install:
+	if [ -d ~/.vim/backups ]; then mv ~/.vim/backups ~/.vim/tmp/; fi
 	mv ~/.vim/bundle/vundle /tmp
 	git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
 	vim -c ":BundleInstall" -c ":qa" 

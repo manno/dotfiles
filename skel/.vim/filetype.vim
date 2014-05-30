@@ -49,6 +49,7 @@ augroup filetypedetect
     " -----  eruby/rails/erb
     au! BufRead *.rhtml               setf eruby
     au! BufRead *.erb                 setf eruby
+    au! BufRead *.jbuilder            setf ruby
     " -----  perl templates
     au BufNewFile,BufRead  *.tt       setf html
     "  ----  mirah
