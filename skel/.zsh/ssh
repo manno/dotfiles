@@ -1,4 +1,4 @@
-if [ -n "$PS1" && -z "$SSH_CONNECTION" ]; then
+if [ -n "$PS1" ] && [ -z "$SSH_CONNECTION" ]; then
   # Start GNOME Keyring
   eval $(/usr/bin/gnome-keyring-daemon --start --components=gpg,secrets,ssh)
   # You probably need to do this too:
