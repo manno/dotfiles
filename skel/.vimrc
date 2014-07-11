@@ -71,7 +71,11 @@ endif
 
 "----- GUI
 if has("gui_running")
-    set guifont=Monospace\ 11
+    set guifont=Monospace\ 9
+    set guioptions-=m        " remove menu bar
+    set guioptions-=T        " remove tool bar
+    set guioptions-=r
+    set guioptions-=L
 endif
 
 "----- VIMDIFF

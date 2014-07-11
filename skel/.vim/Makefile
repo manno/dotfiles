@@ -2,29 +2,31 @@ install:
 	if [ -d ~/.vim/backups ]; then mv ~/.vim/backups ~/.vim/tmp/; fi
 	mv ~/.vim/bundle/vundle /tmp
 	git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
-	vim -c ":BundleInstall" -c ":qa" 
+	vim +BundleInstall
 
 compile: debian_dependencies
 	# compile YouCompleteMe
-	cd bundle/YouCompleteMe && ./install.sh
+	#cd bundle/YouCompleteMe && ./install.sh
 	# compile Command-T
 	bash -l -c 'rvm use system; cd bundle/command-t/ruby/command-t && ruby extconf.rb && make clean && make'
 
 debian_dependencies:
 	sudo apt-get install exuberant-ctags cscope
 	# YouCompleteMe
-	sudo apt-get install build-essential cmake python-dev 
+	#sudo apt-get install build-essential cmake python-dev 
 	# commandt
 	sudo apt-get install ruby-dev
+	# ag
+	sudo apt-get install silversearcher-ag
 
 backup:
 	tar -cz --exclude ~/.vim/backups --exclude ~/.vim/spell --exclude ~/.vim/bundle --exclude ~/.vim/tmp -f ~/vimconf.release.tar.gz  ~/.vimrc ~/.vim
 
 update_doc:
-	vim -c ":helptags ~/.vim/doc" -c ":q" 
+	vim +'helptags ~/.vim/doc'
 
 vundle_clean:
-	vim -c ":BundleClean" -c ":qa" 
+	vim +BundleClean
 
 fonts:
 	mkdir -p ~/.config/fontconfig/conf.d/

@@ -16,7 +16,7 @@ noremap <C-Right> <C-W>l
 " COMMANDS
 
 " use ; for ex commands
-nnoremap ; :
+"nnoremap ; :
 
 " quit all buffers - qa/wa
 command! Q      :quitall
@@ -39,6 +39,9 @@ let @t = "xhPll"
 " forgot to open as root?
 command! Wsudo  :w !sudo tee > /dev/null %
 
+" since we bound ctrl-t to commandt
+map <C-[> <ESC>:pop<CR>
+
 "-----------------------------------------------------------
 " CONVERTER MAPS
 "
@@ -50,7 +53,7 @@ map  _tt     :source $VIMRUNTIME/syntax/2tex.vim
 vmap _ta     :TOansi
 
 " SEARCH
-map ,g     :Bgrep /<C-R><C-W>/
+map \g     :Ggrep <C-R><C-W><CR>
 
 "-----------------------------------------------------------
 " MOUSEWHEEL IN XTERM

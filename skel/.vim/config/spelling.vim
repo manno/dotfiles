@@ -25,3 +25,5 @@ map <esc><F8>   :setlocal nospell<CR>:call WordProcessor(0)<CR>
 " FIXME Spell check mode (?)
 map <Up> gk
 map <Down> gj
+
+set thesaurus+=~/.vim/spell/thesaurus.txt

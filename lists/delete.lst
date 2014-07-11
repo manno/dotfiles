@@ -56,6 +56,15 @@
 -.vim/plugin/tagexplorer.vim
 -.vim/plugin/taglist.vim
 -.vim/plugin/vimspell.vim
+-.vim/plugin/toansi.vim
+-.vim/indent/tex.vim
+-.vim/indent/prolog.vim
+-.vim/indent/javascript.vim
+-.vim/syntax/cs.vim
+-.vim/syntax/pdf.vim
+-.vim/syntax/2tex.vim
+-.vim/syntax/2ansi.vim
+-.vim/syntax/Wikipedia.vim 
 -.vim/ruby
 -.vim/ruby/fuzzy_file_finder.rb
 -.vim/syntax/dtd.vim

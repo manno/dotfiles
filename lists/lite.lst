@@ -11,7 +11,7 @@
 .tmux.conf
 .tmux.xterm-screen
 .vim/Makefile
-.vim/backups
+-.vim/backups
 .vim/bundle/vundle/LICENSE-MIT.txt
 .vim/bundle/vundle/README.md
 .vim/bundle/vundle/autoload/vundle.vim
@@ -27,8 +27,6 @@
 .vim/config/statusline.vim
 .vim/config/vundle.vim
 .vim/filetype.vim
-.vim/indent/javascript.vim
-.vim/syntax/pdf.vim
 .vim/tmp
 .vimrc
 .zkbd/linux-pc-linux-gnu

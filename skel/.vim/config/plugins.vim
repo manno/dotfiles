@@ -5,6 +5,9 @@
 nnoremap <silent> <Leader>t :CommandTTag<CR>
 nnoremap <silent> <C-t> :CommandT<CR>
 
+" CtrlP
+"let g:ctrlp_map = '<c-t>'
+
 set wildignore+=*.o,*.obj,.svn,.git,tags
 let g:CommandTWildIgnore=&wildignore . ",doc/**,tmp/**,test/tmp/**"
 
@@ -15,6 +18,9 @@ let g:syntastic_ruby_checkers = ['mri', 'rubocop']
 " YCM
 let g:ycm_register_as_syntastic_checker = 0
 
+" Neocomplete
+let g:neocomplete#enable_at_startup = 1
+
 " fugitive git grep
 autocmd QuickFixCmdPost *grep* cwindow
 
@@ -22,6 +28,7 @@ autocmd QuickFixCmdPost *grep* cwindow
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline_theme='sol'
+let g:airline#extensions#branch#enabled = 0
 
 " tango
 colorscheme tango

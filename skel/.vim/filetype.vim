@@ -11,7 +11,7 @@ autocmd FileType eruby    map _rw i<%= %>
 autocmd FileType html     set omnifunc=htmlcomplete#CompleteTags
 autocmd FileType java     set foldmethod=manual
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType lua      set ts=4 sw=4 noet smartindent foldmethod=syntax
+autocmd FileType lua      set ts=4 sw=4 et smartindent foldmethod=syntax
 autocmd FileType nfo      edit ++enc=cp437 
 autocmd FileType perl     source $HOME/.vim/config/filetype_perl.vim 
 autocmd FileType php      set omnifunc=phpcomplete#CompletePHP
