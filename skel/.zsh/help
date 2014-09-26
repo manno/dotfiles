@@ -37,6 +37,8 @@ echo -e "
     t      files with the sticky bit (01000)
     print *(m-1)          # Dateien, die vor bis zu einem Tag modifiziert wurden.
     print *(a1)           # Dateien, auf die vor einem Tag zugegriffen wurde.
+    print *(om[1])        # Zuletzt modifizierte Datei (neueste)
+    print *(^m0)          # files NOT modified today *N*
     print *(@)            # Nur Links
     print *(Lk+50)        # Dateien die ueber 50 Kilobytes grosz sind
     print *(Lk-50)        # Dateien die kleiner als 50 Kilobytes sind
@@ -45,7 +47,7 @@ echo -e "
     print (foo|bar).*     # Alle Dateien mit 'foo' und / oder 'bar' am Anfang
     print *~*.*           # Nur Dateien ohne '.' in Namen
     chmod 644 *(.^x)      # make all non-executable files publically readable
-    print -l *(.c|.h)     # Nur Dateien mit dem Suffix '.c' und / oder '.h'
+    print *(.c|.h)        # Nur Dateien mit dem Suffix '.c' und / oder '.h'
     print **/*(g:users:)  # Alle Dateien/Verzeichnisse der Gruppe >users<
     echo /proc/*/cwd(:h:t:s/self//) # Analog zu >ps ax | awk '{print \$1}'<
     "

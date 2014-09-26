@@ -44,8 +44,9 @@ Bundle 'Shougo/neocomplete.vim'
 Bundle 'scrooloose/syntastic'
 
 " Colorschemes
-" tango colors
-Bundle 'tango.vim'
+"Bundle 'jonathanfilip/vim-lucius'
+"Bundle 'tomasr/molokai'
+"Bundle 'noahfrederick/vim-hemisu'
 
 " ctags support
 Bundle 'vim-tags'

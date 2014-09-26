@@ -5,6 +5,9 @@
 nnoremap <silent> <Leader>t :CommandTTag<CR>
 nnoremap <silent> <C-t> :CommandT<CR>
 
+" since we bound ctrl-t to commandt
+let @t = ":pop"
+
 " CtrlP
 "let g:ctrlp_map = '<c-t>'
 
@@ -30,8 +33,9 @@ let g:airline_powerline_fonts = 1
 let g:airline_theme='sol'
 let g:airline#extensions#branch#enabled = 0
 
-" tango
-colorscheme tango
+" ----- Colorschemes
+"colorscheme lucius
+"hi Normal ctermbg=White
 
 " ----- Tag List Plugin
 "let Tlist_Ctags_Cmd="/usr/bin/ctags"

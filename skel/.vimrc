@@ -1,10 +1,15 @@
 "-----------------------------------------------------------
 " MAIN VIMRC
 "
+set t_Co=256
+syntax enable
+set synmaxcol=2048 " hugefiles
 colorscheme default
+hi DiffText       term=reverse cterm=bold ctermbg=9 ctermfg=white
+
+"colorscheme hemisu
+
 set nocompatible      " We're running Vim, not Vi!
-set virtualedit=block " fix problem with yank in utf8
-set wildmenu
 
 "----- Setup tabs, use spaces instead of tabs
 set shiftround
@@ -17,13 +22,13 @@ set autowrite         " Writes on make/shell commands
 
 "----- Setup document specifics
 set autoindent
-syntax enable
 filetype on                       " Enable filetype detection
 filetype indent on                " Enable filetype-specific indenting
 filetype plugin on                " Enable filetype-specific plugins
 set hidden                        " Allow hidden buffers
 set noinsertmode                  " don't don't out in insert mode
 set backspace=indent,eol,start    " allow us to backspace before an insert
+set wildmenu
 "set colorcolumn=120
 
 " jump to the last position when reopening a file
@@ -31,6 +36,7 @@ if has("autocmd")
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
     \| exe "normal g'\"" | endif
 endif
+
 
 "----- Backups & Files
 set backup                   " Enable creation of backup file.
@@ -65,6 +71,7 @@ set nodigraph               " you need digraphs for uumlauts
 if has("multi_byte")        " vim tip 245
      set encoding=utf-8     " how vim shall represent characters internally
      set fileencodings=utf-8,iso-8859-15,ucs-bom    " heuristic
+     set virtualedit=block " fix problem with yank in utf8
 else
      echoerr "Sorry, this version of (g)vim was not compiled with +multi_byte"
 endif
@@ -80,9 +87,10 @@ endif
 
 "----- VIMDIFF
 if &diff
-    syntax off
+    "syntax off
     " FIXME wrapping ?
     "set wrap
+    set diffopt+=iwhite
 endif
 
 "----- INCLUDES

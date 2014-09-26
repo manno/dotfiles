@@ -39,8 +39,8 @@ let @t = "xhPll"
 " forgot to open as root?
 command! Wsudo  :w !sudo tee > /dev/null %
 
-" since we bound ctrl-t to commandt
-map <C-[> <ESC>:pop<CR>
+" format json 
+com! -range FormatJSON <line1>,<line2>!python -m json.tool
 
 "-----------------------------------------------------------
 " CONVERTER MAPS

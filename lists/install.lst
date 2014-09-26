@@ -54,6 +54,7 @@ bin/whichdeb
 .zsh/locale
 .zsh/options
 .zsh/prompt
+.zsh/ssh
 .zshrc
 .zsh/x
 .zsh/.zshenv

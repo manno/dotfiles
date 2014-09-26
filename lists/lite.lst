@@ -53,6 +53,7 @@
 .zsh/locale
 .zsh/options
 .zsh/prompt
+.zsh/ssh
 .zsh/x
 .zshenv
 .zshrc

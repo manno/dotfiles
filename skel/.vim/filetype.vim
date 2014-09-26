@@ -24,6 +24,9 @@ autocmd FileType xwt      set ts=2 sw=2 foldmethod=syntax
 autocmd FileType vim      set ts=4 sw=4
 "autocmd FileType xml      let g:xml_syntax_folding = 1 
 
+" strip trailing whitespace
+autocmd FileType ruby,haml,css,html,eruby,coffee,javascript autocmd BufWritePre <buffer> :%s/\s\+$//e
+
 " ----- FIXME really finish ?
 if exists("did_load_filetypes")
     finish
@@ -39,6 +42,8 @@ augroup filetypedetect
     au! BufRead,BufNewFile *.pdf      setf pdf
     " -----  MediaWiki
     au BufNewFile,BufRead *.wiki      setf Wikipedia
+    " -----  Markdown
+    au BufNewFile,BufRead *.md        setf markdown
     " -----  Prolog
     au BufRead,BufNewFile *.prolog    setf prolog
     " -----  SVN
@@ -50,6 +55,7 @@ augroup filetypedetect
     au! BufRead *.rhtml               setf eruby
     au! BufRead *.erb                 setf eruby
     au! BufRead *.jbuilder            setf ruby
+    au! BufRead *.coffee              setf coffee
     " -----  perl templates
     au BufNewFile,BufRead  *.tt       setf html
     "  ----  mirah
