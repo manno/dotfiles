@@ -18,7 +18,7 @@ Bundle 'manno/grep'
 Bundle 'rking/ag.vim'
 
 " taglist
-Bundle 'taglist.vim'
+"Bundle 'taglist.vim'
 
 " Status line
 "Bundle 'Lokaltog/vim-powerline'
@@ -56,7 +56,7 @@ Bundle 'edkolev/tmuxline.vim'
 
 " Format SQL
 Bundle 'vim-scripts/SQLUtilities'
-Bundle 'vim-scripts/Align'
+"Bundle 'vim-scripts/Align'
 
 " surround - yse' veS'
 Bundle 'tpope/vim-surround.git'
@@ -67,7 +67,7 @@ Bundle 'tpope/vim-bundler'
 Bundle 'tpope/vim-rake'
 
 " file
-Bundle 'bogado/file-line'
+Bundle 'manno/file-line'
 
 " Gvim Related
 Bundle 'airblade/vim-rooter'

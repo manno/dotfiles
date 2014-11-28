@@ -1,10 +1,9 @@
 install:
-	if [ -d ~/.vim/backups ]; then mv ~/.vim/backups ~/.vim/tmp/; fi
 	mv ~/.vim/bundle/vundle /tmp
 	git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
 	vim +BundleInstall
 
-compile: debian_dependencies
+compile:
 	# compile YouCompleteMe
 	#cd bundle/YouCompleteMe && ./install.sh
 	# compile Command-T

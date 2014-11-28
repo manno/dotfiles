@@ -44,6 +44,8 @@ augroup filetypedetect
     au BufNewFile,BufRead *.wiki      setf Wikipedia
     " -----  Markdown
     au BufNewFile,BufRead *.md        setf markdown
+    " -----  Gradle
+    au BufNewFile,BufRead *.gradle    setf groovy
     " -----  Prolog
     au BufRead,BufNewFile *.prolog    setf prolog
     " -----  SVN
