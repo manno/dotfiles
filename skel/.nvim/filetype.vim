@@ -4,7 +4,7 @@
 "
 autocmd FileType c        set ts=2 sw=2 cindent
 autocmd FileType c        set omnifunc=ccomplete#Complete
-autocmd FileType cs       source $HOME/.nvim/config/filetype_csharp.vim 
+autocmd FileType cs       source $HOME/.nvim/configs/filetype_csharp.vim 
 autocmd FileType css      set omnifunc=csscomplete#CompleteCSS
 autocmd FileType eruby    set ts=2 sw=2
 autocmd FileType eruby    map _rw i<%= %>
@@ -13,12 +13,12 @@ autocmd FileType java     set foldmethod=manual
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType lua      set ts=4 sw=4 et smartindent foldmethod=syntax
 autocmd FileType nfo      edit ++enc=cp437 
-autocmd FileType perl     source $HOME/.nvim/config/filetype_perl.vim 
+autocmd FileType perl     source $HOME/.nvim/configs/filetype_perl.vim 
 autocmd FileType php      set omnifunc=phpcomplete#CompletePHP
-autocmd FileType plaintex source $HOME/.nvim/config/filetype_tex.vim 
+autocmd FileType plaintex source $HOME/.nvim/configs/filetype_tex.vim 
 autocmd FileType python   set omnifunc=pythoncomplete#Complete
-autocmd FileType ruby     source $HOME/.nvim/config/filetype_ruby.vim 
-autocmd FileType tex      source $HOME/.nvim/config/filetype_tex.vim 
+autocmd FileType ruby     source $HOME/.nvim/configs/filetype_ruby.vim 
+autocmd FileType tex      source $HOME/.nvim/configs/filetype_tex.vim 
 autocmd FileType xml      set omnifunc=xmlcomplete#CompleteTags ts=4 sw=4
 autocmd FileType xwt      set ts=2 sw=2 foldmethod=syntax 
 autocmd FileType vim      set ts=4 sw=4

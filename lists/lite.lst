@@ -21,10 +21,10 @@
 .vim/bundle/vundle/doc/vundle.txt
 .vim/config/filetype_perl.vim
 .vim/config/filetype_ruby.vim
-.vim/config/keys_normal.vim
+-.vim/config/keys_normal.vim
 .vim/config/plugins.vim
 .vim/config/spelling.vim
-.vim/config/statusline.vim
+-.vim/config/statusline.vim
 .vim/config/vundle.vim
 .vim/filetype.vim
 .vim/tmp

@@ -27,9 +27,6 @@ Bundle 'vim-airline'
 " command-t - replace mbe,fuzzy
 Bundle 'git://git.wincent.com/command-t.git'
 
-" ctrlP?
-"Bundle 'ctrlp.vim'
-
 " tab completion
 " Bundle 'ervandew/supertab'
 

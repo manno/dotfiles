@@ -5,6 +5,8 @@
 set pastetoggle=<F5>
 
 noremap <C-n>   :bn<CR>
+"nnoremap <silent> <C-n> :if &buftype ==# 'quickfix'<Bar>bn<Bar>endif<CR>
+
 noremap <C-p>   :bp<CR>
 
 " navigate windows
@@ -39,6 +41,9 @@ let @t = "xhPll"
 
 " forgot to open as root?
 command! Wsudo  :w !sudo tee > /dev/null %
+
+" format json 
+com! -range FormatJSON <line1>,<line2>!python -m json.tool
 
 "-----------------------------------------------------------
 " CONVERTER MAPS

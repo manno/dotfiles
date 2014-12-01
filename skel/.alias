@@ -41,7 +41,7 @@ qwhich iftop && alias iftop='iftop -B'
 #qwhich nautilus && alias nautilus='nautilus --no-desktop --browser'
 qwhich pinfo && alias info='pinfo'
 alias vundle='vi ~/.vim/config/vundle.vim'
-alias nvundle='vi ~/.nvim/config/vundle.vim'
+alias nvundle='nvim ~/.nvimrc'
 qwhich w3m  && alias w3m='w3m -M'
 
 # shortcut aliases

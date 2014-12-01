@@ -37,7 +37,6 @@ if has("autocmd")
     \| exe "normal g'\"" | endif
 endif
 
-
 "----- Backups & Files
 set backup                   " Enable creation of backup file.
 set directory=~/.vim/tmp     " Where temporary files will go.
@@ -48,7 +47,6 @@ if has('persistent_undo')
     set undolevels=1000         " Maximum number of changes that can be undone
     set undoreload=10000        " Maximum number lines to save for undo on a buffer reload
 endif
-
 
 augroup NoSimultaneousEdits
     autocmd!
@@ -93,9 +91,13 @@ if &diff
     set diffopt+=iwhite
 endif
 
+"----- STATUSLINE
+set laststatus=2
+set ruler
+set showcmd                 " show the command in the status line
+
 "----- INCLUDES
 source $HOME/.vim/config/spelling.vim 
-source $HOME/.vim/config/keys_normal.vim 
+source $HOME/.vim/config/keys.vim 
 source $HOME/.vim/config/vundle.vim 
-source $HOME/.vim/config/statusline.vim 
 source $HOME/.vim/config/plugins.vim 
