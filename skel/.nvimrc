@@ -14,6 +14,13 @@ set expandtab
 set cf                " Enable error files & error jumping.
 set autowrite         " Writes on make/shell commands
 
+"----- speed
+set synmaxcol=128
+set ttyfast           " u got a fast terminal
+set ttyscroll=3
+set lazyredraw        " to avoid scrolling problems
+
+
 "----- Setup document specifics
 set autoindent
 filetype on                       " Enable filetype detection
@@ -118,12 +125,13 @@ set thesaurus+=~/.vim/spell/thesaurus.txt
 " famous paste toggle for xterm vim
 set pastetoggle=<F5>
 
-" FIXME Spell check mode (?)
-map <Up> gk
-map <Down> gj
-
 noremap <C-n>   :bn<CR>
 noremap <C-p>   :bp<CR>
+
+augroup QFix
+    autocmd!
+    autocmd FileType qf setlocal nobuflisted
+augroup END
 
 " navigate windows
 noremap <C-Down>  <C-W>j
@@ -223,10 +231,11 @@ Bundle 'Shougo/vimproc.vim'
 
 " you complete me - needs vim 7.3.584
 " https://github.com/Valloric/YouCompleteMe
-Bundle 'Valloric/YouCompleteMe'
+"Bundle 'Valloric/YouCompleteMe'
 
 " TODO neocomplete instead?
 "Bundle 'Shougo/neocomplete.vim'
+Bundle 'Shougo/neocomplcache.vim'
 
 " syntax errors
 Bundle 'scrooloose/syntastic'
@@ -244,7 +253,7 @@ Bundle 'edkolev/tmuxline.vim'
 
 " Format SQL
 Bundle 'vim-scripts/SQLUtilities'
-"Bundle 'vim-scripts/Align'
+Bundle 'vim-scripts/Align'
 
 " surround - yse' veS'
 Bundle 'tpope/vim-surround.git'
@@ -307,10 +316,11 @@ let g:syntastic_ruby_checkers = ['rubocop', 'mri']
 let g:syntastic_ruby_rubocop_args = "-D"
 
 " YCM
-let g:ycm_register_as_syntastic_checker = 0
+"let g:ycm_register_as_syntastic_checker = 0
 
 " Neocomplete
-let g:neocomplete#enable_at_startup = 1
+"let g:neocomplete#enable_at_startup = 1
+let g:neocomplcache_enable_at_startup = 1 
 
 " fugitive git grep
 autocmd QuickFixCmdPost *grep* cwindow

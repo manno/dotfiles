@@ -9,6 +9,12 @@ noremap <C-n>   :bn<CR>
 
 noremap <C-p>   :bp<CR>
 
+augroup QFix
+    autocmd!
+    autocmd FileType qf setlocal nobuflisted
+augroup END
+
+
 " navigate windows
 noremap <C-Down>  <C-W>j
 noremap <C-Up>    <C-W>k
