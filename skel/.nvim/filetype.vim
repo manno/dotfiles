@@ -62,4 +62,5 @@ augroup filetypedetect
     "  ----  mirah
     au BufNewFile,BufRead  *.mirah    setf ruby
     au! BufRead *.xwt                 setf xml
+    au! BufRead *.go                  setf go
 augroup END

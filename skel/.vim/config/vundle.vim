@@ -1,79 +1,75 @@
-"-----------------------------------------------------------
-" VUNDLE
-"
-" apt-get install cmake python-dev
-set rtp+=~/.vim/bundle/vundle
-call vundle#rc()
-
-Bundle 'gmarik/vundle'
+call plug#begin('~/.vim/plugged')
 
 " nerd
-Bundle 'The-NERD-Commenter'
+Plug 'The-NERD-Commenter'
 
 " grep
-"Bundle 'vim-scripts/grep.vim'
-Bundle 'manno/grep'
+"Plug 'vim-scripts/grep.vim'
+Plug 'manno/grep'
 
 " search with ag?
-Bundle 'rking/ag.vim'
+"Plug 'rking/ag.vim'
 
 " taglist
-"Bundle 'taglist.vim'
+"Plug 'taglist.vim'
 
 " Status line
-"Bundle 'Lokaltog/vim-powerline'
-Bundle 'vim-airline'
+"Plug 'Lokaltog/vim-powerline'
+Plug 'vim-airline'
 
 " command-t - replace mbe,fuzzy
-Bundle 'git://git.wincent.com/command-t.git'
+Plug 'git://git.wincent.com/command-t.git', { 'do': 'rvm use system; ruby extconf.rb && make clean && make'}
 
 " tab completion
-" Bundle 'ervandew/supertab'
+" Plug 'ervandew/supertab'
 
 " you complete me - needs vim 7.3.584
 " https://github.com/Valloric/YouCompleteMe
-"Bundle 'Valloric/YouCompleteMe'
+"Plug 'Valloric/YouCompleteMe'
 
 " TODO neocomplete instead?
-Bundle 'Shougo/neocomplete.vim'
+Plug 'Shougo/neocomplete.vim'
 
 " syntax errors
-Bundle 'scrooloose/syntastic'
+Plug 'scrooloose/syntastic'
 
 " Colorschemes
-"Bundle 'jonathanfilip/vim-lucius'
-"Bundle 'tomasr/molokai'
-"Bundle 'noahfrederick/vim-hemisu'
+"Plug 'jonathanfilip/vim-lucius'
+"Plug 'tomasr/molokai'
+"Plug 'noahfrederick/vim-hemisu'
+Plug 'endel/vim-github-colorscheme'
 
 " ctags support
-Bundle 'vim-tags'
+Plug 'vim-tags'
 
 " Tmux integration
-Bundle 'edkolev/tmuxline.vim'
+Plug 'edkolev/tmuxline.vim'
 
 " Format SQL
-Bundle 'vim-scripts/SQLUtilities'
-"Bundle 'vim-scripts/Align'
+Plug 'vim-scripts/SQLUtilities'
+"Plug 'vim-scripts/Align'
 
 " surround - yse' veS'
-Bundle 'tpope/vim-surround.git'
+Plug 'tpope/vim-surround'
 
 " vim ruby
 " gem install gem-ctags
-Bundle 'tpope/vim-bundler'
-Bundle 'tpope/vim-rake'
+Plug 'tpope/vim-bundler', { 'for': 'ruby' }
+Plug 'tpope/vim-rake', { 'for': 'ruby' }
+Plug 'fatih/vim-go', { 'for': 'go' }
 
 " file
-Bundle 'manno/file-line'
+Plug 'manno/file-line'
 
 " Gvim Related
-Bundle 'airblade/vim-rooter'
+Plug 'airblade/vim-rooter'
 
 " syntax
-Bundle 'vim-polyglot'
+Plug 'vim-polyglot'
 
 " Git
-Bundle 'fugitive.vim'
+Plug 'fugitive.vim'
 
 " latexsuite = vim-latex
 
+call plug#end()
