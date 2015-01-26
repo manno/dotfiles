@@ -1,7 +1,6 @@
 " ----- Colors
 set t_Co=256
 syntax enable
-set synmaxcol=2048 " hugefiles
 colorscheme default
 hi DiffText       term=reverse cterm=bold ctermbg=9 ctermfg=white
 
@@ -15,7 +14,7 @@ set cf                " Enable error files & error jumping.
 set autowrite         " Writes on make/shell commands
 
 "----- speed
-set synmaxcol=128
+set synmaxcol=256
 set ttyfast           " u got a fast terminal
 set ttyscroll=3
 set lazyredraw        " to avoid scrolling problems
@@ -202,80 +201,71 @@ set     <S-F3>=[25~
 " LOGO set     <S-F6>=[29~
 " set     <S-F7>=[31~
 
-" ----- Vundle
-"
-" apt-get install cmake python-dev
-set rtp+=~/.nvim/bundle/vundle
-call vundle#rc("~/.nvim/bundle")
-
-Bundle 'gmarik/vundle'
+" ----- Plug
+call plug#begin('~/.nvim/plugged')
 
 " nerd
-Bundle 'The-NERD-Commenter'
+Plug 'The-NERD-Commenter'
 
 " grep
-"Bundle 'vim-scripts/grep.vim'
-Bundle 'manno/grep'
+"Plug 'vim-scripts/grep.vim'
+Plug 'manno/grep'
 
 " search with ag?
-"Bundle 'rking/ag.vim'
+"Plug 'rking/ag.vim'
 
 " Status line
-Bundle 'vim-airline'
+Plug 'vim-airline'
 
-Bundle 'Shougo/unite.vim'
-Bundle 'Shougo/vimproc.vim'
-
-" tab completion
-" Bundle 'ervandew/supertab'
+" completion
+Plug 'Shougo/unite.vim'
+Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 
 " you complete me - needs vim 7.3.584
 " https://github.com/Valloric/YouCompleteMe
-"Bundle 'Valloric/YouCompleteMe'
+"Plug 'Valloric/YouCompleteMe'
 
 " TODO neocomplete instead?
-"Bundle 'Shougo/neocomplete.vim'
-Bundle 'Shougo/neocomplcache.vim'
+"Plug 'Shougo/neocomplete.vim'
+Plug 'Shougo/neocomplcache.vim'
 
 " syntax errors
-Bundle 'scrooloose/syntastic'
-
-" Colorschemes
-"Bundle 'jonathanfilip/vim-lucius'
-"Bundle 'tomasr/molokai'
-"Bundle 'noahfrederick/vim-hemisu'
+Plug 'scrooloose/syntastic'
 
 " ctags support
-Bundle 'vim-tags'
+Plug 'vim-tags'
 
-" Tmux integration
-Bundle 'edkolev/tmuxline.vim'
+" tmux integration
+Plug 'edkolev/tmuxline.vim'
 
-" Format SQL
-Bundle 'vim-scripts/SQLUtilities'
-Bundle 'vim-scripts/Align'
+" format SQL
+Plug 'vim-scripts/SQLUtilities'
+Plug 'vim-scripts/Align'
 
 " surround - yse' veS'
-Bundle 'tpope/vim-surround.git'
+Plug 'tpope/vim-surround'
 
 " vim ruby
 " gem install gem-ctags
-Bundle 'tpope/vim-bundler'
-Bundle 'tpope/vim-rake'
+Plug 'tpope/vim-bundler', { 'for': 'ruby' }
+Plug 'tpope/vim-rake', { 'for': 'ruby' }
+Plug 'fatih/vim-go', { 'for': 'go' }
 
 " file
-Bundle 'manno/file-line'
+Plug 'manno/file-line'
 
-" Gvim Related
-Bundle 'airblade/vim-rooter'
+" gvim Related
+Plug 'airblade/vim-rooter'
 
 " syntax
-Bundle 'vim-polyglot'
+Plug 'vim-polyglot'
 
-" Git
-Bundle 'fugitive.vim'
+" git
+Plug 'fugitive.vim'
 
 " latexsuite = vim-latex
+
+call plug#end()
 
 " ----- Plugin Configurations
 "
