@@ -79,7 +79,7 @@ bin/whichdeb
 -.nvim/bundle/vundle/README.md
 -.nvim/bundle/vundle/LICENSE-MIT.txt
 .nvim/syntax/ragel.vim
-.nvim/Makefile
+-.nvim/Makefile
 .nvim/tmp
 .nvim/configs/filetype_ruby.vim
 .nvim/configs/filetype_tex.vim
