@@ -1,6 +1,6 @@
 compile:
 	# compile YouCompleteMe
-	#cd bundle/YouCompleteMe && ./install.sh
+	#cd plugged/YouCompleteMe && ./install.sh
 	# compile Command-T
 	bash -l -c 'rvm use system; cd plugged/command-t/ruby/command-t && ruby extconf.rb && make clean && make'
 
@@ -14,10 +14,13 @@ debian_dependencies:
 	sudo apt-get install silversearcher-ag
 
 backup:
-	tar -cz --exclude ~/.vim/backups --exclude ~/.vim/spell --exclude ~/.vim/bundle --exclude ~/.vim/tmp -f ~/vimconf.release.tar.gz  ~/.vimrc ~/.vim
+	tar -cz --exclude ~/.vim/backups --exclude ~/.vim/spell --exclude ~/.vim/plugged --exclude ~/.vim/tmp -f ~/vimconf.release.tar.gz  ~/.vimrc ~/.vim
 
 update_doc:
 	vim +'helptags ~/.vim/doc'
+
+clean:
+	vim +PlugClean
 
 fonts:
 	mkdir -p ~/.config/fontconfig/conf.d/

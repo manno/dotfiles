@@ -19,6 +19,9 @@ autocmd FileType php      set omnifunc=phpcomplete#CompletePHP
 autocmd FileType plaintex source $HOME/.nvim/configs/filetype_tex.vim 
 autocmd FileType python   set omnifunc=pythoncomplete#Complete
 autocmd FileType ruby     source $HOME/.nvim/configs/filetype_ruby.vim 
+autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1 
+autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
+autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
 autocmd FileType tex      source $HOME/.nvim/configs/filetype_tex.vim 
 autocmd FileType xml      set omnifunc=xmlcomplete#CompleteTags ts=4 sw=4
 autocmd FileType xwt      set ts=2 sw=2 foldmethod=syntax 

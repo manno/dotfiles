@@ -8,6 +8,7 @@ autocmd FileType cs       source $HOME/.vim/config/filetype_csharp.vim
 autocmd FileType css      set omnifunc=csscomplete#CompleteCSS
 autocmd FileType eruby    set ts=2 sw=2
 autocmd FileType eruby    map _rw i<%= %>
+autocmd FileType go       setlocal noet ts=8 sw=8 sts=8
 autocmd FileType html     set omnifunc=htmlcomplete#CompleteTags
 autocmd FileType java     set foldmethod=manual
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
@@ -18,6 +19,9 @@ autocmd FileType php      set omnifunc=phpcomplete#CompletePHP
 autocmd FileType plaintex source $HOME/.vim/config/filetype_tex.vim 
 autocmd FileType python   set omnifunc=pythoncomplete#Complete
 autocmd FileType ruby     source $HOME/.vim/config/filetype_ruby.vim 
+autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1 
+autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
+autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
 autocmd FileType tex      source $HOME/.vim/config/filetype_tex.vim 
 autocmd FileType xml      set omnifunc=xmlcomplete#CompleteTags ts=4 sw=4
 autocmd FileType xwt      set ts=2 sw=2 foldmethod=syntax 

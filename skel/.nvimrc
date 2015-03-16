@@ -15,8 +15,6 @@ set autowrite         " Writes on make/shell commands
 
 "----- speed
 set synmaxcol=256
-set ttyfast           " u got a fast terminal
-set ttyscroll=3
 set lazyredraw        " to avoid scrolling problems
 
 
@@ -54,7 +52,6 @@ augroup NoSimultaneousEdits
 augroup END
 
 "----- Search
-"
 set ignorecase
 set smartcase
 set incsearch               " show `best match so far' as typed
@@ -63,20 +60,10 @@ set hlsearch                " keep highlight until :noh
 "----- Encoding
 set nodigraph               " you need digraphs for uumlauts
 if has("multi_byte")        " vim tip 245
-     set encoding=utf-8     " how vim shall represent characters internally
      set fileencodings=utf-8,iso-8859-15,ucs-bom    " heuristic
      set virtualedit=block " fix problem with yank in utf8
 else
      echoerr "Sorry, this version of (g)vim was not compiled with +multi_byte"
-endif
-
-"----- Gui Vim
-if has("gui_running")
-    set guifont=Monospace\ 9
-    set guioptions-=m        " remove menu bar
-    set guioptions-=T        " remove tool bar
-    set guioptions-=r
-    set guioptions-=L
 endif
 
 "----- Diffmode
@@ -87,7 +74,7 @@ if &diff
     set diffopt+=iwhite
 endif
 
-" ----- Statusline
+"----- Statusline
 set laststatus=2
 set ruler
 set showcmd                 " show the command in the status line
@@ -159,7 +146,7 @@ let @t = "xhPll"
 " forgot to open as root?
 command! Wsudo  :w !sudo tee > /dev/null %
 
-" format json 
+" format json
 com! -range FormatJSON <line1>,<line2>!python -m json.tool
 
 " ----- Converter Mappings
@@ -194,7 +181,7 @@ map! <M-Esc>[65~ <S-MouseUp>
 "" keymap error (F12=[24~) ???
 " set     <F12>=<Char-0xffc9>
 set     <F12>=<Char-96>
-set     <S-F2>=[24~   
+set     <S-F2>=[24~
 set     <S-F3>=[25~
 " UNDO set     <S-F4>=[26~
 " set     <S-F5>=[28~
@@ -214,16 +201,16 @@ Plug 'manno/grep'
 " search with ag?
 "Plug 'rking/ag.vim'
 
-" Status line
+" status line
 Plug 'vim-airline'
 
-" completion
+" open files
 Plug 'Shougo/unite.vim'
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 
 " you complete me - needs vim 7.3.584
 " https://github.com/Valloric/YouCompleteMe
-"Plug 'Valloric/YouCompleteMe'
+"Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
 
 " TODO neocomplete instead?
 "Plug 'Shougo/neocomplete.vim'
@@ -250,6 +237,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-bundler', { 'for': 'ruby' }
 Plug 'tpope/vim-rake', { 'for': 'ruby' }
 Plug 'fatih/vim-go', { 'for': 'go' }
+"Plug 'tpope/vim-rails', { 'for': 'ruby' }
 
 " file
 Plug 'manno/file-line'
@@ -287,7 +275,7 @@ call unite#custom_source('file_rec,file_rec/async,file,grep',
       \ 'tmp/',
       \ '\.git/',
       \ ], '\|'))
-"nnoremap <C-t> :<C-u>Unite -start-insert file_rec/async:!<CR>
+nnoremap <C-f> :<C-u>Unite -start-insert file_rec/async:!<CR>
 nnoremap <C-t> :<C-u>Unite -no-split -start-insert file_rec/git:--cached:--exclude-standard<CR>
 nnoremap <Leader>b :<C-u>Unite -no-split -start-insert buffer<CR>
 
@@ -299,7 +287,7 @@ function! s:unite_settings()
     nmap <buffer> <C-c> <Plug>(unite_exit)
 endfunction
 
-" Syntastic /  Rubocop 
+" Syntastic /  Rubocop
 "let g:syntastic_quiet_messages = {'level': 'warnings'}
 "let g:syntastic_ruby_checkers = ['mri', 'rubocop']
 let g:syntastic_ruby_checkers = ['rubocop', 'mri']
@@ -310,7 +298,7 @@ let g:syntastic_ruby_rubocop_args = "-D"
 
 " Neocomplete
 "let g:neocomplete#enable_at_startup = 1
-let g:neocomplcache_enable_at_startup = 1 
+let g:neocomplcache_enable_at_startup = 1
 
 " fugitive git grep
 autocmd QuickFixCmdPost *grep* cwindow

@@ -25,11 +25,11 @@ bin/whichdeb
 .vim/config/filetype_tex.vim
 -.vim/config/functions.vim
 -.vim/config/keys_normal.vim
-.vim/config/keys.vim
-.vim/config/plugins.vim
-.vim/config/spelling.vim
+-.vim/config/keys.vim
+-.vim/config/plugins.vim
+-.vim/config/spelling.vim
 -.vim/config/statusline.vim
-.vim/config/vundle.vim
+-.vim/config/vundle.vim
 .vim/filetype.vim
 .vim/Makefile
 .vimrc

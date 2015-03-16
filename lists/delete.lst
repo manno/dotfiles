@@ -1,6 +1,7 @@
 -.bash_logout
 -.bash_profile.localhost
 -.bashrc_local
+-.vim/bundle
 -.vim/compiler/perl.vim
 -.vim/compiler/ruby.vim
 -.vim/config/macros.vim
