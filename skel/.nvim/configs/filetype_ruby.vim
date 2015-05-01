@@ -16,4 +16,5 @@ map  _hr        :s/:\([a-z_]*\) =>/\1:/g<CR>
 
 " Make those debugger statements painfully obvious
 au BufEnter *.rb syn match error contained "\<binding.pry\>"
+au BufEnter *.rb syn match error contained "\<byebug\>"
 au BufEnter *.rb syn match error contained "\<debugger\>"

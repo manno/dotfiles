@@ -237,7 +237,7 @@ Plug 'rking/ag.vim'
 Plug 'vim-airline'
 
 " open files
-Plug 'git://git.wincent.com/command-t.git', { 'do': 'rvm use system; cd ruby/command-t && ruby extconf.rb && make clean && make' }
+Plug 'git://git.wincent.com/command-t.git', { 'do': 'rvm use system; ruby extconf.rb && make clean && make'}
 
 " open files
 "Plug 'Shougo/unite.vim'
@@ -248,11 +248,17 @@ Plug 'git://git.wincent.com/command-t.git', { 'do': 'rvm use system; cd ruby/com
 "Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
 
 " TODO neocomplete instead?
-Plug 'Shougo/neocomplete.vim'
+"Plug 'Shougo/neocomplete.vim'
 "Plug 'Shougo/neocomplcache.vim'
 
 " syntax errors
 Plug 'scrooloose/syntastic'
+
+" Colorschemes
+"Plug 'jonathanfilip/vim-lucius'
+"Plug 'tomasr/molokai'
+"Plug 'noahfrederick/vim-hemisu'
+Plug 'endel/vim-github-colorscheme'
 
 " ctags support
 Plug 'vim-tags'

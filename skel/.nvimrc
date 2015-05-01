@@ -216,8 +216,18 @@ Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 "Plug 'Shougo/neocomplete.vim'
 Plug 'Shougo/neocomplcache.vim'
 
+"Plug 'osyo-manga/vim-monster'
+"let g:monster#completion#rcodetools#backend = "async_rct_complete"
+"let g:neocomplete#force_omni_input_patterns = { 'ruby' : '[^. *\t]\.\|\h\w*::', }
+
 " syntax errors
 Plug 'scrooloose/syntastic'
+
+" Colorschemes
+Plug 'jonathanfilip/vim-lucius'
+Plug 'tomasr/molokai'
+Plug 'noahfrederick/vim-hemisu'
+Plug 'endel/vim-github-colorscheme'
 
 " ctags support
 Plug 'vim-tags'
@@ -252,6 +262,7 @@ Plug 'vim-polyglot'
 Plug 'fugitive.vim'
 
 " latexsuite = vim-latex
+Plug 'vim-latex/vim-latex', { 'for': 'tex' }
 
 call plug#end()
 
