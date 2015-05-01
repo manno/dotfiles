@@ -80,20 +80,3 @@ termcapinfo xterm* ti@:te@
 # STARTUP SCREENS
 # ------------------------------------------------------------------------------
 #screen -t 'shell' bash
-
-bind I screen -t 'irssi' irssi
-bind J screen -t 'icq' centericq-utf8 -a
-bind M screen -t 'mutt' mutt
-bind N screen -t 'ppp0' netload ppp0
-bind T screen -t 'htop' htop
-bind V screen -t 'vim' vim 
-#bind W screen -t 'netwatch' sudo netwatch
-#bind S screen -t 'snownews' snownews
-#bind O screen -t 'top' top
-#bind R screen -t 'raggle'  raggle
-#bind C screen -t 'serial'  kermit -c -l /dev/tts/0
-#bind G screen -t 'glspy' /glftpd/bin/gl_spy
-#bind B screen -t 'eth1' netload eth1
-#bind T screen -t 'traffic' sudo trafshow
-#bind E screen -t 'errlog' sh -c 'tail -f /var/log/apache/error.log'
-#bind B screen -t 'binclock' sh -c "setterm -cursor off;/home/ja/bin/binclock.py ;setterm -cursor on "
