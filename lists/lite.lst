@@ -1,4 +1,3 @@
--.vim/config/functions.vim
 .alias
 .aliases
 .bash_profile
@@ -11,21 +10,8 @@
 .tmux.conf
 .tmux.xterm-screen
 .vim/Makefile
--.vim/backups
--.vim/bundle/vundle/LICENSE-MIT.txt
--.vim/bundle/vundle/README.md
--.vim/bundle/vundle/autoload/vundle.vim
--.vim/bundle/vundle/autoload/vundle/config.vim
--.vim/bundle/vundle/autoload/vundle/installer.vim
--.vim/bundle/vundle/autoload/vundle/scripts.vim
--.vim/bundle/vundle/doc/vundle.txt
 .vim/config/filetype_perl.vim
 .vim/config/filetype_ruby.vim
--.vim/config/keys_normal.vim
--.vim/config/plugins.vim
--.vim/config/spelling.vim
--.vim/config/statusline.vim
--.vim/config/vundle.vim
 .vim/filetype.vim
 .vim/tmp
 .vimrc

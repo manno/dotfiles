@@ -1,2 +1,2 @@
 lite:
-	tar cfz dotfiles-lite.tar.gz --files-from lists/lite.lst
+	cd skel && tar cfz ../dotfiles-lite.tar.gz --files-from ../lists/lite.lst
