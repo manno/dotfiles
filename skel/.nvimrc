@@ -1,8 +1,17 @@
 " ----- Colors
-set t_Co=256
+"set t_Co=256
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 syntax enable
 colorscheme default
-hi DiffText       term=reverse cterm=bold ctermbg=9 ctermfg=white
+"hi DiffText       term=reverse cterm=bold ctermbg=9 ctermfg=white
+"hi DiffAdd    term=reverse cterm=bold ctermbg=green ctermfg=white
+"hi DiffChange term=reverse cterm=bold ctermbg=cyan  ctermfg=black
+"hi DiffText   term=reverse cterm=bold ctermbg=gray  ctermfg=black
+"hi DiffDelete term=reverse cterm=bold ctermbg=red   ctermfg=black
+"hi DiffAdd        term=bold ctermbg=81
+"hi DiffChange     term=bold ctermbg=225
+"hi DiffDelete     term=bold ctermfg=12 ctermbg=159
+
 
 "----- Setup tabs, use spaces instead of tabs
 set shiftround
@@ -228,6 +237,7 @@ Plug 'jonathanfilip/vim-lucius'
 Plug 'tomasr/molokai'
 Plug 'noahfrederick/vim-hemisu'
 Plug 'endel/vim-github-colorscheme'
+Plug 'chriskempson/vim-tomorrow-theme'
 
 " ctags support
 Plug 'vim-tags'
@@ -328,6 +338,7 @@ let g:airline#extensions#branch#enabled = 0
 " ----- Colorschemes
 "colorscheme lucius
 "hi Normal ctermbg=White
+colorscheme github
 
 " ----- ?
 let xml_tag_completion_map = "<C-l>"

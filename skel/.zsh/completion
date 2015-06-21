@@ -47,4 +47,7 @@ zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}'
 autoload -Uz compinit
 compinit -i
 
+#autoload predict-on
+#predict-on
+
 # vim: ft=zsh ts=4 sw=4

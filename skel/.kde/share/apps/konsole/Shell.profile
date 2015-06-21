@@ -1,8 +1,10 @@
 [Appearance]
 BoldIntense=false
 ColorScheme=BlackOnWhite
+Font=Droid Sans Mono,9,-1,5,50,0,0,0,0,0
 
 [General]
+Command=/usr/bin/zsh --login
 Environment=TERM=xterm-256colors
 Icon=goa-account
 Name=Shell

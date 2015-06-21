@@ -9,16 +9,12 @@ if [ -z "$debian_chroot" -a -r /etc/debian_chroot ]; then
      debian_chroot="$(cat /etc/debian_chroot)$del"
 fi
 
-# Time
-#rprompt_time="%{$fg[grey]%}%T"
-    
-
 # VCS - man zshcontrib
 autoload -Uz vcs_info
 zstyle ':vcs_info:*' actionformats \
-    '%F{5}(%f%s%F{5})%F{3}-%F{5}[%F{2}%b%F{3}|%F{1}%a%F{5}]%f '
+    '%F{5}[%F{2}%b%F{3}|%F{1}%a%F{5}]%f'
 zstyle ':vcs_info:*' formats       \
-    '%F{5}(%f%s%F{5})%F{3}-%F{5}[%F{2}%b%F{5}]%f '
+    '%F{5}[%F{2}%b%F{5}]%f'
 zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b%F{1}:%F{3}%r'
 
 zstyle ':vcs_info:*' enable git cvs svn
@@ -29,11 +25,19 @@ zstyle ':vcs_info:*' enable git cvs svn
 vcs_info_wrapper() { 
     vcs_info 
     if [ -n "$vcs_info_msg_0_" ]; then 
-        echo "%{$fg[grey]%}${vcs_info_msg_0_}%{$reset_color%}$del"
+        echo "${vcs_info_msg_0_}%{$reset_color%}"
     fi
 }
+
+rvm_prompt_wrapper () {
+    ruby_version=$(~/.rvm/bin/rvm-prompt | sed 's/ruby-//')
+    if [ -n "$ruby_version" ]; then
+        echo "%{$fg[green]%}[%{$fg[magenta]%}$ruby_version%{$fg[green]%}]%{$reset_color%}"
+    fi
+}
+
 if [ "$TERM" != "screen" ]; then
-    RPROMPT=$'${del}$(vcs_info_wrapper)${rprompt_time}%{$reset_color%}'
+    RPROMPT=$'${del}$(vcs_info_wrapper)$(rvm_prompt_wrapper)%{$reset_color%}'
 fi
 
 # Method 2:  use precmd hook to get vcs info
