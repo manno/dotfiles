@@ -156,6 +156,8 @@ let @t = "xhPll"
 " forgot to open as root?
 command! Wsudo  :w !sudo tee > /dev/null %
 
+command! Tidy :%!/opt/tidy-html5/bin/tidy -w -i -q -f /dev/null
+
 " format json
 com! -range FormatJSON <line1>,<line2>!python -m json.tool
 
@@ -215,8 +217,9 @@ Plug 'manno/grep'
 Plug 'vim-airline'
 
 " open files
-Plug 'Shougo/unite.vim'
-Plug 'Shougo/vimproc.vim', { 'do': 'make' }
+"Plug 'Shougo/unite.vim'
+"Plug 'Shougo/vimproc.vim', { 'do': 'make' }
+Plug 'ctrlpvim/ctrlp.vim'
 
 " you complete me - needs vim 7.3.584
 " https://github.com/Valloric/YouCompleteMe
@@ -287,27 +290,31 @@ let @t = ":pop"
 set wildignore+=*.o,*.obj,.svn,.git,tags
 "let g:CommandTWildIgnore=&wildignore . ",doc/**,tmp/**,test/tmp/**"
 
-" Unite
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-call unite#filters#sorter_default#use(['sorter_rank'])
-call unite#custom#source('file_rec,file_rec/async', 'max_candidates', 1000)
-call unite#custom#source('file_rec,file_rec/git', 'max_candidates', 0)
-call unite#custom_source('file_rec,file_rec/async,file,grep',
-      \ 'ignore_pattern', join([
-      \ 'tmp/',
-      \ '\.git/',
-      \ ], '\|'))
-nnoremap <C-f> :<C-u>Unite -start-insert file_rec/async:!<CR>
-nnoremap <C-t> :<C-u>Unite -no-split -start-insert file_rec/git:--cached:--exclude-standard<CR>
-nnoremap <Leader>b :<C-u>Unite -no-split -start-insert buffer<CR>
+" " Unite
+" call unite#filters#matcher_default#use(['matcher_fuzzy'])
+" call unite#filters#sorter_default#use(['sorter_rank'])
+" call unite#custom#source('file_rec,file_rec/async', 'max_candidates', 1000)
+" call unite#custom#source('file_rec,file_rec/git', 'max_candidates', 0)
+" call unite#custom_source('file_rec,file_rec/async,file,grep',
+"       \ 'ignore_pattern', join([
+"       \ 'tmp/',
+"       \ '\.git/',
+"       \ ], '\|'))
+" nnoremap <C-f> :<C-u>Unite -start-insert file_rec/async:!<CR>
+" nnoremap <C-t> :<C-u>Unite -no-split -start-insert file_rec/git:--cached:--exclude-standard<CR>
+" nnoremap <Leader>b :<C-u>Unite -no-split -start-insert buffer<CR>
 
-autocmd FileType unite call s:unite_settings()
+" autocmd FileType unite call s:unite_settings()
 
-function! s:unite_settings()
-    let b:SuperTabDisabled=1
-    nmap <buffer> <ESC> <Plug>(unite_exit)
-    nmap <buffer> <C-c> <Plug>(unite_exit)
-endfunction
+" function! s:unite_settings()
+"     let b:SuperTabDisabled=1
+"     nmap <buffer> <ESC> <Plug>(unite_exit)
+"     nmap <buffer> <C-c> <Plug>(unite_exit)
+" endfunction
+
+let g:ctrlp_map = '<c-t>'
+let g:ctrlp_user_command = 'git ls-files %s'
+nnoremap <Leader>b :CtrlPBufTag<cr>
 
 " Syntastic /  Rubocop
 "let g:syntastic_quiet_messages = {'level': 'warnings'}

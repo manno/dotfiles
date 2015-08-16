@@ -25,6 +25,10 @@
   tree = log --oneline --decorate --graph
   unstage = reset HEAD
   g = grep
+  cp = cherry-pick
+  cpc = cherry-pick --continue
+  rb = rebase
+  rbc = rebase --continue
 [format]  
 	pretty = format:%Cred%h%Creset -%C(yellow)%d%Creset %s - %C(dim white)%an %Creset%Cgreen(%cr)%Creset
 [color]

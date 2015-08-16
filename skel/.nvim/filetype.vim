@@ -62,6 +62,7 @@ augroup filetypedetect
     au! BufRead *.erb                 setf eruby
     au! BufRead *.jbuilder            setf ruby
     au! BufRead *.coffee              setf coffee
+    au! BufRead *.prawn    setf ruby
     " -----  perl templates
     au BufNewFile,BufRead  *.tt       setf html
     "  ----  mirah
