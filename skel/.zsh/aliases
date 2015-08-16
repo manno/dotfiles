@@ -1,25 +1,14 @@
 # Aliases
 
-# global alias, i.e.: dmesg G foo
 # filters
 alias -g G='|grep -i'
 alias -g XXD='|xxd'
 alias -g L='|less'
-#alias -g F='| egrep -v -e "svn" -e "_darcs"'
-alias -g filter_svn='| egrep -v -e "\.svn" -e "_darcs"'
-#alias -g filter_mysqldump=| perl -ne 'if (/^INSERT .*\(.(.*).\);/) {print $1."\n";}'
 
 # globs
-#alias -g glob_svn='**/*~.svn'
-#alias -g glob_pl='**/*p[lm]~.svn'
-#alias -g glob_py='**/*py~.svn'
-#alias -g glob_c='**/*[ch]~.svn'
-#alias -g glob_html='**/*htm[l]~.svn'
-#alias -g glob_xml='**/*x[sm]l~.svn'
+alias -g glob_recent='**/*(om[1])'
 
 # redirects
-#alias -g NULL='> /dev/null 2>&1'
-#alias -g ONE='2>&1'
 alias -g V='2>&1 > /tmp/stdin.$$; vi /tmp/stdin.$$'
 
 # time
@@ -29,9 +18,6 @@ alias -g TODAY=$(date +%Y%m%d)
 # dir shortcuts
 alias -g ...='../..'
 alias -g ....='../../..'
-
-#alias -s txt="vim"
-#alias -s pl="cat"
 
 # load bash aliases
 [[ -f ~/.alias ]] && . ~/.alias
@@ -44,14 +30,5 @@ alias -g hist0='perl -a -F: -MTime::Local -ne "\$F[1]=\" \".localtime(\$F[1]); p
 alias -g hist1='perl -a -F: -MTime::Local -ne "\$F[1]=\" \".localtime(\$F[1]); print join(\":\", @F);" $HISTFILE_OLD | less'
 alias reload='source $HOME/.zshrc'
 alias -g vi!='vi `fc -n | xargs`'
-
-# viminfo
-function viminfo () { vim -R -c "Info $1" -c "bdelete 1"; }
-#alias info=viminfo
-function vimman () { vim -R -c "Man $1 $2" -c "bdelete 1"; }
-#alias man=vimman
-
-# load more exotic bash aliases
-[[ -f ~/.aliases ]] && . ~/.aliases
 
 # vim: ft=zsh ts=4 sw=4

@@ -1,5 +1,4 @@
 .alias
-.aliases
 .bash_profile
 .bashrc
 bin/log.view

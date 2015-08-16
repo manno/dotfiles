@@ -11,9 +11,6 @@ if [ -n "$PS1" ]; then
 
     # aliases
     test -e ~/.alias && . ~/.alias
-    if [ -f ~/.aliases ]; then
-            source ~/.aliases
-    fi
 
     # If this is an xterm set the title to user@host:dir
     case $TERM in

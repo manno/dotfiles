@@ -28,65 +28,37 @@ alias fg3='fg %3'
 alias bc='bc -l'
 alias df='df -Th -x tmpfs -x usbfs'
 alias diff='diff --exclude ".svn" -up'
-#alias diff='diff -Nau'
 alias du='du -h'
 alias gdb='gdb -q'
-#alias grep='grep --color'
-#alias egrep='egrep --color'
 alias ipsort="sort -n -t . -k 1,1 -k 2,2 -k 3,3 -k 4,4"
 alias last='last -a'
 #alias less='less -MSI'
 alias nl='nl -nln -ba'
 qwhich iftop && alias iftop='iftop -B'
-#qwhich nautilus && alias nautilus='nautilus --no-desktop --browser'
 qwhich pinfo && alias info='pinfo'
-alias vundle='vi ~/.vim/config/vundle.vim'
-alias nvundle='nvim ~/.nvimrc'
 qwhich w3m  && alias w3m='w3m -M'
 
 # shortcut aliases
 #
 alias Grep='grep -rsi '
-#alias cpan='perl -MCPAN -e shell'
 alias dmesgtail='dmesg|tail'
-alias idelist='grep . /proc/ide/hd*/model; grep . /sys/block/*/device/model'
-#alias kcd='cd - ; cd'
-#alias pS='ps axu | grep $USER'
 alias path='echo $PATH'
 alias reload='source $HOME/.bashrc'
-#alias rsync+='rsync -ulptvP'
 alias wm="wget -m -k -np"
 alias zl='zless'
+alias g='git --no-pager'
+alias vimdiff='vi -d'
 qwhich cscope && alias cscope-r='cscope -R -s .'
 qwhich ctags && alias ctags-r='ctags --recurse=yes'
 qwhich indent && alias indent='indent -ce -br -brs -nut -i4 -l120'
-qwhich ntpdate && alias ntpdate_do='sudo ntpdate europe.pool.ntp.org'
-
-# version control aliases
-#
-if qwhich svn; then
-    alias svndiffHEAD="export last=\$(svn info | grep Revision | awk '{print \$2}'); svn up; svn diff -r\$last"
-fi
-if qwhich svk; then
-    alias svk.listdepot='svk list -Rd 1 //'
-    alias svk.status='svk status  | grep -v "^\?"'
-fi
-#alias tlalog="vi \$(tla make-log)"
-#alias tlaadd="tla add-id"
-#tladelete="tla delete-id"
+qwhich mpv && alias mplayeridentify='mpv -noconfig all -vo null -ao null -frames 0 -identify'
 
 # debian aliases
 #
 if [ -f /proc/version ] && egrep -qi "(debian|ubuntu)" /proc/version; then
-    alias ac='apt-cache'
-    alias ag='apt-get'
-    alias ap='aptitude'
     alias acp='apt-cache policy'
     alias acs='apt-cache search'
     alias acS='apt-cache show'
-    #alias apt-show-versions='apt-show-versions -a'
-    #alias dpkg-l='dpkg --get-selections'
-    #alias dpkg-S-dir='for i in *;do echo `pwd`/$i; echo $i >&2 ;done | xargs dpkg -S'
     alias fr='fakeroot'
 fi
 
@@ -94,8 +66,6 @@ fi
 #
 if qwhich screen; then
     alias screen='/usr/bin/screen -e "^Ff" -dUR -T xterm'
-    alias screen1='/usr/bin/screen -e "^Vv" -dUR -T xterm'
-    alias screen2='/usr/bin/screen -e "^Bb" -dUR -T xterm'
     alias screenssh='F=~/tmp/env; [ -f $F ] && (source $F;  rm $F) || (export|grep SSH > $F)'
 fi
 
@@ -119,40 +89,4 @@ if [ -f /proc/net/tcp6 ]; then
     alias ping6.ip6-allnodes='ping6 ff02::1 -I eth0'
     alias ping6.ip6-allrouters='ping6 ff02::2 -I eth0'
     alias ping6.ip6-allhosts='ping6 ff02::3 -I eth0'
-    alias ping6.h1='ping6 www.ipv6.org'
-    alias ping6.h2='ping6 noc.sixxs.net'
-    alias ping6.h3='ping6 www.kame.net'
-    alias ping6.h4='ping6 lkml.org'
-    alias ip6='ip -6'
-    alias nmap6='nmap -6'
 fi
-
-# linux no warranty recode aliases
-#
-if [ "$(uname -s)" = "Linux" ] && qwhich recode; then
- alias unix2dos='recode lat1..ibmpc'
- alias dos2unix='recode ibmpc..lat1'
- alias unix2mac='recode lat1..mac'
- alias mac2unix='recode mac..lat1'
-fi
-
-# mplayer
-#
-if qwhich mplayer; then
-    #alias mplayer='mplayer -stop-xscreensaver'
-    alias mplayeridentify='mplayer -noconfig all -vo null -ao null -frames 0 -identify'
-    alias mplayeralsa2='mplayer -ao alsa:device=hw=1.0'
-    alias mplayerroot='mplayer -fs -rootwin'
-    alias mplayerloud='mplayer -af volume=30'
-fi
-
-if qwhich xine; then
-    alias xine='LC_ALL=C xine'
-    alias xineshuffle='xine -pf -lshuffle -P $HOME/.xine/playlist.tox'
-fi
-
-alias annex='git annex'
-alias amend='git commit --amend'
-alias g='git --no-pager'
-alias vimdiff='vi -d'
-
