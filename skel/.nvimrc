@@ -12,6 +12,7 @@ colorscheme default
 "hi DiffChange     term=bold ctermbg=225
 "hi DiffDelete     term=bold ctermfg=12 ctermbg=159
 
+set mouse=
 
 "----- Setup tabs, use spaces instead of tabs
 set shiftround

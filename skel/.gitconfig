@@ -1,5 +1,5 @@
 [core]
-  pager = 
+  pager = less -FRXK
   bigFileThresholdbigFileThreshold = 10m
 [user]
   name = Mario Manno
@@ -11,20 +11,31 @@
   merge = refs/heads/master
 [alias]
   co = checkout
-  cm = commit
-  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s - %C(dim white)%an %Creset%Cgreen(%cr)%Creset' --abbrev-commit --date=relative -n 30
+  lg = log --graph -n 20
+  lg100 = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s - %C(dim white)%an %Creset%Cgreen(%cr)%Creset' --abbrev-commit --date=relative -n 100
   lg1 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(yellow)%d%C(reset) %s %C(dim white)- %an%C(reset) %C(green)(%ar)%C(reset)' --all -n 40
   lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(cyan)%aD%C(reset) %C(green)(%ar)%C(reset)%C(yellow)%d%C(reset)%n''          %C(reset)%s%C(reset) %C(dim white)- %an%C(reset)' --all -n 100
   st = status
   info = remote -v
   meld = mergetool -t meld -y
   what = whatchanged -n 5
+  fixup = commit --fixup
   commitam = commit -a -m
   commitm = commit -m
   tree = log --oneline --decorate --graph
   unstage = reset HEAD
+  g = grep
+[format]  
+	pretty = format:%Cred%h%Creset -%C(yellow)%d%Creset %s - %C(dim white)%an %Creset%Cgreen(%cr)%Creset
 [color]
   ui = auto
 [branch]
   autosetuprebase = always
 	autosetupmerge = always
+[rerere]
+	enabled = true
+[log]
+	abbrevCommit = true
+	dateRelative = true
+[rebase]
+	autosquash = true

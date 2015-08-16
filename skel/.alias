@@ -153,5 +153,6 @@ fi
 
 alias annex='git annex'
 alias amend='git commit --amend'
-alias g='git'
+alias g='git --no-pager'
+alias vimdiff='vi -d'
 
