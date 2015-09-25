@@ -1,0 +1,15 @@
+TerminalWindow {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+TerminalWindow .notebook {
+  border: 0;
+  padding: 0;
+  font-size: small;
+}
+
+TerminalScreen {
+  -VteTerminal-inner-border: 0;
+}

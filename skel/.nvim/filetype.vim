@@ -31,7 +31,7 @@ autocmd FileType vim      set ts=4 sw=4
 "autocmd FileType xml      let g:xml_syntax_folding = 1 
 
 " strip trailing whitespace
-autocmd FileType ruby,haml,css,html,eruby,coffee,javascript autocmd BufWritePre <buffer> :%s/\s\+$//e
+autocmd FileType ruby,yaml,haml,css,html,eruby,coffee,javascript,markdown autocmd BufWritePre <buffer> :%s/\s\+$//e
 
 " ----- FIXME really finish ?
 if exists("did_load_filetypes")

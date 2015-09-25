@@ -234,7 +234,8 @@ Plug 'Shougo/neocomplcache.vim'
 "let g:neocomplete#force_omni_input_patterns = { 'ruby' : '[^. *\t]\.\|\h\w*::', }
 
 " syntax errors
-Plug 'scrooloose/syntastic'
+"Plug 'scrooloose/syntastic'
+Plug 'benekastah/neomake'
 
 " Colorschemes
 Plug 'jonathanfilip/vim-lucius'
@@ -318,9 +319,8 @@ nnoremap <Leader>b :CtrlPBufTag<cr>
 
 " Syntastic /  Rubocop
 "let g:syntastic_quiet_messages = {'level': 'warnings'}
-"let g:syntastic_ruby_checkers = ['mri', 'rubocop']
-let g:syntastic_ruby_checkers = ['rubocop', 'mri']
-let g:syntastic_ruby_rubocop_args = "-D"
+"let g:syntastic_ruby_checkers = ['rubocop', 'mri']
+"let g:syntastic_ruby_rubocop_args = "-D"
 
 " YCM
 "let g:ycm_register_as_syntastic_checker = 0

@@ -90,3 +90,5 @@ if [ -f /proc/net/tcp6 ]; then
     alias ping6.ip6-allrouters='ping6 ff02::2 -I eth0'
     alias ping6.ip6-allhosts='ping6 ff02::3 -I eth0'
 fi
+
+#alias bundle='http_proxy=127.0.0.1:8123 bundle'

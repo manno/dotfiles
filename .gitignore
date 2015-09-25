@@ -1,1 +1,3 @@
 contrib/
+skel/.nvim/autoload/plug.vim
+skel/.vim/autoload/plug.vim
