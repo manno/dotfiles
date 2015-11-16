@@ -12,7 +12,7 @@ colorscheme default
 "hi DiffChange     term=bold ctermbg=225
 "hi DiffDelete     term=bold ctermfg=12 ctermbg=159
 
-set mouse=
+set mouse=ivh
 
 "----- Setup tabs, use spaces instead of tabs
 set shiftround
@@ -47,11 +47,11 @@ endif
 
 "----- Backups & Files
 set backup                   " Enable creation of backup file.
-set directory=~/.nvim/tmp     " Where temporary files will go.
-set backupdir=~/.nvim/tmp/backups " Where backups will go.
+set directory=~/.config/nvim/swap     " Where temporary files will go.
+set backupdir=~/.config/nvim/backup " Where backups will go.
 if has('persistent_undo')
     set undofile                " So is persistent undo ...
-    set undodir=~/.nvim/tmp/undos
+    set undodir=~/.config/undo
     set undolevels=1000         " Maximum number of changes that can be undone
     set undoreload=10000        " Maximum number lines to save for undo on a buffer reload
 endif
@@ -114,7 +114,7 @@ map <F8>        :setlocal spell spelllang=de_20,de,en<CR>:call WordProcessor(1)<
 map <s-F8>      :setlocal spell spelllang=en<CR>:call WordProcessor(1)<CR>
 map <esc><F8>   :setlocal nospell<CR>:call WordProcessor(0)<CR>
 
-set thesaurus+=~/.vim/spell/thesaurus.txt
+set thesaurus+=~/.config/nvim/spell/thesaurus.txt
 
 " ----- Keys / Mappings / Commands
 "
@@ -158,7 +158,7 @@ command! Wsudo  :w !sudo tee > /dev/null %
 
 command! Tidy :%!/opt/tidy-html5/bin/tidy -w -i -q -f /dev/null
 
-" format json
+" format json 
 com! -range FormatJSON <line1>,<line2>!python -m json.tool
 
 " ----- Converter Mappings
@@ -193,7 +193,7 @@ map! <M-Esc>[65~ <S-MouseUp>
 "" keymap error (F12=[24~) ???
 " set     <F12>=<Char-0xffc9>
 set     <F12>=<Char-96>
-set     <S-F2>=[24~
+set     <S-F2>=[24~   
 set     <S-F3>=[25~
 " UNDO set     <S-F4>=[26~
 " set     <S-F5>=[28~
@@ -201,7 +201,7 @@ set     <S-F3>=[25~
 " set     <S-F7>=[31~
 
 " ----- Plug
-call plug#begin('~/.nvim/plugged')
+call plug#begin('~/.config/nvim/plugged')
 
 " nerd
 Plug 'The-NERD-Commenter'
@@ -228,6 +228,7 @@ Plug 'ctrlpvim/ctrlp.vim'
 " TODO neocomplete instead?
 "Plug 'Shougo/neocomplete.vim'
 Plug 'Shougo/neocomplcache.vim'
+"Plug 'Shougo/deoplete'
 
 "Plug 'osyo-manga/vim-monster'
 "let g:monster#completion#rcodetools#backend = "async_rct_complete"
@@ -317,17 +318,18 @@ let g:ctrlp_map = '<c-t>'
 let g:ctrlp_user_command = 'git ls-files %s'
 nnoremap <Leader>b :CtrlPBufTag<cr>
 
-" Syntastic /  Rubocop
+" Syntastic /  Rubocop 
 "let g:syntastic_quiet_messages = {'level': 'warnings'}
-"let g:syntastic_ruby_checkers = ['rubocop', 'mri']
-"let g:syntastic_ruby_rubocop_args = "-D"
+"let g:syntastic_ruby_checkers = ['mri', 'rubocop']
+let g:syntastic_ruby_checkers = ['rubocop', 'mri']
+let g:syntastic_ruby_rubocop_args = "-D -R"
 
 " YCM
 "let g:ycm_register_as_syntastic_checker = 0
 
 " Neocomplete
 "let g:neocomplete#enable_at_startup = 1
-let g:neocomplcache_enable_at_startup = 1
+let g:neocomplcache_enable_at_startup = 1 
 
 " fugitive git grep
 autocmd QuickFixCmdPost *grep* cwindow

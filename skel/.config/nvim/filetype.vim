@@ -4,7 +4,7 @@
 "
 autocmd FileType c        set ts=2 sw=2 cindent
 autocmd FileType c        set omnifunc=ccomplete#Complete
-autocmd FileType cs       source $HOME/.nvim/configs/filetype_csharp.vim 
+autocmd FileType cs       source $HOME/.config/nvim/config/filetype_csharp.vim 
 autocmd FileType css      set omnifunc=csscomplete#CompleteCSS
 autocmd FileType eruby    set ts=2 sw=2
 autocmd FileType eruby    map _rw i<%= %>
@@ -16,15 +16,15 @@ autocmd FileType csv     set foldmethod=manual
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType lua      set ts=4 sw=4 et smartindent foldmethod=syntax
 autocmd FileType nfo      edit ++enc=cp437 
-autocmd FileType perl     source $HOME/.nvim/configs/filetype_perl.vim 
+autocmd FileType perl     source $HOME/.config/nvim/config/filetype_perl.vim 
 autocmd FileType php      set omnifunc=phpcomplete#CompletePHP
-autocmd FileType plaintex source $HOME/.nvim/configs/filetype_tex.vim 
+autocmd FileType plaintex source $HOME/.config/nvim/config/filetype_tex.vim 
 autocmd FileType python   set omnifunc=pythoncomplete#Complete
-autocmd FileType ruby     source $HOME/.nvim/configs/filetype_ruby.vim 
+autocmd FileType ruby     source $HOME/.config/nvim/config/filetype_ruby.vim 
 autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1 
 autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
 autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
-autocmd FileType tex      source $HOME/.nvim/configs/filetype_tex.vim 
+autocmd FileType tex      source $HOME/.config/nvim/config/filetype_tex.vim 
 autocmd FileType xml      set omnifunc=xmlcomplete#CompleteTags ts=4 sw=4
 autocmd FileType xwt      set ts=2 sw=2 foldmethod=syntax 
 autocmd FileType vim      set ts=4 sw=4
@@ -69,4 +69,5 @@ augroup filetypedetect
     au BufNewFile,BufRead  *.mirah    setf ruby
     au! BufRead *.xwt                 setf xml
     au! BufRead *.go                  setf go
+    autocmd! BufWritePost *.go Neomake
 augroup END
