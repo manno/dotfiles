@@ -37,6 +37,7 @@ set hidden                        " Allow hidden buffers
 set noinsertmode                  " don't don't out in insert mode
 set backspace=indent,eol,start    " allow us to backspace before an insert
 set wildmenu
+set wildignore+=*.o,*.obj,.svn,.git,tags
 "set colorcolumn=120
 
 " jump to the last position when reopening a file
@@ -47,11 +48,9 @@ endif
 
 "----- Backups & Files
 set backup                   " Enable creation of backup file.
-set directory=~/.config/nvim/swap     " Where temporary files will go.
-set backupdir=~/.config/nvim/backup " Where backups will go.
+set backupdir=~/.local/share/nvim/backup " Where backups will go.
 if has('persistent_undo')
     set undofile                " So is persistent undo ...
-    set undodir=~/.config/undo
     set undolevels=1000         " Maximum number of changes that can be undone
     set undoreload=10000        " Maximum number lines to save for undo on a buffer reload
 endif
@@ -121,28 +120,18 @@ set thesaurus+=~/.config/nvim/spell/thesaurus.txt
 " famous paste toggle for xterm vim
 set pastetoggle=<F5>
 
+" buffer next/prev
 noremap <C-n>   :bn<CR>
 noremap <C-p>   :bp<CR>
 
-augroup QFix
-    autocmd!
-    autocmd FileType qf setlocal nobuflisted
-augroup END
-
-" navigate windows
+" navigate windows / splits
 noremap <C-Down>  <C-W>j
 noremap <C-Up>    <C-W>k
 noremap <C-Left>  <C-W>h
 noremap <C-Right> <C-W>l
 
-" use ; for ex commands
-"nnoremap ; :
-
 " quit all buffers - qa/wa
 command! Q      :quitall
-
-" Map omnifunc to <Ctrl> + Space:
-inoremap <Nul> <C-x><C-o>
 
 " debug
 map   <F6>      :command
@@ -150,30 +139,14 @@ map   <F6>      :command
 " make
 map !ma       <ESC>:w<CR>:make<CR>
 
-" exchange two letters, like shell <ctrl-t>
-let @t = "xhPll"
-
-" forgot to open as root?
-command! Wsudo  :w !sudo tee > /dev/null %
-
-command! Tidy :%!/opt/tidy-html5/bin/tidy -w -i -q -f /dev/null
-
-" format json 
-com! -range FormatJSON <line1>,<line2>!python -m json.tool
-
-" ----- Converter Mappings
-"
-" convert to html
-map  _th     :source $VIMRUNTIME/syntax/2html.vim
-" convert to colored tex, use TMiniBufExplorer first
-map  _tt     :source $VIMRUNTIME/syntax/2tex.vim
-" convert to colored ansi
-vmap _ta     :TOansi
+" since ctrl-t is bound to commandt / unite / fzf
+let @t = ":pop"
 
 " SEARCH
 map \g     :Ggrep <C-R><C-W><CR>
 
 " ----- Mousewheel in Xterm
+"
 map <M-Esc>[62~ <MouseDown>
 map! <M-Esc>[62~ <MouseDown>
 map <M-Esc>[63~ <MouseUp>
@@ -200,6 +173,23 @@ set     <S-F3>=[25~
 " LOGO set     <S-F6>=[29~
 " set     <S-F7>=[31~
 
+" forgot to open as root?
+command! Wsudo  :w !sudo tee > /dev/null %
+
+command! Tidy :%!/opt/tidy-html5/bin/tidy -w -i -q -f /dev/null
+
+" format json
+com! -range FormatJSON <line1>,<line2>!python -m json.tool
+
+" ----- Converter Mappings
+"
+" convert to html
+map  _th     :source $VIMRUNTIME/syntax/2html.vim
+" convert to colored tex, use TMiniBufExplorer first
+map  _tt     :source $VIMRUNTIME/syntax/2tex.vim
+" convert to colored ansi
+vmap _ta     :TOansi
+
 " ----- Plug
 "auto-install vim-plug
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
@@ -225,7 +215,9 @@ Plug 'vim-airline'
 " open files
 "Plug 'Shougo/unite.vim'
 "Plug 'Shougo/vimproc.vim', { 'do': 'make' }
-Plug 'ctrlpvim/ctrlp.vim'
+"Plug 'ctrlpvim/ctrlp.vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 
 " you complete me - needs vim 7.3.584
 " https://github.com/Valloric/YouCompleteMe
@@ -234,7 +226,7 @@ Plug 'ctrlpvim/ctrlp.vim'
 " TODO neocomplete instead?
 "Plug 'Shougo/neocomplete.vim'
 Plug 'Shougo/neocomplcache.vim'
-"Plug 'Shougo/deoplete'
+"Plug 'Shougo/deoplete.nvim'
 
 "Plug 'osyo-manga/vim-monster'
 "let g:monster#completion#rcodetools#backend = "async_rct_complete"
@@ -252,7 +244,7 @@ Plug 'endel/vim-github-colorscheme'
 Plug 'chriskempson/vim-tomorrow-theme'
 
 " ctags support
-Plug 'vim-tags'
+Plug 'szw/vim-tags'
 
 " tmux integration
 Plug 'edkolev/tmuxline.vim'
@@ -269,12 +261,12 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-bundler', { 'for': 'ruby' }
 Plug 'tpope/vim-rake', { 'for': 'ruby' }
 Plug 'fatih/vim-go', { 'for': 'go' }
-"Plug 'tpope/vim-rails', { 'for': 'ruby' }
+Plug 'tpope/vim-rails', { 'for': 'ruby' }
 
-" file
+" open files at line
 Plug 'manno/file-line'
 
-" gvim Related
+" gvim related - change project root
 Plug 'airblade/vim-rooter'
 
 " syntax
@@ -290,12 +282,10 @@ call plug#end()
 
 " ----- Plugin Configurations
 "
+
 " CommandT
 "nnoremap <silent> <Leader>t :CommandTTag<CR>
 "nnoremap <silent> <C-t> :CommandT<CR>
-" since we bound ctrl-t to commandt / unite
-let @t = ":pop"
-set wildignore+=*.o,*.obj,.svn,.git,tags
 "let g:CommandTWildIgnore=&wildignore . ",doc/**,tmp/**,test/tmp/**"
 
 " " Unite
@@ -320,18 +310,27 @@ set wildignore+=*.o,*.obj,.svn,.git,tags
 "     nmap <buffer> <C-c> <Plug>(unite_exit)
 " endfunction
 
-let g:ctrlp_map = '<c-t>'
-let g:ctrlp_user_command = 'git ls-files %s'
-nnoremap <Leader>b :CtrlPBufTag<cr>
+" CtrlP
+"let g:ctrlp_map = '<c-t>'
+"let g:ctrlp_user_command = 'git ls-files %s'
+"nnoremap <Leader>b :CtrlPBufTag<cr>
 
 " Syntastic /  Rubocop 
 "let g:syntastic_quiet_messages = {'level': 'warnings'}
-"let g:syntastic_ruby_checkers = ['mri', 'rubocop']
-let g:syntastic_ruby_checkers = ['rubocop', 'mri']
-let g:syntastic_ruby_rubocop_args = "-D -R"
+"let g:syntastic_ruby_checkers = ['rubocop', 'mri']
+"let g:syntastic_ruby_rubocop_args = "-D"
 
 " YCM
 "let g:ycm_register_as_syntastic_checker = 0
+
+" vim-tags
+"let g:vim_tags_ctags_binary = "/opt/universal-ctags/bin/ctags"
+"let g:vim_tags_project_tags_command = "{CTAGS} --recurse {OPTIONS} {DIRECTORY} 2>/dev/null"
+"let g:vim_tags_gems_tags_command = "{CTAGS} --recurse {OPTIONS} `bundle show --paths` 2>/dev/null"
+
+" fzf
+map <C-t> :GitFiles<CR>
+map <C-b> :Buffers<CR>
 
 " Neocomplete
 "let g:neocomplete#enable_at_startup = 1
@@ -350,6 +349,16 @@ let g:airline#extensions#branch#enabled = 0
 "     let g:airline_symbols = {}
 " endif
 " let g:airline_symbols.space = "\ua0"
+
+" don't show quickfix in buffer list
+augroup QFix
+    autocmd!
+    autocmd FileType qf setlocal nobuflisted
+augroup END
+
+
+" Vim Rooter
+let g:rooter_patterns = [ 'package.json', 'Rakefile', '.git', '.git/', '_darcs/', '.hg/', '.bzr/', '.svn/' ]
 
 " ----- Colorschemes
 "colorscheme lucius

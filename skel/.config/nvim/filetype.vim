@@ -8,6 +8,7 @@ autocmd FileType cs       source $HOME/.config/nvim/config/filetype_csharp.vim
 autocmd FileType css      set omnifunc=csscomplete#CompleteCSS
 autocmd FileType eruby    set ts=2 sw=2
 autocmd FileType eruby    map _rw i<%= %>
+autocmd FileType es6      setf javascript
 autocmd FileType go       setlocal noet ts=8 sw=8 sts=8
 autocmd FileType go       map <F4> :GoImports<CR>
 autocmd FileType html     set omnifunc=htmlcomplete#CompleteTags

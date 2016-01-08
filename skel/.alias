@@ -41,6 +41,10 @@ qwhich w3m  && alias w3m='w3m -M'
 # shortcut aliases
 #
 alias Grep='grep -rsi '
+alias grep='grep --color --exclude-dir=.svn --exclude-dir=.git'
+if [ `uname` = "FreeBSD" ]; then 
+    alias grep='grep --color'
+fi
 alias dmesgtail='dmesg|tail'
 alias path='echo $PATH'
 alias reload='source $HOME/.bashrc'

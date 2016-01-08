@@ -55,8 +55,6 @@ bindkey "${key[Insert]}" overwrite-mode
 #  Ctrl-left-arrow and Ctrl-right-arrow for word moving
 #bindkey '\e[5C' forward-word
 #bindkey '\e[5D' backward-word
-bindkey '^b' backward-word
-bindkey '^f' forward-word
 bindkey '^[[1;5C' forward-word
 bindkey '^[[1;5D' backward-word
 
