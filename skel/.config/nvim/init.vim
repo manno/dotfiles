@@ -133,6 +133,9 @@ noremap <C-Right> <C-W>l
 " quit all buffers - qa/wa
 command! Q      :quitall
 
+" close current buffer
+map <M-w>        <ESC>:bw<CR>
+
 " debug
 map   <F6>      :command
 
@@ -245,6 +248,7 @@ Plug 'chriskempson/vim-tomorrow-theme'
 
 " ctags support
 Plug 'szw/vim-tags'
+Plug 'majutsushi/tagbar'
 
 " tmux integration
 Plug 'edkolev/tmuxline.vim'
@@ -331,6 +335,9 @@ call plug#end()
 " fzf
 map <C-t> :GitFiles<CR>
 map <C-b> :Buffers<CR>
+
+" tagbar
+nmap <F5> :TagbarToggle<CR>
 
 " Neocomplete
 "let g:neocomplete#enable_at_startup = 1
