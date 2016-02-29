@@ -40,38 +40,6 @@ if [ "$TERM" != "screen" ]; then
     RPROMPT=$'${del}$(vcs_info_wrapper)$(rvm_prompt_wrapper)%{$reset_color%}'
 fi
 
-# Method 2:  use precmd hook to get vcs info
-#precmd_vcs() { vcs_info }
-#add-zsh-hook precmd precmd_vcs
-#if [ "$TERM" != "screen" ]; then
-#    RPROMPT=$'${del}${vcs_info_msg_0_}${rprompt_time}%{$reset_color%}'
-#fi
-
-# Method 3:  without vcs_info
-# git_prompt_info() {
-#    ref=$(git symbolic-ref HEAD 2> /dev/null) || return
-#    echo "(${ref#refs/heads/})"
-# }
-# 
-# is_svn() {
-#     if [ -d .svn ]; then
-#         if [ -x /usr/bin/svn ]; then
-#             rev=$(svn info 2> /dev/null | grep Revision)
-#             echo "r%{$fg[grey]%}${rev#Revision: }%{$reset_color%}$del"
-#         else
-#             echo "svn$del"
-#         fi
-#     fi
-# }
-# 
-# is_git() {
-#     if [ -x /usr/bin/git ]; then
-#         ref=$(git show-ref 2> /dev/null) || return
-#         echo "%{$fg[grey]%}${ref[37,40]}%{$reset_color%}$del"
-#     fi
-# }
-# RPROMPT=$'${del}$(is_git)$(is_svn)%{$fg[grey]%}${rprompt_time}%{$reset_color%}'
-
 # PROMPT CONFIG
 cPre=$'%{$fg[black]%}%(1j.⚑ .)%{$reset_color%}'
 cPS1=$'%n%{$fg[red]%}@%{$reset_color%}%m%{$fg[red]%}:%{$reset_color%}%~%{$fg[red]%}%# %{$reset_color%}'
