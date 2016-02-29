@@ -13,7 +13,7 @@ autocmd FileType go       setlocal noet ts=8 sw=8 sts=8
 autocmd FileType go       map <F4> :GoImports<CR>
 autocmd FileType html     set omnifunc=htmlcomplete#CompleteTags
 autocmd FileType java     set foldmethod=manual
-autocmd FileType csv     set foldmethod=manual
+"autocmd FileType csv      set nofoldenable
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType lua      set ts=4 sw=4 et smartindent foldmethod=syntax
 autocmd FileType nfo      edit ++enc=cp437 

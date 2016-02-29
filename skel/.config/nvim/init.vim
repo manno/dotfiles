@@ -273,8 +273,19 @@ Plug 'manno/file-line'
 " gvim related - change project root
 Plug 'airblade/vim-rooter'
 
-" syntax
-Plug 'vim-polyglot'
+" polyglot bundles csv.vim and an old version too
+" Instead install separately https://github.com/sheerun/vim-polyglot
+" Plug 'vim-polyglot'
+Plug 'stephpy/vim-yaml', { 'for': 'yaml' }
+Plug 'tpope/vim-git', { 'for': 'git' }
+Plug 'tpope/vim-haml', { 'for': 'haml' }
+Plug 'tpope/vim-markdown', { 'for': 'markdown' }
+Plug 'sheerun/yajs.vim', { 'for': 'javascript' }
+Plug 'honza/dockerfile.vim', { 'for': 'docker' }
+Plug 'JulesWang/css.vim', { 'for': 'css' }
+Plug 'othree/html5.vim', { 'for': 'html' }
+Plug 'mitsuhiko/vim-python-combined', { 'for': 'python' }
+Plug 'vim-scripts/R.vim', { 'for': 'r' }
 
 " git
 Plug 'fugitive.vim'
@@ -334,7 +345,7 @@ call plug#end()
 
 " fzf
 map <C-t> :GitFiles<CR>
-map <C-b> :Buffers<CR>
+map <M-b> :Buffers<CR>
 
 " tagbar
 nmap <F5> :TagbarToggle<CR>
