@@ -20,11 +20,13 @@ au BufEnter *.rb syn match error contained "\<binding.pry\>"
 au BufEnter *.rb syn match error contained "\<byebug\>"
 au BufEnter *.rb syn match error contained "\<debugger\>"
 
-function! neomake#makers#ft#ruby#rubocop()
-    return {
-        \ 'args': ['-D', '-R', '--format', 'emacs'],
+set number
+
+let g:neomake_ruby_rubocop_maker = {
+            \ 'args': ['-D', '-R', '--format', 'emacs', '--fail-level', 'F'],
         \ 'errorformat': '%f:%l:%c: %t: %m',
         \ 'postprocess': function('neomake#makers#ft#ruby#RubocopEntryProcess')
         \ }
-endfunction
+let g:neomake_ruby_enabled_makers = ['rubocop']
+
 autocmd! BufWritePost * Neomake
