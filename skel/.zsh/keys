@@ -6,6 +6,9 @@
 # for tmux export 256color
 [ -n "$TMUX" ] && export TERM=xterm-screen-256color
 
+# disable suspend
+stty -ixon 
+
 bindkey -e                              # EMACS
 # echo checking ~/.zkbd/$TERM-$VENDOR-$OSTYPE
 autoload zkbd
@@ -21,10 +24,10 @@ load_zkdb_file() {
     }
     check_kbd ~/.zkbd/$TERM-${${DISPLAY:t}:-$VENDOR-$OSTYPE}
     if [ "$found_kbd" = "0" ]; then
-    check_kbd ~/.zkbd/$TERM-${DISPLAY:-$VENDOR-$OSTYPE}
+        check_kbd ~/.zkbd/$TERM-${DISPLAY:-$VENDOR-$OSTYPE}
     fi
     if [ "$found_kbd" = "0" ]; then
-    check_kbd ~/.zkbd/$TERM-$VENDOR-$OSTYPE
+        check_kbd ~/.zkbd/$TERM-$VENDOR-$OSTYPE
     fi
     if [ "$found_kbd" = "0" ]; then
         echo

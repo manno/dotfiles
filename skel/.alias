@@ -53,7 +53,7 @@ alias reload='source $HOME/.bashrc'
 alias wm="wget -m -k -np"
 alias zl='zless'
 alias g='git --no-pager'
-alias vimdiff='vi -d'
+alias vimdiff='nvim -d'
 qwhich cscope && alias cscope-r='cscope -R -s .'
 qwhich ctags && alias ctags-r='ctags --recurse=yes'
 qwhich indent && alias indent='indent -ce -br -brs -nut -i4 -l120'
