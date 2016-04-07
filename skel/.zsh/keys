@@ -7,7 +7,7 @@
 [ -n "$TMUX" ] && export TERM=xterm-screen-256color
 
 # disable suspend
-stty -ixon 
+stty -ixon -ixoff
 
 bindkey -e                              # EMACS
 # echo checking ~/.zkbd/$TERM-$VENDOR-$OSTYPE

@@ -121,14 +121,14 @@ set thesaurus+=~/.config/nvim/spell/thesaurus.txt
 set pastetoggle=<F5>
 
 " buffer next/prev
-noremap <C-n>   :bn<CR>
-noremap <C-p>   :bp<CR>
+nnoremap <C-n>   :bn<CR>
+nnoremap <C-p>   :bp<CR>
 
 " navigate windows / splits
-noremap <C-Down>  <C-W>j
-noremap <C-Up>    <C-W>k
-noremap <C-Left>  <C-W>h
-noremap <C-Right> <C-W>l
+nnoremap <C-Down>  <C-W>j
+nnoremap <C-Up>    <C-W>k
+nnoremap <C-Left>  <C-W>h
+nnoremap <C-Right> <C-W>l
 
 " quit all buffers - qa/wa
 command! Q      :quitall
@@ -266,6 +266,7 @@ Plug 'tpope/vim-bundler', { 'for': 'ruby' }
 Plug 'tpope/vim-rake', { 'for': 'ruby' }
 Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'tpope/vim-rails', { 'for': 'ruby' }
+Plug 'janko-m/vim-test'
 
 " open files at line
 Plug 'manno/file-line'
@@ -347,6 +348,10 @@ call plug#end()
 map <C-t> :GitFiles<CR>
 map <M-b> :Buffers<CR>
 
+" vim-test
+nmap <F3> :TestFile<CR>
+let test#strategy = "neovim"
+
 " tagbar
 nmap <F5> :TagbarToggle<CR>
 
@@ -388,3 +393,13 @@ let xml_tag_completion_map = "<C-l>"
 
 " ----- NERDCommenter
 let NERDSpaceDelims = 1
+
+" ----- Terminal
+tnoremap <A-h> <C-\><C-n><C-w>h
+tnoremap <A-j> <C-\><C-n><C-w>j
+tnoremap <A-k> <C-\><C-n><C-w>k
+tnoremap <A-l> <C-\><C-n><C-w>l
+nnoremap <A-h> <C-w>h
+nnoremap <A-j> <C-w>j
+nnoremap <A-k> <C-w>k
+nnoremap <A-l> <C-w>l

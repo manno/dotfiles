@@ -42,7 +42,7 @@
 .bash_profile
 .bashrc
 .config/git/gitk
-.config/nvim/Makefile
+-.config/nvim/Makefile
 .config/nvim/config/filetype_csharp.vim
 .config/nvim/config/filetype_perl.vim
 .config/nvim/config/filetype_ruby.vim

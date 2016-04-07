@@ -71,4 +71,5 @@ augroup filetypedetect
     au! BufRead *.xwt                 setf xml
     au! BufRead *.go                  setf go
     autocmd! BufWritePost *.go Neomake
+    autocmd! BufWritePost *.js Neomake
 augroup END
