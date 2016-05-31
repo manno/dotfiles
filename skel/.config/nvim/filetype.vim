@@ -70,6 +70,7 @@ augroup filetypedetect
     au BufNewFile,BufRead  *.mirah    setf ruby
     au! BufRead *.xwt                 setf xml
     au! BufRead *.go                  setf go
-    autocmd! BufWritePost *.go Neomake
-    autocmd! BufWritePost *.js Neomake
+    au! BufWritePost *.go Neomake
+    au! BufWritePost *.js Neomake
+    au! BufRead PKGBUILD setf sh
 augroup END

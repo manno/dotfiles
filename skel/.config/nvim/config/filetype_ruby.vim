@@ -15,6 +15,8 @@ map  <F4>         :!rubocop -a %<CR>
 
 map  _hr        :s/:\([a-z_]*\) =>/\1:/g<CR>
 
+map  _hr2       :%s/:\([^":]*\) =>/\1:/g<CR>
+
 " Make those debugger statements painfully obvious
 au BufEnter *.rb syn match error contained "\<binding.pry\>"
 au BufEnter *.rb syn match error contained "\<byebug\>"
