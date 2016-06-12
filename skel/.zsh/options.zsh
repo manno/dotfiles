@@ -25,6 +25,3 @@ if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
         CPUTYPE=`arch`
     fi
 fi
-
-
-# vim: ft=zsh ts=4 sw=4

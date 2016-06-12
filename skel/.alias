@@ -53,7 +53,6 @@ alias reload='source $HOME/.bashrc'
 alias wm="wget -m -k -np"
 alias zl='zless'
 alias g='git --no-pager'
-alias vimdiff='nvim -d'
 qwhich cscope && alias cscope-r='cscope -R -s .'
 qwhich ctags && alias ctags-r='ctags --recurse=yes'
 qwhich indent && alias indent='indent -ce -br -brs -nut -i4 -l120'
@@ -98,3 +97,11 @@ if [ -f /proc/net/tcp6 ]; then
 fi
 
 #alias bundle='http_proxy=127.0.0.1:8123 bundle'
+
+if qwhich nvim; then
+alias vimdiff='nvim -d'
+alias vi=nvim
+alias vim=nvim
+fi
+
+alias visudo='sudo visudo -f /etc/sudoers.d/local'

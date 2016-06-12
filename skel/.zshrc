@@ -1,4 +1,4 @@
-# .zshrc: login, interactive shell, after profile (2)
+# .zshrc: interactive shell, after zprofile(login) and zshenv(always)
 # vim: ft=zsh ts=4 sw=4
 
 ## Checks
@@ -26,13 +26,3 @@ path=(/sbin /usr/sbin /usr/local/sbin $path)
 
 ## Load more modules
 autoload zargs
-
-## Profile
-#[[ -f ~/.zprofile ]] && source ~/.zprofile
-
-## Show ssh agent keys
-if [ -x /usr/bin/ssh-add ] && [ "$SSH_AUTH_SOCK" != "" ] && [ -r "$SSH_AUTH_SOCK" ]; then
-    /usr/bin/ssh-add -l
-fi
-
-path=($HOME/.rvm/bin "$path[@]") # Add RVM to PATH for scripting

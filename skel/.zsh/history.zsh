@@ -20,5 +20,3 @@ setopt HIST_EXPIRE_DUPS_FIRST   # throw dupes away if space is limited
 setopt HIST_FIND_NO_DUPS        # no dupes in search
 setopt HIST_IGNORE_SPACE
 setopt HIST_NO_STORE
-
-# vim: ft=zsh ts=4 sw=4

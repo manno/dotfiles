@@ -30,9 +30,11 @@ vcs_info_wrapper() {
 }
 
 rvm_prompt_wrapper () {
-    ruby_version=$(~/.rvm/bin/rvm-prompt | sed 's/ruby-//')
-    if [ -n "$ruby_version" ]; then
-        echo "%{$fg[green]%}[%{$fg[magenta]%}$ruby_version%{$fg[green]%}]%{$reset_color%}"
+    if [ -x ~/.rvm/bin/rvm-prompt ]; then
+        ruby_version=$(~/.rvm/bin/rvm-prompt | sed 's/ruby-//')
+        if [ -n "$ruby_version" ]; then
+            echo "%{$fg[green]%}[%{$fg[magenta]%}$ruby_version%{$fg[green]%}]%{$reset_color%}"
+        fi
     fi
 }
 
@@ -53,5 +55,3 @@ promptinit
 # just select language in gdm and set locales to en_GB.UTF-8
 # needed again:
 echo -ne '\e%G'
-
-# vim: ft=zsh ts=4 sw=4

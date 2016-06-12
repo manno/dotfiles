@@ -30,6 +30,7 @@ load_zkdb_file() {
         check_kbd ~/.zkbd/$TERM-$VENDOR-$OSTYPE
     fi
     if [ "$found_kbd" = "0" ]; then
+        echo -e "\e[0;36m"
         echo
         echo not found: ~/.zkbd/$TERM-${DISPLAY:-$VENDOR-$OSTYPE}
         echo not found: ~/.zkbd/$TERM-$VENDOR-$OSTYPE
@@ -69,5 +70,3 @@ bindkey '^[[1;5D' backward-word
 # all
 bindkey ' ' magic-space                 # also do history expansion on space
 bindkey '^I' complete-word              # complete on tab, leave expansion to _expand
-
-# vim: ft=zsh ts=4 sw=4

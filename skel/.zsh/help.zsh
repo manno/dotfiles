@@ -1,5 +1,4 @@
 # Local Settings
-# vim: ft=zsh ts=4 sw=4
 # A quick globbing reference, stolen from GRML.
 help-aliases () {
 echo -e "

@@ -53,5 +53,3 @@ compinit -i
 # functions to make completion for git aliases work
 _git_co() { _git_checkout }
 _git_lg() { _git_log }
-
-# vim: ft=zsh ts=4 sw=4
