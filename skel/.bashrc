@@ -31,4 +31,3 @@ test -e ~/.env && . ~/.env
 test -e ~/.env.localhost && . ~/.env.localhost
 test -e /etc/environment && . /etc/environment
 export LANG LC_ALL
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*

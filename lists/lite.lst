@@ -41,7 +41,7 @@
 .zkbd/xterm-screen-256color-pc-linux-gnu
 .zkbd/xterm-screen-256color-unknown-linux-gnu
 .zkbd/xterm-unknown-linux-gnu
-.zlogin
+-.zlogin
 .zsh/.zshenv
 .zsh/aliases.zsh
 .zsh/completion.zsh

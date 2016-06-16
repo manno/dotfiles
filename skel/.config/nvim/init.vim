@@ -228,8 +228,12 @@ Plug 'junegunn/fzf.vim'
 
 " TODO neocomplete instead?
 "Plug 'Shougo/neocomplete.vim'
-Plug 'Shougo/neocomplcache.vim'
+"Plug 'Shougo/neocomplcache.vim'
 "Plug 'Shougo/deoplete.nvim'
+function! DoRemote(arg)
+  UpdateRemotePlugins
+endfunction
+Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
 
 "Plug 'osyo-manga/vim-monster'
 "let g:monster#completion#rcodetools#backend = "async_rct_complete"
@@ -357,7 +361,8 @@ nmap <F5> :TagbarToggle<CR>
 
 " Neocomplete
 "let g:neocomplete#enable_at_startup = 1
-let g:neocomplcache_enable_at_startup = 1 
+"let g:neocomplcache_enable_at_startup = 1 
+let g:deoplete#enable_at_startup = 1
 
 " fugitive git grep
 autocmd QuickFixCmdPost *grep* cwindow

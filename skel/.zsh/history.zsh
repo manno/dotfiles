@@ -1,10 +1,9 @@
 # Enable compsys completion.
 # hist vars
 HISTSIZE=200000
-if [ -z $SUDO_USER ]; then
-    HISTFILE=~/.zsh_history
-    HISTFILE_OLD=~/.zsh_history.old
-else
+HISTFILE=~/.zsh_history
+HISTFILE_OLD=~/.zsh_history.old
+if [ $SUDO_USER ] && [ $USER = "root" ]; then
     HISTFILE=~/.zsh_history-sudo
     HISTFILE_OLD=~/.zsh_history-sudo.old
 fi

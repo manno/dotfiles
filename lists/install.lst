@@ -84,7 +84,7 @@
 .zkbd/xterm-pc-linux-gnu
 .zkbd/xterm-portbld-freebsd9.0
 .zkbd/xterm-unknown-linux-gnu
-.zlogin
+-.zlogin
 .zsh/.zshenv
 .zsh/aliases.zsh
 .zsh/completion.zsh
