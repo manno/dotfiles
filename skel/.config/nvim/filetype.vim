@@ -29,6 +29,7 @@ autocmd FileType tex      source $HOME/.config/nvim/config/filetype_tex.vim
 autocmd FileType xml      set omnifunc=xmlcomplete#CompleteTags ts=4 sw=4
 autocmd FileType xwt      set ts=2 sw=2 foldmethod=syntax 
 autocmd FileType vim      set ts=4 sw=4
+autocmd FileType zsh      set ts=4 sw=4 et
 "autocmd FileType xml      let g:xml_syntax_folding = 1 
 
 " strip trailing whitespace

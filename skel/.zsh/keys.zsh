@@ -19,6 +19,7 @@ load_zkdb_file() {
         file=$1
         if [ -f "$file" ]; then
             found_kbd="1"
+            export ZKBD_SOURCE="$file"
             source "$file"
         fi
     }
