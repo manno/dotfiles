@@ -48,7 +48,6 @@ if [ `uname` = "FreeBSD" ]; then
     alias grep='grep --color'
 fi
 alias dmesgtail='dmesg|tail'
-alias path='echo $PATH'
 alias reload='source $HOME/.bashrc'
 alias wm="wget -m -k -np"
 alias zl='zless'

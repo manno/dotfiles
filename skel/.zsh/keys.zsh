@@ -4,7 +4,7 @@
 #[ -n "$KONSOLE_PROFILE_NAME" ] && export TERM=konsole-256color 
 [ -n "$KONSOLE_PROFILE_NAME" ] && export TERM=xterm-256color 
 # for tmux export 256color
-[ -n "$TMUX" ] && export TERM=xterm-screen-256color
+#[ -n "$TMUX" ] && export TERM=xterm-screen-256color
 
 # disable suspend
 stty -ixon -ixoff

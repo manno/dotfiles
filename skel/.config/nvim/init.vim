@@ -386,7 +386,7 @@ augroup END
 
 
 " Vim Rooter
-let g:rooter_patterns = [ 'package.json', 'Rakefile', '.git', '.git/', '_darcs/', '.hg/', '.bzr/', '.svn/' ]
+let g:rooter_patterns = [ 'package.json', 'README.md', 'Rakefile', '.git', '.git/', '_darcs/', '.hg/', '.bzr/', '.svn/' ]
 
 " ----- Colorschemes
 "colorscheme lucius

@@ -44,7 +44,7 @@ fi
 
 # PROMPT CONFIG
 cPre=$'%{$fg[black]%}%(1j.⚑ .)%{$reset_color%}'
-cPS1=$'%n%{$fg[red]%}@%{$reset_color%}%m%{$fg[red]%}:%{$reset_color%}%~%{$fg[red]%}%# %{$reset_color%}'
+cPS1=$'%n%{$fg[magenta]%}@%{$reset_color%}%m%{$fg[magenta]%}:%{$reset_color%}%~%{$fg[magenta]%}%# %{$reset_color%}'
 PROMPT=${cPre}${debian_chroot}${cPS1}
 
 # promptinit

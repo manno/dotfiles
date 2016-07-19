@@ -33,7 +33,7 @@ autocmd FileType zsh      set ts=4 sw=4 et
 "autocmd FileType xml      let g:xml_syntax_folding = 1 
 
 " strip trailing whitespace
-autocmd FileType ruby,yaml,haml,css,html,eruby,coffee,javascript,markdown autocmd BufWritePre <buffer> :%s/\s\+$//e
+autocmd FileType ruby,yaml,haml,css,html,eruby,coffee,javascript,markdown,sh autocmd BufWritePre <buffer> :%s/\s\+$//e
 
 " ----- FIXME really finish ?
 if exists("did_load_filetypes")

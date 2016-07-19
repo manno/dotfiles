@@ -149,3 +149,29 @@ Previously typed commands
 ^string1^string2       this REPEATS the last command replacing string1 with string2. I love to use this one on lengthy commands that I need to repeat slightly changed again.
 "
 }
+
+# command line editing keys
+help-keys () {
+echo -e "
+
+    alt-h   help on current command?
+    alt-f   word forw
+    alt-b   word backw
+
+    esc q   kill line, restore after next command
+    esc-t   transpose words
+    ctrl-d  delete
+         a  beginning of line
+         e  end of line
+         w  kill last word
+         k  kill to eol
+         f  right
+         b  lefth
+         r  search history
+         s  fwd search?
+         n  histor next
+         p  history prev
+         x  jump start, again jump back?
+
+"
+}
