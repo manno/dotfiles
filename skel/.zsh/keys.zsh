@@ -1,16 +1,9 @@
 # keys
 
-# fix TERM variable
-#[ -n "$KONSOLE_PROFILE_NAME" ] && export TERM=konsole-256color 
-[ -n "$KONSOLE_PROFILE_NAME" ] && export TERM=xterm-256color 
-# for tmux export 256color
-#[ -n "$TMUX" ] && export TERM=xterm-screen-256color
-
 # disable suspend
 stty -ixon -ixoff
 
 bindkey -e                              # EMACS
-# echo checking ~/.zkbd/$TERM-$VENDOR-$OSTYPE
 autoload zkbd
 
 load_zkdb_file() {
@@ -19,23 +12,16 @@ load_zkdb_file() {
         file=$1
         if [ -f "$file" ]; then
             found_kbd="1"
-            export ZKBD_SOURCE="$file"
             source "$file"
         fi
     }
-    check_kbd ~/.zkbd/$TERM-${${DISPLAY:t}:-$VENDOR-$OSTYPE}
-    if [ "$found_kbd" = "0" ]; then
-        check_kbd ~/.zkbd/$TERM-${DISPLAY:-$VENDOR-$OSTYPE}
-    fi
-    if [ "$found_kbd" = "0" ]; then
         check_kbd ~/.zkbd/$TERM-$VENDOR-$OSTYPE
-    fi
     if [ "$found_kbd" = "0" ]; then
         echo -e "\e[0;36m"
         echo
-        echo not found: ~/.zkbd/$TERM-${DISPLAY:-$VENDOR-$OSTYPE}
         echo not found: ~/.zkbd/$TERM-$VENDOR-$OSTYPE
         zkbd
+        cp ~/.zkbd/$TERM-${${DISPLAY:t}:-$VENDOR-$OSTYPE} ~/.zkbd/$TERM-$VENDOR-$OSTYPE
     fi
 }
 
