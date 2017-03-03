@@ -15,7 +15,7 @@ load_zkdb_file() {
             source "$file"
         fi
     }
-        check_kbd ~/.zkbd/$TERM-$VENDOR-$OSTYPE
+    check_kbd ~/.zkbd/$TERM-$VENDOR-$OSTYPE
     if [ "$found_kbd" = "0" ]; then
         echo -e "\e[0;36m"
         echo
