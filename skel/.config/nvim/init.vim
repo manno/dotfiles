@@ -49,6 +49,7 @@ endif
 "----- Backups & Files
 set backup                   " Enable creation of backup file.
 set backupdir=~/.local/share/nvim/backup " Where backups will go.
+set undodir=~/.local/share/vim/undo " Where backups will go.
 if has('persistent_undo')
     set undofile                " So is persistent undo ...
     set undolevels=1000         " Maximum number of changes that can be undone
