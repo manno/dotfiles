@@ -1,9 +1,9 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # executed by .bash_profile too
-    
+
 # If running interactively, then:
 if [ -n "$PS1" ]; then
-    
+
     # enable color support of ls and also add handy aliases
     if [ `uname` != "FreeBSD" ]; then
       eval `dircolors -b`
@@ -25,6 +25,9 @@ if [ -n "$PS1" ]; then
     esac
 
 fi
+
+# always save history
+export PROMPT_COMMAND="history -a"
 
 # machine specifix
 test -e ~/.env && . ~/.env
