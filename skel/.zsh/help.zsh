@@ -98,7 +98,7 @@ echo -e "
 "
 }
 
-help-keys() {
+help-keys-long() {
 echo -e "
 Cutting  & Pasting
 ===================
@@ -141,12 +141,6 @@ ctrl-v                  next control key is shown in cmdline (usefull for bind)
 ctrl-s                  argh
 ctrl-q                  ah
 
-Previously typed commands
-==========================
-!!                     previous command
-!xxx                   where xxx is the most recent command STARTING with xxx
-!?xxx                  where xxx is the most recent command CONTAINING xxx (Note: the above command will not find the command if it doesn't start with your pattern. realizing this will save you a little bit of trouble.
-^string1^string2       this REPEATS the last command replacing string1 with string2. I love to use this one on lengthy commands that I need to repeat slightly changed again.
 "
 }
 
@@ -154,24 +148,28 @@ Previously typed commands
 help-keys () {
 echo -e "
 
+    alt-b   word backward
+    alt-f   word forward
     alt-h   help on current command?
-    alt-f   word forw
-    alt-b   word backw
 
-    esc q   kill line, restore after next command
+    esc-backspace delete word 
+    esc-q   kill line, restore after next command
     esc-t   transpose words
-    ctrl-d  delete
-         a  beginning of line
-         e  end of line
-         w  kill last word
-         k  kill to eol
-         f  right
-         b  lefth
-         r  search history
-         s  fwd search?
-         n  histor next
-         p  history prev
-         x  jump start, again jump back?
+
+    ctrl-a  jump to beginning of line
+    ctrl-b  backward char
+    ctrl-d  delete char
+    ctrl-e  jump to end of line
+    ctrl-f  forward char
+    ctrl-k  kill to eol
+    ctrl-n  history next
+    ctrl-o  in history, execute command, bring up next
+    ctrl-p  history prev
+    ctrl-r  search history
+    ctrl-s  forward search?
+    ctrl-w  kill last word
+    ctrl-x  jump start, again jump back?
+    ctrl-y  yank copied text
 
 "
 }
