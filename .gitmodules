@@ -1,0 +1,6 @@
+[submodule "repos/nvim-config"]
+	path = repos/nvim-config
+	url = https://github.com/manno/nvim-config
+[submodule "repos/zsh-config"]
+	path = repos/zsh-config
+	url = https://github.com/manno/zsh-config.git
