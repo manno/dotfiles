@@ -4,3 +4,6 @@
 [submodule "repos/zsh-config"]
 	path = repos/zsh-config
 	url = https://github.com/manno/zsh-config.git
+[submodule "repos/vim-config"]
+	path = repos/vim-config
+	url = https://github.com/manno/vim-config.git
