@@ -32,6 +32,10 @@
   tree = log --oneline --decorate --graph
   unstage = reset HEAD
   what = whatchanged -n 5
+  dci = duet-commit -v
+  drv = duet-revert
+  dmg = duet-merge
+  drb = rebase -i --exec 'git duet-commit --amend --reset-author'
 [format]  
 	pretty = format:%Cred%h%Creset -%C(yellow)%d%Creset %s - %C(dim white)%an %Creset%Cgreen(%cr)%Creset
 [color]
