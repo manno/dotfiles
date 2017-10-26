@@ -50,3 +50,5 @@
 	dateRelative = true
 [rebase]
 	autosquash = true
+[mergetool "fugitive"]
+	cmd = nvim -f -c \"Gvdiff\" \"$MERGED\"
