@@ -1,1 +1,2 @@
-skel/.vim/autoload/plug.vim
+/tags
+/Gemfile.lock.tags
