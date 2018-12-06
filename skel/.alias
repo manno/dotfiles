@@ -1,14 +1,14 @@
 # Aliases
 function qwhich () 
 { 
-    which $1 &> /dev/null 
+    [ -x "$(command -v $1)" ]
 }
 
 # ls aliases
 #
 alias ls='ls --color=auto'
 if [ `uname` = "FreeBSD" ]; then 
-  unalias ls
+    unalias ls
 fi
 alias l='ls -lh'
 alias ll='ls -la'
@@ -74,7 +74,7 @@ if qwhich screen; then
 fi
 
 if qwhich tmux; then
-  alias screen='tmux attach'
+    alias screen='tmux attach'
 fi
 
 if qwhich byobu; then
@@ -96,9 +96,9 @@ if [ -f /proc/net/tcp6 ]; then
 fi
 
 if qwhich nvim; then
-alias vimdiff='nvim -d'
-alias vi=nvim
-alias vim=nvim
+    alias vimdiff='nvim -d'
+    alias vi=nvim
+    alias vim=nvim
 fi
 
 alias visudo='sudo visudo -f /etc/sudoers.d/local'

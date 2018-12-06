@@ -52,3 +52,5 @@
 	autosquash = true
 [mergetool "fugitive"]
 	cmd = nvim -f -c \"Gvdiff\" \"$MERGED\"
+[commit]
+	verbose = true
