@@ -1,0 +1,6 @@
+{
+  "Enable": ["vet","errcheck","golint"],
+  "Disable": ["gotype"],
+  "Fast": true,
+  "Exclude": ["exported \\w+ (\\S*['.]*)([a-zA-Z'.*]*) should have comment or be unexported"]
+}
