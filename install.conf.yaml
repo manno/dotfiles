@@ -1,3 +1,7 @@
+- defaults:
+    link:
+      force: false
+
 - clean: ['~']
 
 - shell:
@@ -6,23 +10,23 @@
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
   - [mkdir -p ~/bin, Create bin dir]
-  - [mkdir -p ~/co, Create checkout dir]
   - [mkdir -p ~/tmp, Create tmp dir]
 
 - link:
-  ~/.config/nvim: repos/nvim-config
-  ~/co: ~/co/workspace
+    ~/.config/nvim: repos/nvim-config
+    ~/.vimrc: repos/vim-config/.vimrc
+    ~/.vim: repos/vim-config/.vim
 
-  ~/.alias: skel/.alias
-  ~/.bash_profile: skel/.bash_profile
-  ~/.bashrc: skel/.bashrc
-  ~/.env: skel/.env
-  ~/.gitconfig: skel/.gitconfig
-  ~/.inputrc: skel/.inputrc
-  ~/.profile: skel/.profile
-  ~/.tmux.conf: skel/.tmux.conf
+    ~/.alias: skel/.alias
+    ~/.bash_profile: skel/.bash_profile
+    ~/.bashrc: skel/.bashrc
+    ~/.env: skel/.env
+    ~/.gitconfig: skel/.gitconfig
+    ~/.inputrc: skel/.inputrc
+    ~/.profile: skel/.profile
+    ~/.tmux.conf: skel/.tmux.conf
 
-  ~/.zkbd: repos/zsh-config/.zkbd
-  ~/.zsh: repos/zsh-config/.zsh
-  ~/.zshenv: repos/zsh-config/.zshenv
-  ~/.zshrc: repos/zsh-config/.zshrc
+    ~/.zkbd: repos/zsh-config/.zkbd
+    ~/.zsh: repos/zsh-config/.zsh
+    ~/.zshenv: repos/zsh-config/.zshenv
+    ~/.zshrc: repos/zsh-config/.zshrc
