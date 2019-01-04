@@ -7,3 +7,6 @@
 [submodule "repos/vim-config"]
 	path = repos/vim-config
 	url = https://github.com/manno/vim-config.git
+[submodule "repos/dotbot"]
+	path = repos/dotbot
+	url = https://github.com/anishathalye/dotbot

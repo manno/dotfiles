@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Description: helps updating skel directory and lists
 
 set -e -o pipefail
