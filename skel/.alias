@@ -101,4 +101,8 @@ if qwhich nvim; then
     alias vim=nvim
 fi
 
+if qwhich gpaste-client; then 
+    alias pbpaste='gpaste-client get 0' 
+fi
+
 alias visudo='sudo visudo -f /etc/sudoers.d/local'
