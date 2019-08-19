@@ -13,7 +13,9 @@
   - [mkdir -p ~/tmp, Create tmp dir]
 
 - link:
-    ~/.config/nvim: repos/nvim-config
+    ~/.config/nvim/init.vim: repos/nvim-config/init.vim
+    ~/.config/nvim/filetype.vim: repos/nvim-config/filetype.vim
+    ~/.config/nvim/coc-settings.json: repos/nvim-config/coc-settings.json
     ~/.vimrc: repos/vim-config/.vimrc
     ~/.vim: repos/vim-config/.vim
 

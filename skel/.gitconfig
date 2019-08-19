@@ -2,7 +2,8 @@
   pager = less -FRXK
   bigFileThresholdbigFileThreshold = 10m
 [user]
-  name = Mario Manno
+	name = Mario Manno
+	email = root@localhost
 [push]
   default = current
 [branch "master"]
