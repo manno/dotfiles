@@ -1,0 +1,42 @@
+[global_config]
+  title_transmit_bg_color = "#729fcf"
+[keybindings]
+  copy = <Super>c
+  full_screen = <Super>Return
+  go_next = <Super>bracketright
+  go_prev = <Super>bracketleft
+  insert_number = None
+  new_tab = <Super>t
+  new_window = <Primary><Shift>n
+  next_tab = <Super>Right
+  paste = <Super>v
+  prev_tab = <Super>Left
+  scaled_zoom = <Shift><Super>Return
+  search = <Super>f
+  split_horiz = <Shift><Super>d
+  split_vert = <Super>d
+  switch_to_tab_1 = <Super>1
+  switch_to_tab_10 = None
+  switch_to_tab_2 = <Super>2
+  switch_to_tab_3 = <Super>3
+  switch_to_tab_4 = <Super>4
+  switch_to_tab_5 = <Super>5
+[layouts]
+  [[default]]
+    [[[child1]]]
+      parent = window0
+      type = Terminal
+    [[[window0]]]
+      parent = ""
+      type = Window
+[plugins]
+[profiles]
+  [[default]]
+    background_color = "#002b36"
+    background_darkness = 0.85
+    copy_on_selection = True
+    cursor_color = "#aaaaaa"
+    foreground_color = "#839496"
+    palette = "#000000:#cc0000:#4e9a06:#c4a000:#3465a4:#75507b:#06989a:#d3d7cf:#555753:#ef2929:#8ae234:#fce94f:#729fcf:#ad7fa8:#34e2e2:#eeeeec"
+    scrollback_infinite = True
+    show_titlebar = False

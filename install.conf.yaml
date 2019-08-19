@@ -23,7 +23,6 @@
     ~/.bash_profile: skel/.bash_profile
     ~/.bashrc: skel/.bashrc
     ~/.env: skel/.env
-    ~/.gitconfig: skel/.gitconfig
     ~/.inputrc: skel/.inputrc
     ~/.profile: skel/.profile
     ~/.tmux.conf: skel/.tmux.conf
@@ -33,3 +32,7 @@
     ~/.zsh: repos/zsh-config/.zsh
     ~/.zshenv: repos/zsh-config/.zshenv
     ~/.zshrc: repos/zsh-config/.zshrc
+
+# these can't be linked
+- shell:
+  - [cp -i ~/.gitconfig ~/, has local modifications]
