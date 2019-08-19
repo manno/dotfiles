@@ -25,6 +25,7 @@
     ~/.inputrc: skel/.inputrc
     ~/.profile: skel/.profile
     ~/.tmux.conf: skel/.tmux.conf
+    ~/.fzf.zsh: skel/.fzf.zsh
 
     ~/.zkbd: repos/zsh-config/.zkbd
     ~/.zsh: repos/zsh-config/.zsh
