@@ -41,3 +41,6 @@ org.gnome.desktop.wm.keybindings unmaximize []
 
 org.gnome.mutter.keybindings toggle-tiled-right "['<Alt><Super>Right']"
 org.gnome.mutter.keybindings toggle-tiled-left "['<Alt><Super>Left']"
+
+#dconf write /org/gnome/desktop/input-sources/xkb-options "['caps:escape']"
+dconf write /org/gnome/desktop/input-sources/xkb-options "['caps:escape', 'compose:ralt']"
