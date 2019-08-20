@@ -11,9 +11,11 @@
   - [git submodule update --init --recursive, Installing submodules]
   - [mkdir -p ~/bin, Create bin dir]
   - [mkdir -p ~/tmp, Create tmp dir]
+  - [mkdir -p ~/.zsh ~/.config/nvim, Create config dirs]
 
 - link:
     ~/.config/nvim/init.vim: repos/nvim-config/init.vim
+    ~/.config/nvim/config: repos/nvim-config/config
     ~/.config/nvim/filetype.vim: repos/nvim-config/filetype.vim
     ~/.config/nvim/coc-settings.json: repos/nvim-config/coc-settings.json
     ~/.vimrc: repos/vim-config/.vimrc
@@ -29,9 +31,14 @@
     ~/.fzf.zsh: skel/.fzf.zsh
 
     ~/.zkbd: repos/zsh-config/.zkbd
-    ~/.zsh: repos/zsh-config/.zsh
     ~/.zshenv: repos/zsh-config/.zshenv
     ~/.zshrc: repos/zsh-config/.zshrc
+    ~/.zsh/:
+      glob: true
+      path: repos/zsh-config/.zsh/*.zsh
+      relink: true
+    ~/.zsh/func: repos/zsh-config/.zsh/func
+    ~/.zsh/plugins: repos/zsh-config/.zsh/plugins
 
 # these can't be linked
 - shell:
