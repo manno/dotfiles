@@ -18,9 +18,12 @@ print_existing_diff() {
       puts "vi -d skel/#{f} #{h}/#{f}"
     else
       l="ln -s #{p}/#{f} $HOME/#{f}"
+      l.gsub!(/skel/, "repos/zsh-config") if f.match(/zsh/)
+      l.gsub!(/skel/, "repos/nvim-config") if f.match(/nvim/)
       if /diff:.*#{h}.*: No such file/
         puts "# #{l}"
       else
+        next if File.symlink?(File.join(h, f)) || f.match("nvim/config") || f.match("zsh/func")
         puts "# rm $HOME/#{f}; #{l}"
       end
     end
