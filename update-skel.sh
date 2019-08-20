@@ -11,7 +11,20 @@ print_existing_diff() {
     grep -v $0 | \
     grep -v '.gitkeep' | \
     sort | \
-    ruby -ne 'h=ENV["HOME"];f=$_.chomp.gsub(/\A\.\//,"");$_=%x(diff -q "#{f}" #{h}/#{f} 2>&1);if /differ/; puts "vi -d skel/#{f} #{h}/#{f}"; elsif /diff:.*#{h}.*: No such file/; puts "cp skel/#{f} #{h}/#{f}"; end'
+    ruby -ne '
+    h=ENV["HOME"];f=$_.chomp.gsub(/\A\.\//,"");$_=%x(diff -q "#{f}" #{h}/#{f} 2>&1)
+    p=ENV["PWD"].gsub(/#{h}/, "$HOME")
+    if /differ/
+      puts "vi -d skel/#{f} #{h}/#{f}"
+    else
+      l="ln -s #{p}/#{f} $HOME/#{f}"
+      if /diff:.*#{h}.*: No such file/
+        puts "# #{l}"
+      else
+        puts "# rm $HOME/#{f}; #{l}"
+      end
+    end
+' | sort
 
   # | egrep -v 'vi -d (skel/.bash_profile|skel/.profile)'
 }
