@@ -30,6 +30,10 @@
     ~/.tmux.conf: skel/.tmux.conf
     ~/.fzf.zsh: skel/.fzf.zsh
 
+    ~/.config/konsole/konsolerc: skel/.config/konsole/konsolerc
+    ~/.local/share/konsole/konsole.css: skel/.local/share/konsole/konsole.css
+    ~/.local/share/konsole/Shell.profile: skel/.local/share/konsole/Shell.profile
+
     ~/.zkbd: repos/zsh-config/.zkbd
     ~/.zshenv: repos/zsh-config/.zshenv
     ~/.zshrc: repos/zsh-config/.zshrc
