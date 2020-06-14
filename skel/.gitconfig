@@ -21,16 +21,19 @@
   g = grep
   info = remote -v
   lg = log --graph -n 20
+  lgm = log --graph -n 20 --merges
   lg1 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(yellow)%d%C(reset) %s %C(dim white)- %an%C(reset) %C(green)(%ar)%C(reset)' --all -n 40
   lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(cyan)%aD%C(reset) %C(green)(%ar)%C(reset)%C(yellow)%d%C(reset)%n''          %C(reset)%s%C(reset) %C(dim white)- %an%C(reset)' --all -n 100
-  logf = log --pretty=fuller --date=short -n 100
+  logf = log --pretty=fuller --date=short
   meld = mergetool -t meld -y
   rb = rebase
   rba = rebase --abort
   rbc = rebase --continue
   rbi = rebase -i origin/master
+  rom = rebase origin/master
   schemarb = commit -m 'update schema.rb' db/schema.rb
   st = status --short
+  sw = switch
   tree = log --oneline --decorate --graph
   unstage = reset HEAD
   what = whatchanged -n 5
@@ -52,6 +55,7 @@
 	dateRelative = true
 [rebase]
 	autosquash = true
+	autoStash = true
 [mergetool "fugitive"]
 	cmd = nvim -f -c \"Gvdiff\" \"$MERGED\"
 [commit]

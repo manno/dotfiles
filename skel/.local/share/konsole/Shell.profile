@@ -22,7 +22,8 @@ ShowTerminalSizeHint=false
 
 [Interaction Options]
 AutoCopySelectedText=true
-TrimTrailingSpacesInSelectedText=true
+CopyTextAsHTML=false
+TrimTrailingSpacesInSelectedText=false
 
 [Scrolling]
 HistoryMode=2

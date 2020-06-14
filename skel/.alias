@@ -47,7 +47,7 @@ alias grep='grep --color --exclude-dir=.svn --exclude-dir=.git'
 if [ `uname` = "FreeBSD" ]; then 
     alias grep='grep --color'
 fi
-alias dmesgtail='dmesg|tail'
+alias dmesgtail='dmesg -T|tail'
 alias reload='source $HOME/.bashrc'
 alias wm="wget -m -k -np"
 alias zl='zless'
