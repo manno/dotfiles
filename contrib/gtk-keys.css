@@ -1,0 +1,114 @@
+/*
+  mkdir -p ~/.themes/mm/gtk-3.0
+  cp gtk-keys.css ~/.themes/mm/gtk-3.0
+  gsettings set org.gnome.desktop.interface gtk-key-theme mm
+ */
+
+@binding-set gtk-mac-cmd-c
+{
+  bind "<super>x" { "cut-clipboard" () };
+  bind "<super>c" { "copy-clipboard" () };
+  bind "<super>v" { "paste-clipboard" () };
+  unbind "<ctrl>x";
+  unbind "<ctrl>c";
+  unbind "<ctrl>v";
+}
+
+@binding-set gtk-mac-entry
+{
+  bind "<super>a" {
+    "move-cursor" (buffer-ends, -1, 0)
+    "move-cursor" (buffer-ends, 1, 1)
+  };
+  bind "<shift><super>a" { "move-cursor" (visual-positions, 0, 0) };
+
+  bind "<ctrl>b" { "move-cursor" (logical-positions, -1, 0) };
+  bind "<shift><ctrl>b" { "move-cursor" (logical-positions, -1, 1) };
+  bind "<ctrl>f" { "move-cursor" (logical-positions, 1, 0) };
+  bind "<shift><ctrl>f" { "move-cursor" (logical-positions, 1, 1) };
+
+  bind "<alt>b" { "move-cursor" (words, -1, 0) };
+  bind "<shift><alt>b" { "move-cursor" (words, -1, 1) };
+  bind "<alt>f" { "move-cursor" (words, 1, 0) };
+  bind "<shift><alt>f" { "move-cursor" (words, 1, 1) };
+
+  bind "<ctrl>a" { "move-cursor" (paragraph-ends, -1, 0) };
+  bind "<shift><ctrl>a" { "move-cursor" (paragraph-ends, -1, 1) };
+  bind "<ctrl>e" { "move-cursor" (paragraph-ends, 1, 0) };
+  bind "<shift><ctrl>e" { "move-cursor" (paragraph-ends, 1, 1) };
+
+  bind "<ctrl>d" { "delete-from-cursor" (chars, 1) };
+}
+
+@binding-set gtk-mac-text-view
+{
+  bind "<shift><super>a" { "select-all" (0) };
+  bind "<super>a" { "select-all" (1) };
+}
+
+/* @binding-set gtk-mac-label                                         */
+/* {                                                                  */
+/*   bind "<super>a" {                                                */
+/*     "move-cursor" (paragraph-ends, -1, 0)                          */
+/*     "move-cursor" (paragraph-ends, 1, 1)                           */
+/*   };                                                               */
+/*   bind "<shift><super>a" { "move-cursor" (paragraph-ends, 0, 0) }; */
+/*   bind "<super>c" { "copy-clipboard" () };                         */
+/*   unbind "<ctrl>a";                                                */
+/*   unbind "<shift><ctrl>a";                                         */
+/*   unbind "<ctrl>c";                                                */
+/* }                                                                  */
+
+/* @binding-set gtk-mac-file-chooser                                  */
+/* {                                                                  */
+/*   bind "<super>v" { "location-popup-on-paste" () };                */
+/*   unbind "<ctrl>v";                                                */
+
+/*   bind "<super><shift>G" { "location-popup" () };                  */
+/*   bind "<super><shift>H" { "home-folder" () };                     */
+/*   bind "<super>Up" { "up-folder" () };                             */
+/* }                                                                  */
+
+/* @binding-set gtk-mac-tree-view                                     */
+/* {                                                                  */
+/*   bind "<super>a" { "select-all" () };                             */
+/*   bind "<shift><super>a" { "unselect-all" () };                    */
+/*   bind "<super>f" { "start-interactive-search" () };               */
+/*   bind "<super>F" { "start-interactive-search" () };               */
+/*   unbind "<ctrl>a";                                                */
+/*   unbind "<shift><ctrl>a";                                         */
+/*   unbind "<ctrl>f";                                                */
+/*   unbind "<ctrl>F";                                                */
+/* }                                                                  */
+
+/* @binding-set gtk-mac-icon-view                                     */
+/* {                                                                  */
+/*   bind "<super>a" { "select-all" () };                             */
+/*   bind "<shift><super>a" { "unselect-all" () };                    */
+/*   unbind "<ctrl>a";                                                */
+/*   unbind "<shift><ctrl>a";                                         */
+/* }                                                                  */
+
+/* iconview {                                                         */
+/*   -gtk-key-bindings: gtk-mac-icon-view;                            */
+/* }                                                                  */
+
+/* label {                                                            */
+/*   -gtk-key-bindings: gtk-mac-label;                                */
+/* }                                                                  */
+
+/* GtkFileChooserWidget {                                             */
+/*   -gtk-key-bindings: gtk-mac-file-chooser;                         */
+/* }                                                                  */
+
+entry {
+  -gtk-key-bindings: gtk-mac-cmd-c, gtk-mac-entry;
+}
+
+textview {
+  -gtk-key-bindings: gtk-mac-cmd-c, gtk-mac-entry, gtk-mac-text-view;
+}
+
+/* treeview {                              */
+/*   -gtk-key-bindings: gtk-mac-tree-view; */
+/* }                                       */
