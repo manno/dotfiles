@@ -1,0 +1,28 @@
+#!/bin/sh
+
+case "$1" in
+
+  -h|help|usage|--help)
+    echo "$0 [commit|c|head|h]|modified"
+    echo
+    echo "examples:"
+    echo " $0 -c  # edit files from last commit"
+    echo " $0 -m  # edit modified files"
+    #echo " $0 -m  # edit files which differ from master"
+    ;;
+
+  # master)
+  #   #nvim $(git diff-tree --no-commit-id --name-only -r master)
+  #   ;;
+
+  modified|m|-m)
+    nvim $(git ls-files --modified)
+    ;;
+
+  *|commit|c|-c|HEAD|h)
+    # edit files from last commit
+    # nvim $(git log --pretty=format: --name-only -n 1)
+    nvim $(git diff-tree --no-commit-id --name-only -r HEAD)
+    ;;
+
+esac
