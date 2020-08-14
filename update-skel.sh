@@ -12,14 +12,16 @@ print_existing_diff() {
     grep -v '.gitkeep' | \
     sort | \
     ruby -ne '
-    h=ENV["HOME"];f=$_.chomp.gsub(/\A\.\//,"");$_=%x(diff -q "#{f}" #{h}/#{f} 2>&1)
+    h=ENV["HOME"]
+    f=$_.chomp.gsub(/\A\.\//,"")
+    $_=%x(diff -q "#{f}" #{h}/#{f} 2>&1)
     p=ENV["PWD"].gsub(/#{h}/, "$HOME")
     if /differ/
       puts "vi -d skel/#{f} #{h}/#{f}"
     else
       l="ln -s #{p}/#{f} $HOME/#{f}"
-      l.gsub!(/skel/, "repos/zsh-config") if f.match(/zsh/)
-      l.gsub!(/skel/, "repos/nvim-config") if f.match(/nvim/)
+      l.gsub!(/skel/, "repos/zsh-config") if f.match(/zsh/) && !File.readable?(f)
+      l.gsub!(/skel/, "repos/nvim-config") if f.match(/nvim/) && !File.readable?(f)
       if /diff:.*#{h}.*: No such file/
         puts "# #{l}"
       else
