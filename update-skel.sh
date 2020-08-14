@@ -20,8 +20,8 @@ print_existing_diff() {
       puts "vi -d skel/#{f} #{h}/#{f}"
     else
       l="ln -s #{p}/#{f} $HOME/#{f}"
-      l.gsub!(/skel/, "repos/zsh-config") if f.match(/zsh/) && !File.readable?(f)
-      l.gsub!(/skel/, "repos/nvim-config") if f.match(/nvim/) && !File.readable?(f)
+      l.gsub!(/skel/, "repos/zsh-config") if f.match(/zsh/) && !File.readable?("skel/#{f}")
+      l.gsub!(/skel/, "repos/nvim-config") if f.match(/nvim/) && !File.readable?("skel/#{f}")
       if /diff:.*#{h}.*: No such file/
         puts "# #{l}"
       else
