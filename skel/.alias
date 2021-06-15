@@ -10,6 +10,7 @@ alias ls='ls --color=auto'
 if [ `uname` = "FreeBSD" ]; then 
     unalias ls
 fi
+qwhich lsd  && alias ls='lsd --date +"%b %d"'
 alias l='ls -lh'
 alias ll='ls -la'
 
