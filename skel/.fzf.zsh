@@ -18,5 +18,5 @@ fi
 # ------------
 source "$HOME/.fzf/shell/key-bindings.zsh"
 
-bindkey "^R" history-incremental-search-backward
-bindkey '\er' fzf-history-widget
+bindkey "^R" fzf-history-widget
+bindkey '\er' history-incremental-search-backward

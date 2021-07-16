@@ -2,14 +2,14 @@
   pager = less -FRXK
   bigFileThresholdbigFileThreshold = 10m
 [user]
-	name = Mario Manno
-	email = root@localhost
+  name = Mario Manno
+  email = root@localhost
 [push]
   default = current
 [branch "master"]
   remote = origin
   merge = refs/heads/master
-	rebase = true
+  rebase = true
 [alias]
   amend = commit --amend
   co = checkout
@@ -41,24 +41,27 @@
   drv = duet-revert
   dmg = duet-merge
   drb = rebase -i --exec 'git duet-commit --amend --reset-author'
+  revgrep = ! git grep $@ $(git rev-list --all)
 [format]  
-	pretty = format:%Cred%h%Creset -%C(yellow)%d%Creset %s - %C(dim white)%an %Creset%Cgreen(%cr)%Creset
+  pretty = format:%Cred%h%Creset -%C(yellow)%d%Creset %s - %C(dim white)%an %Creset%Cgreen(%cr)%Creset
 [color]
   ui = auto
 [branch]
   autosetuprebase = always
-	autosetupmerge = always
+  autosetupmerge = always
 [rerere]
-	enabled = true
+  enabled = true
 [log]
-	abbrevCommit = true
-	dateRelative = true
+  abbrevCommit = true
+  dateRelative = true
 [rebase]
-	autosquash = true
-	autoStash = true
+  autosquash = true
+  autoStash = true
 [mergetool "fugitive"]
-	cmd = nvim -f -c \"Gvdiff\" \"$MERGED\"
+  cmd = nvim -f -c \"Gvdiff\" \"$MERGED\"
 [commit]
-	verbose = true
+  verbose = true
+[init]
+  defaultBranch = main
 [pull]
-	rebase = true
+  rebase = true
