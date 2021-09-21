@@ -1,0 +1,110 @@
+# Aliases
+function qwhich () 
+{ 
+    [ -x "$(command -v $1)" ]
+}
+
+# ls aliases
+#
+alias ls='ls --color=auto'
+if [ `uname` = "FreeBSD" ]; then 
+    unalias ls
+fi
+qwhich lsd  && alias ls='lsd --date +"%b %d %H:%M"'
+alias l='ls -lh'
+alias ll='ls -la'
+
+# job control aliases
+#
+alias b='bg'
+alias f='fg'
+alias j='jobs'
+alias fg1='fg %1'
+alias fg2='fg %2'
+alias fg3='fg %3'
+#alias r='fc -s'
+
+# aliases that enhance programs default options
+#
+alias bc='bc -l'
+alias df='df -Th -x tmpfs -x usbfs'
+alias diff='diff --exclude ".svn" -up'
+alias du='du -h'
+alias gdb='gdb -q'
+alias ipsort="sort -n -t . -k 1,1 -k 2,2 -k 3,3 -k 4,4"
+alias last='last -a'
+#alias less='less -MSI'
+alias nl='nl -nln -ba'
+qwhich iftop && alias iftop='iftop -B'
+qwhich pinfo && alias info='pinfo'
+qwhich w3m  && alias w3m='w3m -M'
+
+# shortcut aliases
+#
+alias egrep='egrep --color=auto'
+alias grep='grep --color=auto'
+alias Grep='grep -rsi '
+alias grep='grep --color --exclude-dir=.svn --exclude-dir=.git'
+if [ `uname` = "FreeBSD" ]; then 
+    alias grep='grep --color'
+fi
+alias dmesgtail='sudo dmesg -T|tail'
+alias reload='source $HOME/.bashrc'
+alias wm="wget -m -k -np"
+alias zl='zless'
+alias g='git --no-pager'
+qwhich cscope && alias cscope-r='cscope -R -s .'
+qwhich ctags && alias ctags-r='ctags --recurse=yes'
+qwhich indent && alias indent='indent -ce -br -brs -nut -i4 -l120'
+qwhich mpv && alias mplayeridentify='mpv -noconfig all -vo null -ao null -frames 0 -identify'
+qwhich rg  && alias rg="rg --hidden --glob '!.git'"
+
+# debian aliases
+#
+if [ -f /proc/version ] && egrep -qi "(debian|ubuntu)" /proc/version; then
+    alias acp='apt-cache policy'
+    alias acs='apt-cache search'
+    alias acS='apt-cache show'
+    alias fr='fakeroot'
+fi
+
+# screen aliases
+#
+if qwhich screen; then
+    alias screen='/usr/bin/screen -e "^Ff" -dUR -T xterm'
+    alias screenssh='F=~/tmp/env; [ -f $F ] && (source $F;  rm $F) || (export|grep SSH > $F)'
+fi
+
+if qwhich tmux; then
+    alias screen='tmux attach'
+fi
+
+if qwhich byobu; then
+    alias byobu='/usr/bin/byobu -e "^Ff"'
+fi
+
+# core file aliases
+#
+alias core.on='ulimit -c unlimited'
+alias core.off='ulimit -c 0'
+alias core.open='gdb -q -c core '
+
+# ipv6 pings
+#
+if [ -f /proc/net/tcp6 ]; then 
+    alias ping6.ip6-allnodes='ping6 ff02::1 -I eth0'
+    alias ping6.ip6-allrouters='ping6 ff02::2 -I eth0'
+    alias ping6.ip6-allhosts='ping6 ff02::3 -I eth0'
+fi
+
+if qwhich nvim; then
+    alias vimdiff='nvim -d'
+    alias vi=nvim
+    alias vim=nvim
+fi
+
+if qwhich gpaste-client; then 
+    alias pbpaste='gpaste-client get 0' 
+fi
+
+alias visudo='sudo visudo -f /etc/sudoers.d/local'

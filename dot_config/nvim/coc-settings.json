@@ -1,0 +1,38 @@
+{
+  "coc.preferences.currentFunctionSymbolAutoUpdate": true,
+  "coc.preferences.formatOnType": true,
+  "coc.preferences.formatOnSaveFiletypes": [
+    "go",
+    "json"
+  ],
+  "coc.preferences.snippets.enable": true,
+  "coc.preferences.useQuickfixForLocations": true,
+  "diagnostic.errorSign": "✖",
+  "diagnostic.infoSign": "ℹ",
+  "diagnostic.hintSign": "ℹ",
+  "languageserver": {
+    "ccls": {
+      "command": "ccls",
+      "filetypes": [
+        "c",
+        "cpp",
+        "cuda",
+        "objc",
+        "objcpp"
+      ],
+      "rootPatterns": [
+        ".ccls-root",
+        "compile_commands.json"
+      ],
+      "initializationOptions": {
+        "cache": {
+          "directory": ".ccls-cache"
+        }
+      }
+    }
+  },
+  "go.goplsOptions": {
+    "staticcheck": true,
+    "completeUnimported": true
+  }
+}

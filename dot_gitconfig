@@ -1,0 +1,83 @@
+[core]
+  pager = less -FRXK
+  bigFileThresholdbigFileThreshold = 10m
+[user]
+  name = Mario Manno
+  email = mario.manno@gmail.com
+  #email = mario.manno@suse.com
+[push]
+  default = current
+[branch "master"]
+  remote = origin
+  merge = refs/heads/master
+  rebase = true
+[alias]
+  amend = commit --amend
+  co = checkout
+  cp = cherry-pick
+  cpc = cherry-pick --continue
+  fixup = commit --fixup
+  g = grep
+  gg = ! git rev-list --all | xargs git grep
+  info = remote -v
+  lg = log --graph -n 20
+  lgm = log --graph -n 20 --merges
+  lg1 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(yellow)%d%C(reset) %s %C(dim white)- %an%C(reset) %C(green)(%ar)%C(reset)' --all -n 40
+  lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(cyan)%aD%C(reset) %C(green)(%ar)%C(reset)%C(yellow)%d%C(reset)%n''          %C(reset)%s%C(reset) %C(dim white)- %an%C(reset)' --all -n 100
+  logf = log --pretty=fuller --date=short
+  meld = mergetool -t meld -y
+  pull- = ! git checkout master && git pull && git lg -n 3 && printf '%100s\n' | tr ' ' '-' && git checkout - && git lg -5
+  puo = push -u origin
+  rb = rebase
+  rba = rebase --abort
+  rbc = rebase --continue
+  rbi = rebase -i origin/master
+  rom = rebase origin/master
+  st = status --short
+  sw = switch
+  tree = log --oneline --decorate --graph
+  unstage = reset HEAD
+  what = whatchanged -n 5
+  dci = duet-commit -v
+  drv = duet-revert
+  dmg = duet-merge
+  drb = rebase -i --exec 'git duet-commit --amend --reset-author'
+[format]  
+  pretty = format:%Cred%h%Creset -%C(yellow)%d%Creset %s - %C(dim white)%an %Creset%Cgreen(%cr)%Creset
+[color]
+  ui = auto
+[branch]
+  autosetuprebase = always
+  autosetupmerge = always
+[rerere]
+  enabled = true
+[log]
+  abbrevCommit = true
+  dateRelative = true
+[rebase]
+  autosquash = true
+  autoStash = true
+[diff]
+  tool = meld
+[difftool]
+  prompt = false
+[difftool "meld"]
+  trustExitCode = true
+  cmd = open -W -a Meld --args \"$LOCAL\" \"$PWD/$REMOTE\"
+[merge]
+  tool = neovim
+[mergetool]
+  prompt = false
+[mergetool "meld"]
+  trustExitCode = true
+  cmd = open -W -a Meld --args --auto-merge \"$PWD/$LOCAL\" \"$PWD/$BASE\" \"$PWD/$REMOTE\" --output=\"$PWD/$MERGED\"
+[mergetool "fugitive"]
+  cmd = nvim -f -c \"Gvdiff\" \"$MERGED\"
+[mergetool "neovim"]
+  cmd = nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+[commit]
+  verbose = true
+[init]
+  defaultBranch = main
+[pull]
+  rebase = true

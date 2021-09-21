@@ -1,0 +1,34 @@
+# Load .zsh.d/*(.)
+load_zshd () {
+    # load settings from all files in $ddir
+    local profile ddir
+    ddir=.zsh
+    profile=$1
+
+    # colors
+    local grey="\e[0;37m"
+    local red="\e[0;31m"
+    local blue="\e[0;36m"
+    local col="\e[0;30m"  # black
+
+    # Load configs, call profile function
+    echo -en "${blue}loading: ${col}"
+    for i ($HOME/$ddir/*.zsh(.,@)) {
+        # ignore ".files"
+        if [[ $i != .* ]]; then
+            echo -en "${grey}$(basename $i .zsh)${col}"
+            source $i 2> /dev/null
+            found=''
+            if [ $? != 0 ]; then
+                found="${red}☐${col}"
+            else
+                found="${blue}☑${col}"
+            fi
+            echo -en $found" "
+        fi
+    }
+    echo
+
+}
+
+# vim: ft=zsh ts=4 sw=4
