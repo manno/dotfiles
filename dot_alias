@@ -6,11 +6,11 @@ function qwhich ()
 
 # ls aliases
 #
-alias ls='ls --color=auto'
+#alias ls='ls --color=auto'
 if [ `uname` = "FreeBSD" ]; then 
-    unalias ls
+  unalias ls
 fi
-qwhich lsd  && alias ls='lsd --date +"%b %d %H:%M"'
+qwhich lsd  && alias ls='lsd --date "+%b %d %H:%M"'
 alias l='ls -lh'
 alias ll='ls -la'
 
@@ -76,7 +76,7 @@ if qwhich screen; then
 fi
 
 if qwhich tmux; then
-    alias screen='tmux attach'
+  alias screen='tmux attach'
 fi
 
 if qwhich byobu; then
