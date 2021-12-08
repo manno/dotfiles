@@ -10,10 +10,7 @@ if [ -f $HOME/.google.key ]; then
 fi
 
 # PROGRAMS
-export EDITOR="vim"
-if [ -f /usr/local/bin/nvim ]; then
-  export EDITOR="nvim"
-fi
+export EDITOR="nvim"
 export LESS="IRX"
 export LESSCHARSET="utf-8"
 

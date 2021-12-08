@@ -41,8 +41,8 @@ Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': ':CocInstall coc-go'}
 let g:coc_global_extensions=['coc-json',
                            \ 'coc-diagnostic',
                            \ 'coc-tsserver',
-                           \ 'coc-solargraph',
                            \ 'coc-go',
+                           \ 'coc-solargraph',
                            \ 'coc-clangd',
                            \ 'coc-yaml' ]
 
@@ -154,7 +154,7 @@ lua <<EOF
   }
 EOF
 " how is that different from CocList diagnostics
-nnoremap <silent><nowait> <space>a  <cmd>TroubleToggle lsp_workspace_diagnostics<cr>
+nnoremap <silent><nowait> <space>D  <cmd>TroubleToggle lsp_workspace_diagnostics<cr>
 end
 
 " coc
@@ -209,6 +209,8 @@ nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+"
+nmap <silent><nowait> <space>a  <Plug>(coc-codeaction-cursor)
 
 " ----- fzf
 map <leader>t :GitFiles<CR>

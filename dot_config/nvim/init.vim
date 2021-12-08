@@ -48,6 +48,13 @@ if &diff
     syntax off
     "set wrap
     set diffopt+=iwhite
+    " do/dp
+    " 1do
+    " map <leader>1 :diffget LOCAL<CR>
+    " 2do
+    " map <leader>2 :diffget BASE<CR>
+    " 3do
+    " map <leader>3 :diffget REMOTE<CR>
 endif
 
 "----- Statusline

@@ -1,0 +1,41 @@
+# .zshrc: interactive shell, after zprofile(login) and zshenv(always)
+# vim: ft=zsh ts=4 sw=4
+
+## Checks
+[ -d $HOME/.zsh ] || echo "no resource&config dir: .zsh"
+
+## Load Libs
+fpath=(~/.zsh/func $fpath)
+
+## Parse ~/.zsh files
+autoload load_zshd
+load_zshd
+
+## Overide PATH
+#
+# prepend user bin, arm homebrew, local
+if [ "$(arch)" = "arm64" ]; then
+    path=(~/bin /opt/homebrew/bin /usr/local/bin $path)
+else
+    path=(~/bin /usr/local/bin /opt/homebrew/bin $path)
+fi
+
+# add super user paths
+path=(/sbin /usr/sbin /usr/local/sbin $path)
+
+# unique elements
+typeset -U path
+
+# only keep existing dirs
+path=($^path(N))
+
+## Load more modules
+autoload zargs
+
+## Show ssh agent keys
+if [ -x /usr/bin/ssh-add ] && [ "$SSH_AUTH_SOCK" != "" ] && [ -r "$SSH_AUTH_SOCK" ]; then
+    /usr/bin/ssh-add -l
+fi
+
+## Needs to go after other bindkey statements
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
