@@ -45,6 +45,8 @@ let g:coc_global_extensions=['coc-json',
                            \ 'coc-solargraph',
                            \ 'coc-clangd',
                            \ 'coc-yaml' ]
+" homebrew arm64 node
+let g:coc_node_path = '/opt/homebrew/bin/node'
 
 " Colorschemes
 Plug 'jonathanfilip/vim-lucius'

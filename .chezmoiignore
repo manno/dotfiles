@@ -8,6 +8,12 @@ contrib
 {{ if ne .chezmoi.os "linux" -}}
 .inputrc
 {{- end }}
+
 {{ if ne .chezmoi.os "darwin" -}}
 .inputrc
+{{- end }}
+
+{{ if ne .chezmoi.hostname "air" -}}
+.zsh/asdf.zsh
+.config/nvim/config/m1.vim
 {{- end }}

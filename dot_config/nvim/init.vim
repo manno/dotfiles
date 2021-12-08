@@ -201,4 +201,5 @@ runtime config/plugins.vim
 if match(&runtimepath, 'lualine') != -1
   lua require('slanted-gaps')
 end
+runtime config/m1.vim
 "lua require('manno/plugins')
