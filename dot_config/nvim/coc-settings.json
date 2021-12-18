@@ -6,6 +6,12 @@
     "json"
   ],
   "coc.preferences.snippets.enable": true,
+  "hover.floatConfig": {
+    "border": true
+  },
+  "diagnostic.floatConfig": {
+    "border": true
+  },
   "coc.preferences.useQuickfixForLocations": true,
   "codeLens.enable": true,
   "diagnostic.errorSign": "✖",

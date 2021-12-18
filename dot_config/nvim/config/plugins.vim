@@ -184,7 +184,7 @@ nmap <leader>a  <Plug>(coc-codeaction-selected)
 nmap <silent> K  :call CocActionAsync('doHover')<CR>
 
 autocmd FileType c,cpp,ruby nmap <silent> gd <Plug>(coc-declaration)
-autocmd FileType go,ruby nmap <silent> <C-]> <Plug>(coc-definition)
+autocmd FileType c,cpp,go,ruby,rust nmap <silent> <C-]> <Plug>(coc-definition)
 autocmd FileType go nmap gtj :CocCommand go.tags.add json<cr>
 autocmd FileType go nmap gty :CocCommand go.tags.add yaml<cr>
 autocmd FileType go nmap gtx :CocCommand go.tags.clear<cr>
