@@ -8,3 +8,6 @@ contrib
 {{ if ne .chezmoi.os "linux" -}}
 .inputrc
 {{- end }}
+{{ if ne .chezmoi.os "darwin" -}}
+.inputrc
+{{- end }}

@@ -157,6 +157,13 @@ map  _tt     :source $VIMRUNTIME/syntax/2tex.vim
 " convert to colored ansi
 vmap _ta     :TOansi
 
+" Shift + J/K moves selected lines down/up in visual mode
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
+
+" yy vs y$
+" unmap Y
+
 " ----- Filetype Specific Settings
 "
 "autocmd FileType csv          set nofoldenable
@@ -184,4 +191,7 @@ autocmd FileType c,vim,ruby,yaml,haml,css,html,eruby,coffee,javascript,markdown,
 " ----- Plugins
 "
 runtime config/plugins.vim
+if match(&runtimepath, 'lualine') != -1
+  lua require('slanted-gaps')
+end
 "lua require('manno/plugins')

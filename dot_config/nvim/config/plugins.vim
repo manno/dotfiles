@@ -18,13 +18,11 @@ Plug 'scrooloose/nerdcommenter'
 "Plug 'rking/ag.vim'
 
 " Status line
-if has('nvim-0.5.0')
-    Plug 'kyazdani42/nvim-web-devicons'
-    " Plug 'romgrk/barbar.nvim'
-    Plug 'akinsho/nvim-bufferline.lua'
-    Plug 'hoob3rt/lualine.nvim'
-    "Plug 'folke/trouble.nvim'
-endif
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'akinsho/nvim-bufferline.lua'
+Plug 'hoob3rt/lualine.nvim'
+"Plug 'romgrk/barbar.nvim'
+"Plug 'folke/trouble.nvim'
 
 " Open files
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
@@ -36,11 +34,14 @@ Plug 'junegunn/fzf.vim'
 "   go get -u golang.org/x/tools/...
 "   https://github.com/josa42/coc-go#example-configuration
 "   https://github.com/neoclide/coc.nvim/blob/master/data/schema.json
+" run :CocUpdate
+" run :CocInstall ft
 Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': ':CocInstall coc-go'}
 " CocInstall coc-diagnostic
 let g:coc_global_extensions=['coc-json',
                            \ 'coc-diagnostic',
                            \ 'coc-tsserver',
+                           \ 'coc-solargraph',
                            \ 'coc-go',
                            \ 'coc-clangd',
                            \ 'coc-yaml' ]
@@ -74,7 +75,6 @@ Plug 'machakann/vim-sandwich'
 " Vim ruby
 Plug 'tpope/vim-bundler', { 'for': 'ruby' }
 Plug 'tpope/vim-rake', { 'for': 'ruby' }
-"Plug 'fatih/vim-go', { 'for': 'go', 'do': ':silent GoInstallBinaries' }
 Plug 'tpope/vim-rails', { 'for': 'ruby' }
 Plug 'janko-m/vim-test'
 
@@ -89,6 +89,8 @@ endif
 Plug 'davinche/godown-vim', { 'for': 'markdown' }
 
 " Parsers, replaces vim-polyglot
+" TSUpdate
+" TSInstall ft
 Plug 'nvim-treesitter/nvim-treesitter'
 
 " Git
@@ -155,18 +157,6 @@ EOF
 nnoremap <silent><nowait> <space>a  <cmd>TroubleToggle lsp_workspace_diagnostics<cr>
 end
 
-if match(&runtimepath, 'lualine') != -1
-    lua  <<EOF
-    require('lualine').setup {
-        sections = {
-          lualine_c = {{'filename', path = 2}, 'b:coc_current_function'},
-          lualine_y = { 'progress', 'coc#status'}
-        },
-        options = { theme = 'tokyonight' }
-    }
-EOF
-end
-
 " coc
 " https://github.com/neoclide/coc.nvim/blob/master/data/schema.json
 map   <leader><F2>      :CocConfig<CR>
@@ -191,11 +181,14 @@ nmap <leader>a  <Plug>(coc-codeaction-selected)
 
 nmap <silent> K  :call CocActionAsync('doHover')<CR>
 
-autocmd FileType c,cpp nmap <silent> gd <Plug>(coc-declaration)
-autocmd FileType go nmap <silent> <C-]> <Plug>(coc-definition)
+autocmd FileType c,cpp,ruby nmap <silent> gd <Plug>(coc-declaration)
+autocmd FileType go,ruby nmap <silent> <C-]> <Plug>(coc-definition)
 autocmd FileType go nmap gtj :CocCommand go.tags.add json<cr>
 autocmd FileType go nmap gty :CocCommand go.tags.add yaml<cr>
 autocmd FileType go nmap gtx :CocCommand go.tags.clear<cr>
+
+" solargraph
+let g:coc_node_args = ['--dns-result-order=ipv4first']
 
 " Mappings for CoCList
 " Show all diagnostics.
