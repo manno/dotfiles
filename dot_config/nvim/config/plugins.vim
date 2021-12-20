@@ -182,6 +182,7 @@ xmap <leader>a  <Plug>(coc-codeaction-selected)
 nmap <leader>a  <Plug>(coc-codeaction-selected)
 
 nmap <silent> K  :call CocActionAsync('doHover')<CR>
+nmap <leader>r  :call CocActionAsync('rename')<CR>
 
 autocmd FileType c,cpp,ruby nmap <silent> gd <Plug>(coc-declaration)
 autocmd FileType c,cpp,go,ruby,rust nmap <silent> <C-]> <Plug>(coc-definition)
