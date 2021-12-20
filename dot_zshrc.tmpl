@@ -1,5 +1,5 @@
-{{ if eq .chezmoi.hostname "air" }}
+{{- if eq .chezmoi.hostname "air" -}}
 {{   include ".zshrc_m1" }}
-{{ else }}
+{{- else -}}
 {{   include ".zshrc_linux" }}
-{{ end }}
+{{- end -}}
