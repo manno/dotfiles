@@ -108,3 +108,5 @@ if qwhich gpaste-client; then
 fi
 
 alias visudo='sudo visudo -f /etc/sudoers.d/local'
+
+alias fixssh='export SSH_AUTH_SOCK=`ls -1tr /tmp/ssh-*/agent.* | tail -1 `'

@@ -1,9 +1,9 @@
 README.md
 contrib
 
-#{{- if ne .chezmoi.hostname "work-laptop" }}
-#.work # only manage .work on work-laptop
-#{{- end }}
+{{- if ne .chezmoi.hostname "ws" }}
+.ssh/rc
+{{- end }}
 
 {{ if ne .chezmoi.os "linux" -}}
 .inputrc
