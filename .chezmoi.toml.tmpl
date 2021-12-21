@@ -1,8 +1,14 @@
-{{- $email := promptString "email" -}}
+{{- $email := get . "email" -}}
+{{- if not $email -}}
+{{- $email = promptString "email" -}}
+{{- end -}}
+
 [data]
     email = {{ $email | quote }}
+
 [git]
     autoCommit = true
+
 [merge]
     command = "nvim"
     args = ["-d", "{{ "{{ .Source }}" }}", "{{ "{{ .Destination }}" }}", "{{ "{{ .Target }}" }}", "-c", "$wincmd w", "-c", "wincmd J"]
