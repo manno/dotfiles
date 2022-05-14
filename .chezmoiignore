@@ -13,7 +13,10 @@ contrib
 .inputrc
 {{- end }}
 
+{{ if or (ne .chezmoi.os "darwin") (ne .chezmoi.arch "arm64") -}}
+.config/nvim/config/m1.vim
+{{- end }}
+
 {{ if ne .chezmoi.hostname "air" -}}
 .zsh/asdf.zsh
-.config/nvim/config/m1.vim
 {{- end }}

@@ -113,6 +113,7 @@ if qwhich chezmoi; then
   alias cmm='chezmoi merge'
   alias cma='chezmoi add'
   alias cme='chezmoi edit'
+  alias ce='chezmoi edit --apply'
 fi
 
 alias fixssh='export SSH_AUTH_SOCK=`ls -1tr /tmp/ssh-*/agent.* | tail -1 `'

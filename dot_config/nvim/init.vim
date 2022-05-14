@@ -1,4 +1,5 @@
 " ----- Mouse
+"disable normal mode, so terminal can copy
 set mouse=ivh
 
 "----- Setup tabs, use spaces instead of tabs
@@ -165,8 +166,8 @@ map  _tt     :source $VIMRUNTIME/syntax/2tex.vim
 vmap _ta     :TOansi
 
 " Shift + J/K moves selected lines down/up in visual mode
-vnoremap J :m '>+1<CR>gv=gv
-vnoremap K :m '<-2<CR>gv=gv
+"vnoremap J :m '>+1<CR>gv=gv
+"vnoremap K :m '<-2<CR>gv=gv
 
 " yy vs y$
 " unmap Y

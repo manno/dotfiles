@@ -17,6 +17,23 @@
   "diagnostic.errorSign": "✖",
   "diagnostic.infoSign": "ℹ",
   "diagnostic.hintSign": "ℹ",
+  "diagnostic-languageserver.filetypes": {
+    "vim": "vint",
+    "email": "languagetool",
+    "markdown": [
+      "write-good",
+      "markdownlint"
+    ],
+    "sh": "shellcheck",
+    "yaml": [
+      "yamllint"
+    ],
+    "cmake": [
+      "cmake-lint",
+      "cmakelint"
+    ],
+    "systemd": "systemd-analyze"
+  },
   "languageserver": {
     "ccls": {
       "command": "ccls",

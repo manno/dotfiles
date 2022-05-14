@@ -126,6 +126,10 @@ endif
 
 " ----- Plugin Configurations
 
+" Sandwich
+nmap s <Nop>
+xmap s <Nop>
+
 " Search
 map <leader>G     :Ggrep <C-R><C-W> ':(exclude)*fake*'<CR>
 

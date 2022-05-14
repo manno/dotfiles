@@ -15,13 +15,13 @@ load_zshd
 #
 # prepend user bin, arm homebrew, local
 if [ "$(arch)" = "arm64" ]; then
-    path=(~/bin /opt/homebrew/bin /usr/local/bin $path)
+    path=(/opt/homebrew/sbin /usr/local/sbin ~/bin /opt/homebrew/bin /usr/local/bin $path)
 else
-    path=(~/bin /usr/local/bin /opt/homebrew/bin $path)
+    path=(/usr/local/sbin /opt/homebrew/sbin ~/bin /usr/local/bin /opt/homebrew/bin $path)
 fi
 
 # add super user paths
-path=(/sbin /usr/sbin /usr/local/sbin $path)
+path=(/sbin /usr/sbin $path)
 
 # unique elements
 typeset -U path
