@@ -109,4 +109,10 @@ fi
 
 alias visudo='sudo visudo -f /etc/sudoers.d/local'
 
+if qwhich chezmoi; then
+  alias cmm='chezmoi merge'
+  alias cma='chezmoi add'
+  alias cme='chezmoi edit'
+fi
+
 alias fixssh='export SSH_AUTH_SOCK=`ls -1tr /tmp/ssh-*/agent.* | tail -1 `'

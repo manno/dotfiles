@@ -91,7 +91,7 @@ Plug 'davinche/godown-vim', { 'for': 'markdown' }
 " Parsers, replaces vim-polyglot
 " TSUpdate
 " TSInstall ft
-Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " Git
 Plug 'tpope/vim-fugitive'
@@ -259,7 +259,7 @@ endif
 if match(&runtimepath, 'nvim-treesitter') != -1
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  ensure_installed = "all",
   highlight = {
     enable = true,              -- false will disable the whole extension
     -- disable = { "c", "rust" },  -- list of language that will be disabled
