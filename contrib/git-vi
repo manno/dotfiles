@@ -1,0 +1,26 @@
+#!/bin/sh
+
+case "$1" in
+  -h|help|usage|--help)
+    echo "$0 [head|modified|commit ref]"
+    echo
+    echo "examples:"
+    echo " $0               # edit files from HEAD commit"
+    echo " $0 -m            # edit modified files"
+    echo " $0 -c HEAD~2     # edit files from commit"
+    echo " $0 -c abc123     # edit files from commit"
+    echo " $0 -c :/fix      # edit files from commit"
+    ;;
+
+  modified|m|-m)
+    nvim $(git ls-files --modified)
+    ;;
+
+  commit|c|-c)
+    nvim $(git diff-tree --no-commit-id --name-only -r "$2")
+    ;;
+
+  *|head|h|-h)
+    nvim $(git diff-tree --no-commit-id --name-only -r HEAD)
+    ;;
+esac
