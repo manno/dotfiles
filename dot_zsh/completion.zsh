@@ -53,3 +53,6 @@ compinit -i
 # functions to make completion for git aliases work
 _git_co() { _git_checkout }
 _git_lg() { _git_log }
+
+# FIXME lsd completion is broken
+_lsd() { _ls }
