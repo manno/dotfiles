@@ -13,6 +13,12 @@ fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-# machine specifix
-test -e ~/.env && . ~/.env
+# shared env
+export RSYNC_RSH=ssh
+export EDITOR="nvim"
+export LESS="IRX"
+export LESSCHARSET="utf-8"
+export TODAY=$(date +%Y%m%d)
+
+# host specific, not distributed
 test -e ~/.env.localhost && . ~/.env.localhost

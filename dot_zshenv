@@ -12,8 +12,13 @@ if [ -f "$localesfile" ]; then
   export LANG LC_CTYPE LC_MESSAGES LC_ALL LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT LC_IDENTIFICATION
 fi
 
-## shared env
-[ -f ~/.env ] && source ~/.env
+# shared env
+export RSYNC_RSH=ssh
+export EDITOR="nvim"
+export LESS="IRX"
+export LESSCHARSET="utf-8"
+export TODAY=$(date +%Y%m%d)
+
 # host specific, not distributed
 [ -f ~/.env.localhost ] && source ~/.env.localhost
 
