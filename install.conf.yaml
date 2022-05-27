@@ -44,6 +44,8 @@
     ~/.zsh/func: repos/zsh-config/.zsh/func
     ~/.zsh/plugins: repos/zsh-config/.zsh/plugins
 
-# these can't be linked
 - shell:
+  # these can't be linked
   - [cp -i ~/.gitconfig ~/, has local modifications]
+  # alternatives on Linux
+  - [contrib/nvim-alternatives.sh, set up alternatives for nvim]
