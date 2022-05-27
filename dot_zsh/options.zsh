@@ -16,12 +16,3 @@ setopt globcomplete
 # mmv *.c.orig orig/*.c
 autoload -U zmv
 alias mmv='noglob zmv -W'
-
-
-# debian chroot
-# FIXME from where???
-if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
-    if [ -z "$CPUTYPE" ]; then
-        CPUTYPE=`arch`
-    fi
-fi
