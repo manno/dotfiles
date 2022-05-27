@@ -1,4 +1,4 @@
-{{- if eq .chezmoi.hostname "air" -}}
+{{- if and (eq .chezmoi.os "darwin") (eq .chezmoi.arch "arm64") -}}
 {{   include ".zshrc_m1" }}
 {{- else -}}
 {{   include ".zshrc_linux" }}

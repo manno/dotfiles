@@ -13,7 +13,7 @@ load_zshd
 
 ## Overide PATH
 
-# prepend user bin, arm homebrew, local
+# prepend user bin, linux homebrew, local
 path=(~/bin /opt/homebrew/bin /usr/local/bin $path)
 
 # add super user paths
