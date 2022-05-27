@@ -116,4 +116,5 @@ if qwhich chezmoi; then
   alias ce='chezmoi edit --apply'
 fi
 
-alias fixssh='export SSH_AUTH_SOCK=`ls -1tr /tmp/ssh-*/agent.* | tail -1 `'
+alias fixssh="export SSH_AUTH_SOCK=$HOME/.ssh/ssh_auth_sock"
+alias fixssh2='export SSH_AUTH_SOCK=`ls -1tr /tmp/ssh-*/agent.* | tail -1 `'
