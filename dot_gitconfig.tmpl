@@ -58,12 +58,14 @@
   autosquash = true
   autoStash = true
 [diff]
-  tool = meld
+  tool = neovim
 [difftool]
   prompt = false
 [difftool "meld"]
   trustExitCode = true
   cmd = open -W -a Meld --args \"$LOCAL\" \"$PWD/$REMOTE\"
+[difftool "neovim"]
+  cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
 [merge]
   tool = neovim
 [mergetool]
