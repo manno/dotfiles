@@ -15,6 +15,7 @@ contrib
 
 {{ if or (ne .chezmoi.os "darwin") (ne .chezmoi.arch "arm64") -}}
 .config/nvim/config/m1.vim
+.zsh/m1brew.zsh
 {{- end }}
 
 {{ if ne .chezmoi.hostname "air" -}}
