@@ -7,10 +7,6 @@
 ## Load Libs
 fpath=(~/.zsh/func $fpath)
 
-## Parse ~/.zsh files
-autoload load_zshd
-load_zshd
-
 ## Overide PATH
 #
 # prepend user bin, arm homebrew, local
@@ -19,6 +15,10 @@ if [ "$(arch)" = "arm64" ]; then
 else
     path=(/usr/local/sbin /opt/homebrew/sbin ~/bin /usr/local/bin /opt/homebrew/bin $path)
 fi
+
+## Parse ~/.zsh files
+autoload load_zshd
+load_zshd
 
 # add super user paths
 path=(/sbin /usr/sbin $path)
