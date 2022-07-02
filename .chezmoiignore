@@ -26,3 +26,7 @@ contrib
 {{ if ne .chezmoi.hostname "air" -}}
 .zsh/asdf.zsh
 {{- end }}
+
+{{ if eq .category "server" -}}
+.config/nvim/config
+{{ end -}}

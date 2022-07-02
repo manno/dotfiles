@@ -3,8 +3,14 @@
 {{- $email = promptString "email" -}}
 {{- end -}}
 
+{{- $category := get . "category" -}}
+{{- if not $category -}}
+{{- $category = promptString "category" -}}
+{{- end -}}
+
 [data]
     email = {{ $email | quote }}
+    category = {{ $category | quote }}
 
 [git]
     autoCommit = false
