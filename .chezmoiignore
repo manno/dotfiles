@@ -1,5 +1,6 @@
 README.md
 contrib
+.ssh/authorized_keys
 
 {{- if ne .chezmoi.hostname "ws" }}
 .ssh/rc
