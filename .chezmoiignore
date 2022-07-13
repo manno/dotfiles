@@ -12,6 +12,7 @@ contrib
 
 {{ if ne .chezmoi.os "darwin" -}}
 .inputrc
+.zkbd/xterm-256color-apple
 {{- end }}
 
 {{ if eq .chezmoi.os "darwin" -}}
@@ -30,4 +31,6 @@ contrib
 
 {{ if eq .category "server" -}}
 .config/nvim/config
+.config/nvim/coc-settings.json
+.config/nvim/lua/slanted-gaps.lua
 {{ end -}}
