@@ -46,6 +46,9 @@ let g:coc_global_extensions=['coc-json',
                            \ 'coc-clangd',
                            \ 'coc-yaml' ]
 
+" Editing
+Plug 'github/copilot.vim'
+
 " Colorschemes
 Plug 'jonathanfilip/vim-lucius'
 Plug 'tomasr/molokai'
@@ -54,9 +57,9 @@ Plug 'endel/vim-github-colorscheme'
 "Plug 'chriskempson/vim-tomorrow-theme'
 "Plug 'iCyMind/NeoSolarized'
 Plug 'TroyFletcher/vim-colors-synthwave'
-Plug 'drewtempelmeyer/palenight.vim'
-Plug 'embark-theme/vim', { 'as': 'embark' }
-Plug 'sainnhe/sonokai'
+"Plug 'drewtempelmeyer/palenight.vim'
+"Plug 'embark-theme/vim', { 'as': 'embark' }
+"Plug 'sainnhe/sonokai'
 Plug 'folke/tokyonight.nvim'
 
 " Tmux integration
@@ -67,9 +70,9 @@ Plug 'tpope/vim-rsi'
 
 " Format SQL
 Plug 'vim-scripts/SQLUtilities'
-Plug 'vim-scripts/Align'
+"Plug 'vim-scripts/Align'
 
-" Surround - sa$' srb" sd"
+" Surround - sa$' saE" srb" sd"
 Plug 'machakann/vim-sandwich'
 
 " Vim ruby
@@ -96,6 +99,10 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 " Git
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
+
+" Snippets
+Plug 'rafamadriz/friendly-snippets'
+Plug 'L3MON4D3/LuaSnip'
 
 call plug#end()
 
@@ -126,29 +133,29 @@ endif
 
 " ----- Plugin Configurations
 
-" Sandwich
+" machakann/vim-sandwich
 nmap s <Nop>
 xmap s <Nop>
 
-" Search
+" tpope/vim-fugitive
 map <leader>G     :Ggrep <C-R><C-W> ':(exclude)*fake*'<CR>
 
-
-" vim-test
-nmap <F3> :TestFile<CR>
-let test#strategy = "neovim"
-
-" fugitive git grep
 autocmd QuickFixCmdPost *grep* cwindow
 set diffopt+=vertical
 
-" NERDCommenter
+" janko/vim-test
+nmap <F3> :TestFile<CR>
+let test#strategy = "neovim"
+
+" scrooloose/NERDCommenter
 let NERDSpaceDelims = 1
 
+" akinsho/nvim-bufferline
 if match(&runtimepath, 'nvim-bufferline') != -1
     lua require'bufferline'.setup{}
 end
 
+" folke/trouble
 if match(&runtimepath, 'trouble') != -1
 lua <<EOF
   require("trouble").setup {
@@ -161,9 +168,12 @@ EOF
 nnoremap <silent><nowait> <space>D  <cmd>TroubleToggle lsp_workspace_diagnostics<cr>
 end
 
-" coc
+" neoclide/coc.nvim
 " https://github.com/neoclide/coc.nvim/blob/master/data/schema.json
 map   <leader><F2>      :CocConfig<CR>
+
+" <CR> confirms completion suggestion
+inoremap <expr> <cr> coc#pum#visible() ? coc#_select_confirm() : "\<CR>"
 
 " Use `[c` and `]c` to navigate diagnostics
 " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
@@ -217,7 +227,7 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 "
 nmap <silent><nowait> <space>a  <Plug>(coc-codeaction-cursor)
 
-" ----- fzf
+" junegunn/fzf
 map <leader>t :GitFiles<CR>
 map <leader>b :Buffers<CR>
 map <leader>F :Rg<CR>
@@ -253,13 +263,7 @@ endfunction
 "let g:fzf_layout = { 'up': '~50%' }
 let g:fzf_layout = { 'window': 'call FloatingFZF()' }
 
-if $ITERM_PROFILE=="Light Default"
-    highlight TabLine ctermbg=white
-"else
-"    highlight TabLine ctermbg=black
-endif
-
-" Syntax highlight
+" nvim-treesitter
 if match(&runtimepath, 'nvim-treesitter') != -1
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
@@ -272,3 +276,7 @@ require'nvim-treesitter.configs'.setup {
 }
 EOF
 end
+
+lua <<EOF
+require("luasnip.loaders.from_vscode").lazy_load()
+EOF

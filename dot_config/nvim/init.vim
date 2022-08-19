@@ -143,7 +143,7 @@ nnoremap <A-l> <C-w>l
 " Debug
 map   <F6>      :command
 " :so %
-map   <F2>      :n ~/.config/nvim/init.vim<CR>
+map   <F2>      :n ~/.config/nvim/config/plugins.vim ~/.config/nvim/init.vim ~/.config/nvim/filetype.vim ~/.config/nvim/config/m1.vim<CR>
 
 " Make
 map !ma       <ESC>:w<CR>:make %<CR>
@@ -174,6 +174,7 @@ vmap _ta     :TOansi
 
 " ----- Filetype Specific Settings
 "
+augroup languages
 "autocmd FileType csv          set nofoldenable
 "autocmd FileType xml          let g:xml_syntax_folding = 1
 autocmd FileType c            set cindent
@@ -195,6 +196,25 @@ autocmd filetype crontab setlocal nobackup nowritebackup
 
 " strip trailing whitespace
 autocmd FileType c,vim,ruby,yaml,haml,css,html,eruby,coffee,javascript,markdown,sh,python autocmd BufWritePre <buffer> :%s/\s\+$//e
+augroup END
+
+augroup netrw
+autocmd FileType netrw nnoremap <buffer><silent> <Esc> :call <SID>CloseNetrw()<CR>
+autocmd FileType netrw nnoremap <buffer><silent> q     :call <SID>CloseNetrw()<CR>
+augroup END
+
+function! s:CloseNetrw() abort
+  for bufn in range(1, bufnr('$'))
+    if bufexists(bufn) && getbufvar(bufn, '&filetype') ==# 'netrw'
+      silent! execute 'bwipeout ' . bufn
+      if getline(2) =~# '^" Netrw '
+        silent! bwipeout
+      endif
+      return
+    endif
+  endfor
+endfunction
+
 
 " ----- Plugins
 "
