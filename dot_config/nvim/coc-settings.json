@@ -55,6 +55,9 @@
       }
     }
   },
+  "Lua.diagnostics.globals": [
+    "vim"
+  ],
   "solargraph.promptDownload": false,
   "solargraph.checkGemVersion": false,
   "solargraph.diagnostics": true,

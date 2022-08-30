@@ -143,7 +143,7 @@ nnoremap <A-l> <C-w>l
 " Debug
 map   <F6>      :command
 " :so %
-map   <F2>      :n ~/.config/nvim/config/plugins.vim ~/.config/nvim/init.vim ~/.config/nvim/filetype.vim ~/.config/nvim/config/m1.vim<CR>
+map   <F2>      :n ~/.config/nvim/lua/plugins.lua ~/.config/nvim/config/plugins.vim ~/.config/nvim/init.vim ~/.config/nvim/filetype.vim ~/.config/nvim/config/m1.vim<CR>
 
 " Make
 map !ma       <ESC>:w<CR>:make %<CR>
@@ -195,7 +195,7 @@ autocmd FileType zsh          set ts=4 sw=4 et
 autocmd filetype crontab setlocal nobackup nowritebackup
 
 " strip trailing whitespace
-autocmd FileType c,vim,ruby,yaml,haml,css,html,eruby,coffee,javascript,markdown,sh,python autocmd BufWritePre <buffer> :%s/\s\+$//e
+autocmd FileType c,vim,ruby,lua,yaml,haml,css,html,eruby,coffee,javascript,markdown,sh,python autocmd BufWritePre <buffer> :%s/\s\+$//e
 augroup END
 
 augroup netrw
@@ -218,9 +218,7 @@ endfunction
 
 " ----- Plugins
 "
+lua require('plugins')
 runtime config/plugins.vim
-if match(&runtimepath, 'lualine') != -1
-  lua require('slanted-gaps')
-end
 runtime config/m1.vim
 "lua require('manno/plugins')
