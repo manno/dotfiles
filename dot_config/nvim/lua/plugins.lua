@@ -21,6 +21,7 @@ local silentOpt = { silent = true }
 local allOpt = { noremap = true, silent = true, nowait = true }
 
 -- Packer
+-- git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
 local install_path = vim.fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
 local packer_bootstrap
 if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
@@ -43,7 +44,7 @@ return require('packer').startup(function(use)
   use {
     'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate',
-    config = {
+    config = function()
       require'nvim-treesitter.configs'.setup {
         ensure_installed = "all",
         ignore_install = { "phpdoc" },
@@ -52,7 +53,7 @@ return require('packer').startup(function(use)
           -- disable = { "c", "rust" },  -- list of language that will be disabled
         },
       }
-    }
+    end
   }
 
   -- Languageservers
@@ -163,7 +164,7 @@ return require('packer').startup(function(use)
 
   -- Status line
   use 'kyazdani42/nvim-web-devicons'
-  use { 'akinsho/nvim-bufferline.lua', config = { require'bufferline'.setup{} } }
+  use { 'akinsho/nvim-bufferline.lua', config = function() require'bufferline'.setup{} end }
   use { 'hoob3rt/lualine.nvim', config = function() require('slanted-gaps') end }
 
   -- use 'romgrk/barbar.nvim'
@@ -206,9 +207,8 @@ return require('packer').startup(function(use)
 
   -- Surround - sa%" sa$' saE" srb" sr"' sd"
   --use 'machakann/vim-sandwich'
-  use { 'kylechui/nvim-surround', config = {
-      require("nvim-surround").setup({})
-  }}
+  use { 'kylechui/nvim-surround', config = function() require("nvim-surround").setup({}) end
+  }
 
   -- Vim ruby
   use { 'tpope/vim-bundler', ft = {'ruby'} }
@@ -228,15 +228,16 @@ return require('packer').startup(function(use)
   use { 'davinche/godown-vim', ft = {'markdown'} }
 
   -- Git
-  use { 'tpope/vim-fugitive', config = {
+  use { 'tpope/vim-fugitive', config = function()
     vim.keymap.set("", "<leader>G", ":Ggrep <C-R><C-W> ':(exclude)*fake*'<CR>")
-  }}
+  end
+  }
 
   use 'airblade/vim-gitgutter'
 
   -- Snippets
   use 'rafamadriz/friendly-snippets'
-  use { 'L3MON4D3/LuaSnip', config = { require("luasnip.loaders.from_vscode").lazy_load() } }
+  use { 'L3MON4D3/LuaSnip', config = function() require("luasnip.loaders.from_vscode").lazy_load() end }
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
