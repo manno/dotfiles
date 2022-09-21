@@ -104,8 +104,8 @@ endfunction
 " noremap <Right> <Nop>
 
 " German spelling
-map <F8>        :setlocal spell spelllang=de_20,de,en<CR>:call WordProcessor(1)<CR>
-map <s-F8>      :setlocal spell spelllang=en<CR>:call WordProcessor(1)<CR>
+map <F8>        :set spell spelllang=en,de<CR>:call WordProcessor(1)<CR>
+map <s-F8>      :setlocal spell spelllang=de_20,de,en<CR>:call WordProcessor(1)<CR>
 map <esc><F8>   :setlocal nospell<CR>:call WordProcessor(0)<CR>
 
 set thesaurus+=~/.config/nvim/spell/thesaurus.txt

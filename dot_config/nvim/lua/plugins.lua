@@ -70,7 +70,7 @@ return require('packer').startup(function(use)
     branch = 'release',
     run = ':CocInstall coc-go',
     config = function()
-      vim.g.coc_global_extensions = { 'coc-json', 'coc-diagnostic', 'coc-tsserver', 'coc-go', 'coc-solargraph', 'coc-clangd', 'coc-yaml' }
+      vim.g.coc_global_extensions = { 'coc-json', 'coc-diagnostic', 'coc-tsserver', 'coc-go', 'coc-solargraph', 'coc-clangd', 'coc-yaml', 'coc-lua' }
 
       -- solargraph
       vim.g.coc_node_args = {'--dns-result-order=ipv4first'}
@@ -160,7 +160,7 @@ return require('packer').startup(function(use)
     vim.keymap.set("", "<leader>t", ":GitFiles<CR>")
     vim.keymap.set("", "<leader>b", ":Buffers<CR>")
     vim.keymap.set("", "<leader>F", ":Rg<CR>")
-  end}
+  end }
 
   -- Status line
   use 'kyazdani42/nvim-web-devicons'
@@ -197,7 +197,7 @@ return require('packer').startup(function(use)
   use 'folke/tokyonight.nvim'
 
   -- Tmux integration
-  use 'edkolev/tmuxline.vim'
+  use { 'edkolev/tmuxline.vim', opt = true }
 
   -- Readline style insertion
   use 'tpope/vim-rsi'
@@ -207,8 +207,7 @@ return require('packer').startup(function(use)
 
   -- Surround - sa%" sa$' saE" srb" sr"' sd"
   --use 'machakann/vim-sandwich'
-  use { 'kylechui/nvim-surround', config = function() require("nvim-surround").setup({}) end
-  }
+  use { 'kylechui/nvim-surround', config = function() require("nvim-surround").setup({}) end }
 
   -- Vim ruby
   use { 'tpope/vim-bundler', ft = {'ruby'} }
@@ -230,8 +229,7 @@ return require('packer').startup(function(use)
   -- Git
   use { 'tpope/vim-fugitive', config = function()
     vim.keymap.set("", "<leader>G", ":Ggrep <C-R><C-W> ':(exclude)*fake*'<CR>")
-  end
-  }
+  end }
 
   use 'airblade/vim-gitgutter'
 
