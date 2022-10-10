@@ -24,14 +24,14 @@
   lg1 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(yellow)%d%C(reset) %s %C(dim white)- %an%C(reset) %C(green)(%ar)%C(reset)' --all -n 40
   lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(cyan)%aD%C(reset) %C(green)(%ar)%C(reset)%C(yellow)%d%C(reset)%n''          %C(reset)%s%C(reset) %C(dim white)- %an%C(reset)' --all -n 100
   logf = log --pretty=fuller --date=short
+  main-branch = !git symbolic-ref refs/remotes/origin/HEAD | cut -d'/' -f4
   meld = mergetool -t meld -y
-  pull- = ! git checkout master && git pull && git lg -n 3 && printf '%100s\n' | tr ' ' '-' && git checkout - && git lg -5
   puo = push -u origin
   rb = rebase
   rba = rebase --abort
   rbc = rebase --continue
-  rbi = rebase -i origin/master
-  rom = rebase origin/master
+  rbi = "!f(){ git rebase -i origin/$(git main-branch) $@;}; f"
+  rom = "!f(){ git rebase origin/$(git main-branch) $@;}; f"
   st = status --short
   sw = switch
   tree = log --oneline --decorate --graph
