@@ -52,9 +52,33 @@ return require('packer').startup(function(use)
           enable = true,                 -- false will disable the whole extension
           -- disable = { "c", "rust" },  -- list of language that will be disabled
         },
+        textobjects = {
+          move = {
+            enable = true,
+            set_jumps = true, -- whether to set jumps in the jumplist
+            goto_next_start = {
+              ["]]"] = "@function.outer",
+              ["]m"] = "@class.outer",
+            },
+            goto_next_end = {
+              ["]["] = "@function.outer",
+              ["]M"] = "@class.outer",
+            },
+            goto_previous_start = {
+              ["[["] = "@function.outer",
+              ["[m"] = "@class.outer",
+            },
+            goto_previous_end = {
+              ["[]"] = "@function.outer",
+              ["[M"] = "@class.outer",
+            },
+          },
+        },
       }
     end
   }
+  use { 'nvim-treesitter/nvim-treesitter-textobjects' }
+  use { 'nvim-treesitter/nvim-treesitter-context' }
 
   -- Languageservers
   -- run :CocConfig to add language servers, e.g.
