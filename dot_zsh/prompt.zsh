@@ -38,9 +38,19 @@ rvm_prompt_wrapper () {
     fi
 }
 
+kubectl_wrapper () {
+    if [ -x "$(command -v kubectl)" ]; then
+        kubectl_context=$(kubectl config current-context 2> /dev/null)
+        if [ -n "$kubectl_context" ]; then
+            k=${${kubectl_context#k3d-}//(#m)[aeiou]/}
+            echo "%{$fg[green]%}[%{$fg[magenta]%}$k%{$fg[green]%}]%{$reset_color%}"
+        fi
+    fi
+}
+
 if [ "$TERM" != "screen" ]; then
     #RPROMPT=$'${del}$(vcs_info_wrapper)$(rvm_prompt_wrapper)%{$reset_color%}'
-    RPROMPT=$'${del}$(vcs_info_wrapper)%{$reset_color%}'
+    RPROMPT=$'${del}$(vcs_info_wrapper)$(kubectl_wrapper)%{$reset_color%}'
 fi
 
 # PROMPT CONFIG
