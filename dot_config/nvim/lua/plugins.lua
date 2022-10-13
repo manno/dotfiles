@@ -2,21 +2,6 @@
 -- https://github.com/wbthomason/packer.nvim
 -- https://github.com/nanotee/nvim-lua-guide
 
--- local function map(mode, lhs, rhs, opts)
---   local options = { noremap = false }
---   if opts then
---     options = vim.tbl_extend('keep', options, opts)
---   end
---   vim.keymap.set(mode, lhs, rhs, options)
--- end
-
--- local function noremap(mode, lhs, rhs, opts)
---   local options = { noremap = true }
---   if opts then
---     options = vim.tbl_extend('keep', options, opts)
---   end
---   vim.keymap.set(mode, lhs, rhs, options)
--- end
 local silentOpt = { silent = true }
 local allOpt = { noremap = true, silent = true, nowait = true }
 
@@ -103,15 +88,21 @@ return require('packer').startup(function(use)
       vim.keymap.set('', '<leader><F2>', ':CocConfig<CR>')
 
       -- -- <CR> confirms completion suggestion
-      vim.keymap.set("i", "<CR>", "coc#pum#visible() ? coc#_select_confirm() : '<CR>'", {silent = true, expr = true, noremap = true})
+      local opts = {silent = true, noremap = true, expr = true, replace_keycodes = false}
+      vim.keymap.set("i", "<TAB>", 'coc#pum#visible() ? coc#pum#next(1) : v:lua.check_back_space() ? "<TAB>" : coc#refresh()', opts)
+      vim.keymap.set("i", "<S-TAB>", [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]], opts)
 
-      -- -- Use `[c` and `]c` to navigate diagnostics
-      -- -- Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+      -- Make <CR> to accept selected completion item or notify coc.nvim to format
+      -- <C-g>u breaks current undo, please make your own choice.
+      vim.keymap.set("i", "<cr>", [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]], opts)
+
+      -- Use `[c` and `]c` to navigate diagnostics
+      -- Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
       vim.keymap.set("n", "[g", "<Plug>(coc-diagnostic-prev)", silentOpt)
       vim.keymap.set("n", "]g", "<Plug>(coc-diagnostic-next)", silentOpt)
       vim.keymap.set("n", "]d", "<Plug>(coc-definitions)", silentOpt)
 
-      -- -- GoTo code navigation.
+      -- GoTo code navigation.
       vim.keymap.set("n", "gd", "<Plug>(coc-definition)", silentOpt)
       vim.keymap.set("n", "gy", "<Plug>(coc-type-definition)", silentOpt)
       vim.keymap.set("n", "gi", "<Plug>(coc-implementation)", silentOpt)
@@ -119,7 +110,7 @@ return require('packer').startup(function(use)
 
       vim.keymap.set("n", "]f", "<Plug>(coc-fix-current)", silentOpt)
       vim.keymap.set("n", "<leader>rn", "<Plug>(coc-rename)")
-      -- -- \aw \aap \a%
+      -- \aw \aap \a%
       vim.keymap.set("x", "<leader>a", "<Plug>(coc-codeaction-selected)")
       vim.keymap.set("n", "<leader>a", "<Plug>(coc-codeaction-selected)")
 
