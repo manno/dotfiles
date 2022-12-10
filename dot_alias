@@ -41,7 +41,7 @@ qwhich w3m  && alias w3m='w3m -M'
 
 # shortcut aliases
 #
-alias egrep='egrep --color=auto'
+alias egrep='grep -E --color=auto'
 alias grep='grep --color=auto'
 alias Grep='grep -rsi '
 alias grep='grep --color --exclude-dir=.svn --exclude-dir=.git'
@@ -61,7 +61,7 @@ qwhich rg  && alias rg="rg --hidden --glob '!.git'"
 
 # debian aliases
 #
-if [ -f /proc/version ] && egrep -qi "(debian|ubuntu)" /proc/version; then
+if [ -f /proc/version ] && grep -Eqi "(debian|ubuntu)" /proc/version; then
     alias acp='apt-cache policy'
     alias acs='apt-cache search'
     alias acS='apt-cache show'
