@@ -180,7 +180,14 @@ return require('packer').startup(function(use)
   -- Status line
   use 'kyazdani42/nvim-web-devicons'
   use { 'akinsho/nvim-bufferline.lua', config = function() require'bufferline'.setup{} end }
-  use { 'hoob3rt/lualine.nvim', config = function() require('slanted-gaps') end }
+  use { 'hoob3rt/lualine.nvim', config = function()
+    require("lualine").setup({
+      options = {
+        theme = 'tokyonight'
+      }
+    })
+    -- require('slanted-gaps')
+  end }
 
   -- use 'romgrk/barbar.nvim'
   -- use {'folke/trouble.nvim', config = {
@@ -209,7 +216,15 @@ return require('packer').startup(function(use)
   --use 'drewtempelmeyer/palenight.vim'
   --use {'embark-theme/vim', { as = 'embark' }}
   --use 'sainnhe/sonokai'
-  use 'folke/tokyonight.nvim'
+  --use { "catppuccin/nvim", as = "catppuccin", opt = true, config = function()
+  --  require("catppuccin")
+  --end }
+  use { 'folke/tokyonight.nvim', config = function()
+    require("tokyonight").setup({
+      style = "night"
+    })
+  end }
+  vim.api.nvim_command "colorscheme tokyonight"
 
   -- Tmux integration
   use { 'edkolev/tmuxline.vim', opt = true }

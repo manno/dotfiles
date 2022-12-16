@@ -1,28 +1,3 @@
-" ----- Colorschemes
-if $ITERM_PROFILE=="Light Default"
-    "colorscheme hemisu
-    "colorscheme lucius
-    colorscheme github
-" elseif !empty($TMUX)
-"     colorscheme hemisu
-else
-    "colorscheme synthwave
-    "colorscheme hemisu
-    "colorscheme lucius
-    "LuciusBlackHighContrast
-    "colorscheme embark
-    "let g:rehash256 = 1
-    "colorscheme molokai
-
-    " let g:sonokai_style = 'shusia'
-    " let g:sonokai_enable_italic = 1
-    " let g:sonokai_disable_italic_comment = 1
-    " colorscheme sonokai
-
-    let g:tokyonight_style = 'night'
-    colorscheme tokyonight
-endif
-
 " ----- Plugin Configurations
 
 " tpope/vim-fugitive
