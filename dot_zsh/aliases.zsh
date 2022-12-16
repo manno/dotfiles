@@ -7,6 +7,7 @@ alias -g L='|less'
 
 # globs
 alias -g glob_recent='**/*(om[1])'
+alias -g FILES='**/*(.)'
 
 # redirects
 alias -g V='2>&1 > /tmp/stdin.$$; vi /tmp/stdin.$$'
