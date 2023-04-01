@@ -18,6 +18,9 @@ export EDITOR="nvim"
 export LESS="IRX"
 export LESSCHARSET="utf-8"
 export TODAY=$(date +%Y%m%d)
+newline='
+'
+export TIME_STYLE="+%e. %b %Y $newline%b %d %H:%M"
 
 # host specific, not distributed
 [ -f ~/.env.localhost ] && source ~/.env.localhost

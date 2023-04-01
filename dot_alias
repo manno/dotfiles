@@ -10,9 +10,11 @@ function qwhich ()
 if [ `uname` = "FreeBSD" ]; then 
   unalias ls
 fi
-qwhich lsd  && alias ls='lsd --date "+%b %d %H:%M"'
+qwhich lsd  && alias ls='lsd' # --date "+%b %d %H:%M"'
 alias l='ls -lh'
 alias ll='ls -la'
+
+alias egrep="grep -E"
 
 # job control aliases
 #
