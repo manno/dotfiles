@@ -180,13 +180,13 @@ return require('packer').startup(function(use)
   -- Status line
   use 'kyazdani42/nvim-web-devicons'
   use { 'akinsho/nvim-bufferline.lua', config = function() require'bufferline'.setup{} end }
+  --use { 'hoob3rt/lualine.nvim', config = function() require('slanted-gaps') end }
   use { 'hoob3rt/lualine.nvim', config = function()
-    require("lualine").setup({
+    require('lualine').setup {
       options = {
-        theme = 'tokyonight'
+        theme = 'auto',
+      },
       }
-    })
-    -- require('slanted-gaps')
   end }
 
   -- use 'romgrk/barbar.nvim'
@@ -203,7 +203,7 @@ return require('packer').startup(function(use)
   end }
 
   -- Autocompletion
-  use 'github/copilot.vim'
+  use { 'github/copilot.vim', ft = {'ruby', 'go', 'js', 'sh', 'lua', 'vim'} }
 
   -- Colorschemes
   use { 'jonathanfilip/vim-lucius', opt = true }
@@ -216,15 +216,8 @@ return require('packer').startup(function(use)
   --use 'drewtempelmeyer/palenight.vim'
   --use {'embark-theme/vim', { as = 'embark' }}
   --use 'sainnhe/sonokai'
-  --use { "catppuccin/nvim", as = "catppuccin", opt = true, config = function()
-  --  require("catppuccin")
-  --end }
-  use { 'folke/tokyonight.nvim', config = function()
-    require("tokyonight").setup({
-      style = "night"
-    })
-  end }
-  vim.api.nvim_command "colorscheme tokyonight"
+  use 'folke/tokyonight.nvim'
+  vim.cmd[[colorscheme tokyonight]]
 
   -- Tmux integration
   use { 'edkolev/tmuxline.vim', opt = true }

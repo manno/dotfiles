@@ -10,7 +10,7 @@ function qwhich ()
 if [ `uname` = "FreeBSD" ]; then 
   unalias ls
 fi
-qwhich lsd  && alias ls='lsd' # --date "+%b %d %H:%M"'
+qwhich lsd  && alias ls="$HOME/bin/lsd" # --date "+%b %d %H:%M"'
 alias l='ls -lh'
 alias ll='ls -la'
 
@@ -120,5 +120,6 @@ fi
 
 alias fixssh="export SSH_AUTH_SOCK=$HOME/.ssh/ssh_auth_sock"
 alias fixssh2='export SSH_AUTH_SOCK=`ls -1tr /tmp/ssh-*/agent.* | tail -1 `'
+alias fixssh3='export SSH_AUTH_SOCK=`ls -1tr /private/tmp/com.apple.launchd.*/Listeners`'
 alias yubisocket='export SSH_AUTH_SOCK="$(brew --prefix)/var/run/yubikey-agent.sock"'
 alias sshfingerprints='for k in *pub; do ssh-keygen -lf "$k"; done | tee fingerprints'
