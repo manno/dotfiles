@@ -10,7 +10,8 @@ function qwhich ()
 if [ `uname` = "FreeBSD" ]; then 
   unalias ls
 fi
-qwhich lsd  && alias ls="$HOME/bin/lsd" # --date "+%b %d %H:%M"'
+qwhich lsd  && alias ls='lsd --date "+%b %d %H:%M"'
+[ -x "$HOME/bin/lsd" ] && alias ls="$HOME/bin/lsd"
 alias l='ls -lh'
 alias ll='ls -la'
 

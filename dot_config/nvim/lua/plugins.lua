@@ -180,13 +180,12 @@ return require('packer').startup(function(use)
   -- Status line
   use 'kyazdani42/nvim-web-devicons'
   use { 'akinsho/nvim-bufferline.lua', config = function() require'bufferline'.setup{} end }
-  --use { 'hoob3rt/lualine.nvim', config = function() require('slanted-gaps') end }
   use { 'hoob3rt/lualine.nvim', config = function()
-    require('lualine').setup {
+    require("lualine").setup({
       options = {
-        theme = 'auto',
-      },
+        theme = 'auto'
       }
+      })
   end }
 
   -- use 'romgrk/barbar.nvim'
@@ -231,6 +230,9 @@ return require('packer').startup(function(use)
   -- Surround - sa%" sa$' saE" srb" sr"' sd"
   --use 'machakann/vim-sandwich'
   use { 'kylechui/nvim-surround', config = function() require("nvim-surround").setup({}) end }
+
+  -- Spider cursor movement
+  use { "chrisgrieser/nvim-spider" }
 
   -- Vim ruby
   use { 'tpope/vim-bundler', ft = {'ruby'} }

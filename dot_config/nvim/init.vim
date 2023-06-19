@@ -127,7 +127,19 @@ nnoremap <leader>n   :tabnext<CR>
 nnoremap <leader>p   :tabprev<CR>
 
 " Close current buffer
-nnoremap <leader>w       :bw<CR>
+set nofileignorecase
+function! s:CloseBuffer() abort
+  let l:current_buffer = bufnr('%')
+  for bufn in range(1, bufnr('$'))
+    if bufexists(bufn) && getbufvar(bufn, '&filetype') ==# 'netrw'
+      silent! execute 'bwipeout! ' . bufn
+    endif
+    if bufexists(bufn) && bufn == l:current_buffer
+        silent execute 'bw'
+    endif
+  endfor
+endfunction
+nnoremap <leader>w       :call <SID>CloseBuffer()<CR>
 nnoremap <leader>D       :%bd!<CR>
 
 " Terminal
@@ -197,24 +209,6 @@ autocmd filetype crontab setlocal nobackup nowritebackup
 " strip trailing whitespace
 autocmd FileType c,vim,ruby,lua,yaml,haml,css,html,eruby,coffee,javascript,markdown,sh,python autocmd BufWritePre <buffer> :%s/\s\+$//e
 augroup END
-
-augroup netrw
-autocmd FileType netrw nnoremap <buffer><silent> <Esc> :call <SID>CloseNetrw()<CR>
-autocmd FileType netrw nnoremap <buffer><silent> q     :call <SID>CloseNetrw()<CR>
-augroup END
-
-function! s:CloseNetrw() abort
-  for bufn in range(1, bufnr('$'))
-    if bufexists(bufn) && getbufvar(bufn, '&filetype') ==# 'netrw'
-      silent! execute 'bwipeout ' . bufn
-      if getline(2) =~# '^" Netrw '
-        silent! bwipeout
-      endif
-      return
-    endif
-  endfor
-endfunction
-
 
 " ----- Plugins
 "
