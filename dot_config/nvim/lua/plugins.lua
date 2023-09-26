@@ -21,6 +21,7 @@ vim.cmd([[
   augroup end
 ]])
 
+-- https://github.com/wbthomason/packer.nvim#specifying-plugins
 return require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
 
@@ -166,16 +167,29 @@ return require('packer').startup(function(use)
     end
   }
 
-  -- Open files
-  local fzf_root = '~/.fzf'
-  -- '/opt/homebrew/Cellar/fzf/0.33.0/'
-  -- vim.trim(vim.fn.system('brew --prefix')) .. '/opt/fzf'
-  use { fzf_root, as = 'fzf', run = 'cd ~/.fzf && ./install --bin' }
-  use { "junegunn/fzf.vim", config = function()
-    vim.keymap.set("", "<leader>t", ":GitFiles<CR>")
-    vim.keymap.set("", "<leader>b", ":Buffers<CR>")
-    vim.keymap.set("", "<leader>F", ":Rg<CR>")
-  end }
+  -- Telescope
+  use {
+    'nvim-telescope/telescope.nvim', tag = '0.1.3',
+    requires = {
+            { 'nvim-lua/plenary.nvim' },
+            { 'nvim-telescope/telescope-fzf-native.nvim',
+                 run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' },
+            { "davvid/telescope-git-grep.nvim", tag = "v1.0.2" },
+    },
+    config = function()
+      require("telescope").setup({
+        defaults = {
+          mappings = {
+            i = {
+              ["<esc>"] = require("telescope.actions").close,
+            },
+          },
+        },
+      })
+    end
+  }
+
+  use 'nvim-telescope/telescope-symbols.nvim'
 
   -- Status line
   use 'kyazdani42/nvim-web-devicons'
@@ -247,6 +261,8 @@ return require('packer').startup(function(use)
   use 'manno/file-line'
 
   use { 'zerowidth/vim-copy-as-rtf', cond = function() return vim.fn.has('mac') end }
+
+  use "almo7aya/openingh.nvim"
 
   -- Markdown preview
   use { 'davinche/godown-vim', ft = {'markdown'} }
