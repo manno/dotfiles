@@ -155,7 +155,7 @@ nnoremap <A-l> <C-w>l
 " Debug
 map   <F6>      :command
 " :so %
-map   <F2>      :n ~/.config/nvim/lua/plugins.lua ~/.config/nvim/config/plugins.vim ~/.config/nvim/init.vim ~/.config/nvim/filetype.vim ~/.config/nvim/config/m1.vim<CR>
+map   <F2>      :n ~/.config/nvim/lua/plugins.lua ~/.config/nvim/lua/my/config.lua ~/.config/nvim/init.vim ~/.config/nvim/filetype.vim ~/.config/nvim/config/m1.vim<CR>
 
 " Make
 map !ma       <ESC>:w<CR>:make %<CR>
@@ -213,6 +213,6 @@ augroup END
 " ----- Plugins
 "
 lua require('plugins')
-runtime config/plugins.vim
+lua require('my/config')
 runtime config/m1.vim
 "lua require('manno/plugins')
