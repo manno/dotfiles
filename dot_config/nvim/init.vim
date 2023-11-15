@@ -126,20 +126,15 @@ nnoremap <C-p>   :bp<CR>
 nnoremap <leader>n   :tabnext<CR>
 nnoremap <leader>p   :tabprev<CR>
 
-" Close current buffer
 set nofileignorecase
-function! s:CloseBuffer() abort
-  let l:current_buffer = bufnr('%')
-  for bufn in range(1, bufnr('$'))
-    if bufexists(bufn) && getbufvar(bufn, '&filetype') ==# 'netrw'
-      silent! execute 'bwipeout! ' . bufn
-    endif
-    if bufexists(bufn) && bufn == l:current_buffer
-        silent execute 'bw'
-    endif
-  endfor
-endfunction
-nnoremap <leader>w       :call <SID>CloseBuffer()<CR>
+
+" get rid of netrw, can't close its buffer
+let g:loaded_netrw       = 1
+let g:loaded_netrwPlugin = 1
+
+" close buffer / window
+nnoremap <leader>W       :close<CR>
+" close all buffers
 nnoremap <leader>D       :%bd!<CR>
 
 " Terminal
@@ -187,27 +182,27 @@ vmap _ta     :TOansi
 " ----- Filetype Specific Settings
 "
 augroup languages
-"autocmd FileType csv          set nofoldenable
-"autocmd FileType xml          let g:xml_syntax_folding = 1
-autocmd FileType c            set cindent
-autocmd FileType eruby        map _rw i<%= %>
-autocmd FileType eruby        set number
-"autocmd FileType go           map <F4> :GoImports<CR>
-autocmd FileType go           setlocal noet ts=8 sw=8 sts=8 number
-"autocmd FileType go           set completeopt-=preview
-autocmd FileType java         set foldmethod=manual
-autocmd FileType lua          set ts=4 sw=4 et smartindent foldmethod=syntax
-autocmd FileType nfo          edit ++enc=cp437
-autocmd FileType nfo          silent edit ++enc=cp437
-autocmd FileType ruby         set number foldmethod=manual
-autocmd FileType vim          set ts=4 sw=4
-autocmd FileType xml          set ts=4 sw=4
-autocmd FileType xwt          set foldmethod=syntax
-autocmd FileType zsh          set ts=4 sw=4 et
-autocmd filetype crontab setlocal nobackup nowritebackup
+    "autocmd FileType csv          set nofoldenable
+    "autocmd FileType xml          let g:xml_syntax_folding = 1
+    autocmd FileType c            set cindent
+    autocmd FileType eruby        map _rw i<%= %>
+    autocmd FileType eruby        set number
+    "autocmd FileType go           map <F4> :GoImports<CR>
+    autocmd FileType go           setlocal noet ts=8 sw=8 sts=8 number
+    "autocmd FileType go           set completeopt-=preview
+    autocmd FileType java         set foldmethod=manual
+    autocmd FileType lua          set ts=4 sw=4 et smartindent foldmethod=syntax
+    autocmd FileType nfo          edit ++enc=cp437
+    autocmd FileType nfo          silent edit ++enc=cp437
+    autocmd FileType ruby         set number foldmethod=manual
+    autocmd FileType vim          set ts=4 sw=4
+    autocmd FileType xml          set ts=4 sw=4
+    autocmd FileType xwt          set foldmethod=syntax
+    autocmd FileType zsh          set ts=4 sw=4 et
+    autocmd filetype crontab setlocal nobackup nowritebackup
 
-" strip trailing whitespace
-autocmd FileType c,vim,ruby,lua,yaml,haml,css,html,eruby,coffee,javascript,markdown,sh,python autocmd BufWritePre <buffer> :%s/\s\+$//e
+    " strip trailing whitespace
+    autocmd FileType c,vim,ruby,lua,yaml,haml,css,html,eruby,coffee,javascript,markdown,sh,python autocmd BufWritePre <buffer> :%s/\s\+$//e
 augroup END
 
 " ----- Plugins

@@ -39,3 +39,6 @@ fi
 
 ## Needs to go after other bindkey statements
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# remove # from EXTENDED_GLOB
+disable -p '#'

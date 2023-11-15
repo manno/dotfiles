@@ -192,17 +192,31 @@ return require('packer').startup(function(use)
   use 'nvim-telescope/telescope-symbols.nvim'
 
   -- Status line
-  use 'kyazdani42/nvim-web-devicons'
-  use { 'akinsho/nvim-bufferline.lua', config = function() require'bufferline'.setup{} end }
+  use 'nvim-tree/nvim-web-devicons' -- OPTIONAL: for file icons
+
+  use 'lewis6991/gitsigns.nvim' -- OPTIONAL: for git status
+  use { 'romgrk/barbar.nvim', config = function()
+      vim.keymap.set('', '<leader>w', ':BufferWipeout<cr>')
+  end }
+
+  -- preserve layout when closing buffers
+  -- use {'ojroques/nvim-bufdel', config = function()
+  --   vim.keymap.set('', '<leader>w', ':BufDel<cr>')
+  -- end}
+  -- use { 'akinsho/nvim-bufferline.lua', requires = 'nvim-tree/nvim-web-devicons', config = function()
+  --   require 'bufferline'.setup {
+  --     options = { close_command = "BufDel" }
+  --   }
+  -- end }
+
   use { 'hoob3rt/lualine.nvim', config = function()
     require("lualine").setup({
       options = {
         theme = 'auto'
       }
-      })
+    })
   end }
 
-  -- use 'romgrk/barbar.nvim'
   -- use {'folke/trouble.nvim', config = {
   --   require("trouble").setup{}
   --   -- how is that different from CocList diagnostics
