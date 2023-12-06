@@ -41,7 +41,6 @@ set inccommand=nosplit "split?
 
 "----- Encoding
 set nodigraph               " Disable digraphs for uumlauts
-set fileencodings=utf-8,iso-8859-15,ucs-bom    " heuristic
 set virtualedit=block  " Fix problem with yank in utf8
 
 "----- Diffmode

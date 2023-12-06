@@ -186,6 +186,20 @@ return require('packer').startup(function(use)
           },
         },
       })
+      local builtin = require('telescope.builtin')
+      vim.keymap.set('n', '<leader>f', builtin.live_grep, {})
+      vim.keymap.set({'n', 'v'}, '<leader>g', function()
+        require('git_grep').grep()
+      end)
+      vim.keymap.set('n', '<leader>G', function()
+        require('git_grep').live_grep()
+      end)
+      vim.keymap.set('n', '<leader>b', builtin.buffers, {})
+      vim.keymap.set('n', '<leader>t', builtin.git_files, {})
+      -- treesitter, tags, registers
+      vim.keymap.set('n', '<leader>T', builtin.treesitter, {})
+      vim.keymap.set('n', '<leader>F', builtin.find_files, {})
+      vim.keymap.set('n', '<leader>s', builtin.symbols, {})
     end
   }
 
@@ -197,6 +211,8 @@ return require('packer').startup(function(use)
   use 'lewis6991/gitsigns.nvim' -- OPTIONAL: for git status
   use { 'romgrk/barbar.nvim', config = function()
       vim.keymap.set('', '<leader>w', ':BufferWipeout<cr>')
+      vim.keymap.set('', '<C-n>', ':BufferNext<cr>')
+      vim.keymap.set('', '<C-p>', ':BufferPrevious<cr>')
   end }
 
   -- preserve layout when closing buffers
@@ -213,6 +229,17 @@ return require('packer').startup(function(use)
     require("lualine").setup({
       options = {
         theme = 'auto'
+      },
+      sections = {
+        lualine_c = {
+          {
+            'filename',
+            file_status = true,
+            newfile_status = true,
+            path = 1,
+            shorting_target = 20,
+          }
+        },
       }
     })
   end }
@@ -243,8 +270,9 @@ return require('packer').startup(function(use)
   --use 'drewtempelmeyer/palenight.vim'
   --use {'embark-theme/vim', { as = 'embark' }}
   --use 'sainnhe/sonokai'
-  use 'folke/tokyonight.nvim'
+  use { 'folke/tokyonight.nvim', config = function()
   vim.cmd[[colorscheme tokyonight]]
+  end }
 
   -- Tmux integration
   use { 'edkolev/tmuxline.vim', opt = true }
