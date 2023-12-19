@@ -110,13 +110,15 @@ return require('packer').startup(function(use)
       vim.keymap.set("n", "gr", "<Plug>(coc-references)", silentOpt)
 
       vim.keymap.set("n", "]f", "<Plug>(coc-fix-current)", silentOpt)
+      vim.keymap.set("n", "K", ":call CocActionAsync('doHover')<CR>", silentOpt)
+
       vim.keymap.set("n", "<leader>rn", "<Plug>(coc-rename)")
+      vim.keymap.set("n", "<leader>R", ":call CocActionAsync('rename')<CR>")
+
       -- \aw \aap \a%
       vim.keymap.set("x", "<leader>a", "<Plug>(coc-codeaction-selected)")
       vim.keymap.set("n", "<leader>a", "<Plug>(coc-codeaction-selected)")
 
-      vim.keymap.set("n", "K", ":call CocActionAsync('doHover')<CR>", silentOpt)
-      vim.keymap.set("n", "<leader>r", ":call CocActionAsync('rename')<CR>")
 
       -- Mappings for CoCList
       -- Show all diagnostics.
@@ -169,7 +171,7 @@ return require('packer').startup(function(use)
 
   -- Telescope
   use {
-    'nvim-telescope/telescope.nvim', tag = '0.1.3',
+    'nvim-telescope/telescope.nvim', tag = '0.1.5',
     requires = {
             { 'nvim-lua/plenary.nvim' },
             { 'nvim-telescope/telescope-fzf-native.nvim',
@@ -200,6 +202,10 @@ return require('packer').startup(function(use)
       vim.keymap.set('n', '<leader>T', builtin.treesitter, {})
       vim.keymap.set('n', '<leader>F', builtin.find_files, {})
       vim.keymap.set('n', '<leader>s', builtin.symbols, {})
+      vim.keymap.set('n', '<leader>p', builtin.planets, {})
+      vim.keymap.set('n', '<leader>r', builtin.registers, {})
+      vim.keymap.set('n', '<leader>j', builtin.jumplist, {})
+      vim.keymap.set('n', '<leader>d', builtin.diagnostics, {})
     end
   }
 
@@ -215,22 +221,14 @@ return require('packer').startup(function(use)
       vim.keymap.set('', '<C-p>', ':BufferPrevious<cr>')
   end }
 
-  -- preserve layout when closing buffers
-  -- use {'ojroques/nvim-bufdel', config = function()
-  --   vim.keymap.set('', '<leader>w', ':BufDel<cr>')
-  -- end}
-  -- use { 'akinsho/nvim-bufferline.lua', requires = 'nvim-tree/nvim-web-devicons', config = function()
-  --   require 'bufferline'.setup {
-  --     options = { close_command = "BufDel" }
-  --   }
-  -- end }
-
   use { 'hoob3rt/lualine.nvim', config = function()
     require("lualine").setup({
       options = {
-        theme = 'auto'
+        theme = 'auto',
+        globalstatus = true,
       },
       sections = {
+        lualine_b = {'windows', 'diff', 'diagnostics'},
         lualine_c = {
           {
             'filename',
@@ -240,6 +238,7 @@ return require('packer').startup(function(use)
             shorting_target = 20,
           }
         },
+        lualine_y = {'searchcount', 'progress'},
       }
     })
   end }
