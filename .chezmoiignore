@@ -21,7 +21,7 @@ contrib
 {{- end }}
 
 {{ if or (ne .chezmoi.os "darwin") (ne .chezmoi.arch "arm64") -}}
-.config/nvim/config/m1.vim
+.config/nvim/lua/m1.lua
 .zsh/m1brew.zsh
 {{- end }}
 

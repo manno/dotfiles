@@ -1,5 +1,8 @@
 # keys
 
+# disable # glob
+ disable -p '#'
+
 # disable suspend
 stty -ixon -ixoff
 
