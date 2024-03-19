@@ -256,7 +256,7 @@ return require('packer').startup(function(use)
   end }
 
   -- Autocompletion
-  use { 'github/copilot.vim', ft = {'ruby', 'go', 'js', 'sh', 'lua', 'vim'} }
+  use { 'github/copilot.vim', ft = {'ruby', 'go', 'js', 'sh', 'lua', 'vim', 'yaml'} }
 
   -- Colorschemes
   use { 'jonathanfilip/vim-lucius', opt = true }
@@ -270,7 +270,17 @@ return require('packer').startup(function(use)
   --use {'embark-theme/vim', { as = 'embark' }}
   --use 'sainnhe/sonokai'
   use { 'folke/tokyonight.nvim', config = function()
-  vim.cmd[[colorscheme tokyonight]]
+    -- vim.cmd[[colorscheme tokyonight]]
+  end }
+
+  use { 'sontungexpt/witch', config = function(_, opts)
+    --require("witch").setup(opts)
+    --vim.cmd[[colorscheme witch]]
+  end }
+
+  use { 'binhtran432k/dracula.nvim', config = function(_, opts)
+    require("dracula").setup(opts)
+    vim.cmd[[colorscheme dracula]]
   end }
 
   -- Tmux integration
