@@ -6,31 +6,21 @@ if exists("did_load_filetypes")
 endif
 
 " ----- Assign syntax by filename
-" au = autocommand, au! remove all commands for group
 "
 augroup filetypedetect
-    au BufNewFile,BufRead *.md            setf markdown
-    au BufNewFile,BufRead *.mirah         setf ruby
-    au BufNewFile,BufRead *.tt            setf html
-    au BufNewFile,BufRead *.wiki          setf Wikipedia
-    au BufNewFile,BufRead svn-commit.*    setf svn
-    au BufNewFile,BufRead svn-log.*       setf svn
-    au BufRead,BufNewFile *.prolog        setf prolog
-    au BufRead *.coffee                  setf coffee
-    au BufRead *.erb                     setf eruby
-    au BufRead *.es6                     setf javascript
-    au BufRead *.go                      setf go
-    au BufRead *.jbuilder                setf ruby
-    au BufRead *.prawn                   setf ruby
-    au BufRead *.rhtml                   setf eruby
-    au BufRead *.xwt                     setf xml
-    au BufRead PKGBUILD                  setf sh
-    au BufRead,BufNewFile *.nfo          setf nfo
-    au BufRead,BufNewFile *.pdf          setf pdf
-    au BufRead,BufNewFile *.txt          setf text
-    "au BufWritePost *.go                 Neomake
-    "au BufWritePost *.js                 Neomake
-    "au BufWritePost *.rb                 Neomake
-    "au BufWritePost *.go                 GoImports
-    au BufWritePre *.go :silent call CocAction('runCommand', 'editor.action.organizeImport')
+    autocmd BufRead,BufNewFile *.coffee       setf coffee
+    autocmd BufRead,BufNewFile *.es6          setf javascript
+    autocmd BufRead,BufNewFile *.jbuilder     setf ruby
+    autocmd BufRead,BufNewFile *.mirah        setf ruby
+    autocmd BufRead,BufNewFile *.nfo          setf nfo
+    autocmd BufRead,BufNewFile *.prawn        setf ruby
+    autocmd BufRead,BufNewFile *.prolog       setf prolog
+    autocmd BufRead,BufNewFile *.rhtml        setf eruby
+    autocmd BufRead,BufNewFile *.tt           setf html
+    autocmd BufRead,BufNewFile *.txt          setf text
+    autocmd BufRead,BufNewFile *.wiki         setf Wikipedia
+    autocmd BufRead,BufNewFile *.xwt          setf xml
+    autocmd BufRead,BufNewFile PKGBUILD       setf sh
+    autocmd BufRead,BufNewFile svn-commit.*   setf svn
+    autocmd BufRead,BufNewFile svn-log.*      setf svn
 augroup END

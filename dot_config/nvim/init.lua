@@ -54,6 +54,12 @@ if vim.o.diff then
     vim.o.diffopt = vim.o.diffopt .. ',iwhite'
 end
 
+-- Quickfix
+vim.cmd [[
+autocmd QuickFixCmdPost *grep* cwindow
+set diffopt+=vertical
+]]
+
 -- Statusline
 vim.o.showcmd = true -- Show the command in the status line
 
@@ -127,7 +133,7 @@ vim.api.nvim_set_keymap('n', '<A-l>', '<C-w>l', { noremap = true })
 
 -- Debug
 vim.api.nvim_set_keymap('n', '<F6>', ':command', { noremap = true })
-vim.api.nvim_set_keymap('n', '<F2>', ':n ~/.config/nvim/lua/plugins.lua ~/.config/nvim/lua/my/config.lua ~/.config/nvim/init.lua ~/.config/nvim/filetype.vim<CR>', { noremap = true })
+vim.api.nvim_set_keymap('n', '<F2>', ':n ~/.config/nvim/lua/plugins.lua ~/.config/nvim/init.lua ~/.config/nvim/filetype.vim<CR>', { noremap = true })
 
 -- Make
 vim.api.nvim_set_keymap('n', '!ma', '<ESC>:w<CR>:make %<CR>', { noremap = true })
@@ -159,24 +165,25 @@ vim.api.nvim_set_keymap('v', '_ta', ':TOansi<CR>', { noremap = true, silent = tr
 -- ----- Filetype Specific Settings -----
 vim.api.nvim_exec([[
 augroup languages
-    " autocmd FileType csv          set nofoldenable
-    " autocmd FileType xml          let g:xml_syntax_folding = 1
-    autocmd FileType c            set cindent
-    autocmd FileType eruby        map _rw i<%= %>
-    autocmd FileType eruby        set number
-    " autocmd FileType go           map <F4> :GoImports<CR>
-    autocmd FileType go           setlocal noet ts=8 sw=8 sts=8 number
-    " autocmd FileType go           set completeopt-=preview
-    autocmd FileType java         set foldmethod=manual
-    autocmd FileType lua          set ts=4 sw=4 et smartindent foldmethod=syntax
-    autocmd FileType nfo          edit ++enc=cp437
-    autocmd FileType nfo          silent edit ++enc=cp437
-    autocmd FileType ruby         set number foldmethod=manual
-    autocmd FileType vim          set ts=4 sw=4
-    autocmd FileType xml          set ts=4 sw=4
-    autocmd FileType xwt          set foldmethod=syntax
-    autocmd FileType zsh          set ts=4 sw=4 et
-    autocmd filetype crontab setlocal nobackup nowritebackup
+    " autocmd FileType csv       set nofoldenable
+    " autocmd FileType xml       let g:xml_syntax_folding = 1
+    autocmd FileType c           set cindent
+    autocmd FileType eruby       map _rw i<%= %>
+    autocmd FileType eruby       set number
+    " autocmd FileType go        map <F4> :GoImports<CR>
+    autocmd FileType go          setlocal noet ts=8 sw=8 sts=8 number
+    " autocmd FileType go        set completeopt-=preview
+    autocmd BufWritePre *.go     :silent call CocAction('runCommand', 'editor.action.organizeImport')
+    autocmd FileType java        set foldmethod=manual
+    autocmd FileType lua         set ts=4 sw=4 et smartindent foldmethod=syntax
+    autocmd FileType nfo         edit ++enc=cp437
+    autocmd FileType nfo         silent edit ++enc=cp437
+    autocmd FileType ruby        set number foldmethod=manual
+    autocmd FileType vim         set ts=4 sw=4
+    autocmd FileType xml         set ts=4 sw=4
+    autocmd FileType xwt         set foldmethod=syntax
+    autocmd FileType zsh         set ts=4 sw=4 et
+    autocmd filetype crontab     setlocal nobackup nowritebackup
 
     " strip trailing whitespace
     autocmd FileType c,vim,ruby,lua,yaml,haml,css,html,eruby,coffee,javascript,markdown,sh,python autocmd BufWritePre <buffer> :%s/\s\+$//e
@@ -186,4 +193,3 @@ augroup END
 -- ----- Plugins
 
 require('plugins')
-require('my/config')
