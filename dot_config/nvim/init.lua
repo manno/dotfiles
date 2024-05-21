@@ -45,7 +45,7 @@ vim.o.smartcase = true
 vim.o.inccommand = 'nosplit' -- Split?
 
 -- Encoding
-vim.o.nodigraph = true
+vim.o.digraph = false
 vim.o.virtualedit = 'block' -- Fix problem with yank in utf8
 
 -- Diffmode
@@ -114,7 +114,7 @@ vim.api.nvim_set_keymap('n', '<C-p>', ':bp<CR>', { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>n', ':tabnext<CR>', { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>p', ':tabprev<CR>', { noremap = true })
 
-vim.o.nofileignorecase = true
+vim.o.fileignorecase = false
 --  get rid of netrw, can't close its buffer
 -- let g:loaded_netrw       = 1
 -- let g:loaded_netrwPlugin = 1

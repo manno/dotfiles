@@ -245,30 +245,20 @@ return require("lazy").setup({
     end
   },
 
-  -- NerdCommenter
-  {
-    'scrooloose/nerdcommenter',
-    config = function()
-      vim.g.NERDSpaceDelims = 1
-    end
-  },
-
-  -- Autocompletion
-  { 'github/copilot.vim', ft = {'ruby', 'go', 'js', 'sh', 'lua', 'vim', 'yaml'} },
-
   -- Colorschemes
-  { 'jonathanfilip/vim-lucius', lazy = true },
-  { 'tomasr/molokai', lazy = true },
-  { 'noahfrederick/vim-hemisu', lazy = true },
-  { 'endel/vim-github-colorscheme', lazy = true },
   --'chriskempson/vim-tomorrow-theme'
-  --'iCyMind/NeoSolarized'
-  { 'TroyFletcher/vim-colors-synthwave', lazy = true },
   --'drewtempelmeyer/palenight.vim'
-  --{'embark-theme/vim', { name = 'embark' }}
+  --'iCyMind/NeoSolarized'
   --'sainnhe/sonokai'
+  --{'embark-theme/vim', { name = 'embark' }}
+  { 'TroyFletcher/vim-colors-synthwave', lazy = true },
+  { 'endel/vim-github-colorscheme', lazy = true },
+  { 'jonathanfilip/vim-lucius', lazy = true },
+  { 'noahfrederick/vim-hemisu', lazy = true },
+  { 'tomasr/molokai', lazy = true },
   {
     'folke/tokyonight.nvim',
+    lazy = true,
     config = function()
       -- vim.cmd[[colorscheme tokyonight]]
     end
@@ -276,6 +266,7 @@ return require("lazy").setup({
 
   {
     'sontungexpt/witch',
+    lazy = true,
     config = function(_, opts)
       --require("witch").setup(opts)
       --vim.cmd[[colorscheme witch]]
@@ -293,27 +284,27 @@ return require("lazy").setup({
   -- Tmux integration
   { 'edkolev/tmuxline.vim', lazy = true },
 
+  -- Autocompletion
+  { 'github/copilot.vim', ft = {'ruby', 'go', 'js', 'sh', 'lua', 'vim', 'yaml'} },
+
   -- Readline style insertion
   {'tpope/vim-rsi'},
 
-  -- Format SQL
-  {'vim-scripts/SQLUtilities'},
-
-  -- Surround - sa%" sa$' saE" srb" sr"' sd"
-  --'machakann/vim-sandwich'
-  {
-    'kylechui/nvim-surround',
-    config = function() require("nvim-surround").setup({}) end
-  },
-
   -- Spider cursor movement
   { "chrisgrieser/nvim-spider" },
+
+
+  -- Surround - sa%" sa$' saE" srb" sr"' sd"
+  { 'echasnovski/mini.nvim', version = false,
+    config = function() require('mini.surround').setup() end
+  },
 
   -- Vim ruby
   { 'tpope/vim-bundler', ft = {'ruby'} },
   { 'tpope/vim-rake', ft = {'ruby'} },
   { 'tpope/vim-rails', ft = {'ruby'} },
   {
+    ft = {'ruby', 'go'},
     'janko-m/vim-test',
     config = function()
       vim.g['test#strategy'] = "neovim"
@@ -324,12 +315,12 @@ return require("lazy").setup({
   -- Open files at line
   {'manno/file-line'},
 
-  {
-    'zerowidth/vim-copy-as-rtf',
-    cond = function() return vim.fn.has('mac') end
-  },
-
   {"almo7aya/openingh.nvim"},
+
+  -- Format SQL
+  {'vim-scripts/SQLUtilities', ft = {'sql'}},
+
+  { 'zerowidth/vim-copy-as-rtf', cond = function() return vim.fn.has('mac') end },
 
   -- Markdown preview
   { 'davinche/godown-vim', ft = {'markdown'} },
@@ -348,6 +339,7 @@ return require("lazy").setup({
   {'rafamadriz/friendly-snippets'},
   {
     'L3MON4D3/LuaSnip',
+    lazy = true,
     config = function() require("luasnip.loaders.from_vscode").lazy_load() end
   },
 
