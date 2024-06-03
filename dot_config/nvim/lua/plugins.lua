@@ -327,20 +327,16 @@ return require("lazy").setup({
 
   -- Git
   {
-    'tpope/vim-fugitive',
-    config = function()
-      -- vim.keymap.set("", "<leader>G", ":Ggrep <C-R><C-W> ':(exclude)*fake*'<CR>")
-    end
+    'lewis6991/gitsigns.nvim', config = function() require('gitsigns').setup() end,
   },
-
-  {'airblade/vim-gitgutter'},
-
-  -- Snippets
-  {'rafamadriz/friendly-snippets'},
   {
-    'L3MON4D3/LuaSnip',
-    lazy = true,
-    config = function() require("luasnip.loaders.from_vscode").lazy_load() end
+    "NeogitOrg/neogit",
+    dependencies = {
+      "nvim-lua/plenary.nvim",         -- required
+      "sindrets/diffview.nvim",        -- optional - Diff integration
+      "nvim-telescope/telescope.nvim", -- optional
+    },
+    config = true
   },
 
 })
