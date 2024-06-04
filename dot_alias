@@ -122,5 +122,9 @@ fi
 alias fixsshtmux="export SSH_AUTH_SOCK=$HOME/.ssh/ssh_auth_sock"
 alias fixsshlinux='export SSH_AUTH_SOCK=`ls -1tr /tmp/ssh-*/agent.* | tail -1 `'
 alias fixsshmac='export SSH_AUTH_SOCK=`ls -1tr /private/tmp/com.apple.launchd.*/Listeners`'
-alias yubisocket='export SSH_AUTH_SOCK="$(brew --prefix)/var/run/yubikey-agent.sock"'
+if qwhich brew; then
+  alias yubisocket='export SSH_AUTH_SOCK="$(brew --prefix)/var/run/yubikey-agent.sock"'
+else
+  alias yubisocket='export SSH_AUTH_SOCK="/run/user/1000/yubikey-agent/yubikey-agent.sock"'
+fi
 alias sshfingerprints='for k in *pub; do ssh-keygen -lf "$k"; done | tee fingerprints'
