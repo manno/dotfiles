@@ -223,12 +223,33 @@ return require("lazy").setup({
     'hoob3rt/lualine.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
+      -- local get_mode = require('lualine.utils.mode').get_mode
+      local icons = {
+        ['n']      = ' ',
+        ['i']      = '󰙏 ',
+        ['c']      = ' ',
+        ['v']      = '󰸿 ',
+        ['V']      = '󰸽 ',
+      }
       require("lualine").setup({
         options = {
           theme = 'auto',
           globalstatus = true,
         },
         sections = {
+          lualine_a = {
+            {
+              'mode',
+              icons_enabled = true,
+              fmt = function(mode)
+                local m = vim.api.nvim_get_mode().mode
+                if icons[m] == nil then
+                  return mode
+                end
+                return icons[m] .. mode
+              end
+            }
+          },
           lualine_b = {'windows', 'diff', 'diagnostics'},
           lualine_c = {
             {
