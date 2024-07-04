@@ -259,6 +259,10 @@ return require("lazy").setup({
   {
     'folke/tokyonight.nvim',
     lazy = true,
+    priority = 1000,
+    -- on_colors = function(c)
+    --   c.border = c.blue0
+    -- end,
     config = function()
       -- vim.cmd[[colorscheme tokyonight]]
     end
@@ -276,7 +280,13 @@ return require("lazy").setup({
   {
     'binhtran432k/dracula.nvim',
     config = function(_, opts)
-      require("dracula").setup(opts)
+      require("dracula").setup({
+        lualine_bold = true,
+        on_highlights = function(hl, c)
+          hl.VertSplit = { fg = c.cyan }
+          hl.WinSeparator = { fg = c.cyan }
+        end
+      })
       vim.cmd[[colorscheme dracula]]
     end
   },
@@ -329,14 +339,12 @@ return require("lazy").setup({
   {
     'lewis6991/gitsigns.nvim', config = function() require('gitsigns').setup() end,
   },
+  { "sindrets/diffview.nvim" },
   {
-    "NeogitOrg/neogit",
-    dependencies = {
-      "nvim-lua/plenary.nvim",         -- required
-      "sindrets/diffview.nvim",        -- optional - Diff integration
-      "nvim-telescope/telescope.nvim", -- optional
-    },
-    config = true
+    "FabijanZulj/blame.nvim",
+    config = function()
+      require("blame").setup()
+    end
   },
 
 })
