@@ -327,7 +327,34 @@ return require("lazy").setup({
 
   -- Surround - sa%" sa$' saE" srb" sr"' sd"
   { 'echasnovski/mini.nvim', version = false,
-    config = function() require('mini.surround').setup() end
+    config = function()
+      require('mini.surround').setup()
+      local starter =  require('mini.starter')
+      starter.setup({
+        -- https://github.com/MaximilianLloyd/ascii.nvim
+        header = [[
+   ███▄    █ ▓█████  ▒█████   ██▒   █▓ ██▓ ███▄ ▄███▓
+   ██ ▀█   █ ▓█   ▀ ▒██▒  ██▒▓██░   █▒▓██▒▓██▒▀█▀ ██▒
+  ▓██  ▀█ ██▒▒███   ▒██░  ██▒ ▓██  █▒░▒██▒▓██    ▓██░
+  ▓██▒  ▐▌██▒▒▓█  ▄ ▒██   ██░  ▒██ █░░░██░▒██    ▒██
+  ▒██░   ▓██░░▒████▒░ ████▓▒░   ▒▀█░  ░██░▒██▒   ░██▒
+  ░ ▒░   ▒ ▒ ░░ ▒░ ░░ ▒░▒░▒░    ░ ▐░  ░▓  ░ ▒░   ░  ░
+  ░ ░░   ░ ▒░ ░ ░  ░  ░ ▒ ▒░    ░ ░░   ▒ ░░  ░      ░
+     ░   ░ ░    ░   ░ ░ ░ ▒       ░░   ▒ ░░      ░
+           ░    ░  ░    ░ ░        ░   ░         ░
+                                  ░
+        ]],
+        items = {
+          starter.sections.recent_files(5, false),
+          starter.sections.telescope(),
+        },
+        content_hooks = {
+          starter.gen_hook.adding_bullet(),
+          starter.gen_hook.aligning('center', 'center'),
+        },
+
+      })
+    end
   },
 
   -- Vim ruby
