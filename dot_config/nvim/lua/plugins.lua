@@ -184,7 +184,14 @@ return require("lazy").setup({
             },
           },
         },
+        extensions = {
+          file_browser = {
+            hijack_netrw = true,
+          }
+        }
       })
+      require("telescope").load_extension "file_browser"
+
       local builtin = require('telescope.builtin')
       vim.keymap.set('n', '<leader>f', builtin.live_grep, {})
       vim.keymap.set({'n', 'v'}, '<leader>g', function()
@@ -207,6 +214,10 @@ return require("lazy").setup({
   },
 
   {'nvim-telescope/telescope-symbols.nvim'},
+  {
+    "nvim-telescope/telescope-file-browser.nvim",
+    dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
+  },
 
   -- Status line
   {
