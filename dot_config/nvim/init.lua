@@ -17,7 +17,8 @@ vim.o.synmaxcol = 2048
 -- Setup document specifics
 vim.cmd('filetype on')      -- Load filetype.vim
 vim.o.hidden = true         -- Allow hidden buffers
-vim.o.wildignore = vim.o.wildignore .. '*.o,*.obj,.svn,.git,tags'
+vim.o.wildignore =  '*.o,*.obj,.svn,.git,tags'
+vim.o.wildignore = vim.o.wildignore .. ',blue.vim,darkblue.vim,delek.vim,desert.vim,elflord.vim,evening.vim,habamax.vim,industry.vim,koehler.vim,lunaperche.vim,morning.vim,murphy.vim,pablo.vim,peachpuff.vim,quiet.vim,retrobox.vim,ron.vim,shine.vim,slate.vim,sorbet.vim,torte.vim,wildcharm.vim,zaibatsu.vim,zellner.vim'
 
 -- Jump to the last position when reopening a file
 vim.api.nvim_exec([[
