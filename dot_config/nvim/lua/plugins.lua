@@ -355,6 +355,10 @@ return require("lazy").setup({
            ░    ░  ░    ░ ░        ░   ░         ░
                                   ░
         ]],
+        footer = function()
+          local stats = require("lazy").stats()
+          return "⚡ neovim loaded " .. stats.loaded .. "/" .. stats.count .. " plugins"
+        end,
         items = {
           starter.sections.recent_files(5, false),
           starter.sections.telescope(),
