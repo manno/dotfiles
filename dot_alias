@@ -60,7 +60,7 @@ qwhich cscope && alias cscope-r='cscope -R -s .'
 qwhich ctags && alias ctags-r='ctags --recurse=yes'
 qwhich indent && alias indent='indent -ce -br -brs -nut -i4 -l120'
 qwhich mpv && alias mplayeridentify='mpv -noconfig all -vo null -ao null -frames 0 -identify'
-qwhich rg  && alias rg="rg --hidden --glob '!.git'"
+qwhich rg  && alias rg="rg --hidden --sort=path --glob '!.git'"
 
 # debian aliases
 #

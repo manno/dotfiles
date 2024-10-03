@@ -143,8 +143,10 @@ return require("lazy").setup({
       vim.api.nvim_create_autocmd('FileType', {
         pattern = 'c,cpp,ruby',
         group = augroup,
-        callback = function()
-          vim.keymap.set("n", "gd", "<Plug>(coc-declaration)", silentOpt)
+        callback = function(event)
+          -- <c-]> is overriden by ruby ftpplugin
+          vim.keymap.set("n", "<c-]>", "<Plug>(coc-definition)", { silent = true, buffer = event.buf })
+          vim.keymap.set("n", "gd", "<Plug>(coc-definition)", silentOpt)
         end
       })
       vim.api.nvim_create_autocmd('FileType', {
@@ -168,7 +170,7 @@ return require("lazy").setup({
 
   -- Telescope
   {
-    'nvim-telescope/telescope.nvim', version = '0.1.6',
+    'nvim-telescope/telescope.nvim', version = '0.1.8',
     dependencies = {
       { 'nvim-lua/plenary.nvim' },
       { 'nvim-telescope/telescope-fzf-native.nvim',
@@ -195,10 +197,10 @@ return require("lazy").setup({
       local builtin = require('telescope.builtin')
       vim.keymap.set('n', '<leader>f', builtin.live_grep, {})
       vim.keymap.set({'n', 'v'}, '<leader>g', function()
-        require('git_grep').grep()
+        require('git_grep').live_grep()
       end)
       vim.keymap.set('n', '<leader>G', function()
-        require('git_grep').live_grep()
+        require('git_grep').grep()
       end)
       vim.keymap.set('n', '<leader>b', builtin.buffers, {})
       vim.keymap.set('n', '<leader>t', builtin.git_files, {})
@@ -324,7 +326,7 @@ return require("lazy").setup({
   },
 
   -- Tmux integration
-  { 'edkolev/tmuxline.vim', lazy = true },
+  -- { 'edkolev/tmuxline.vim', lazy = true },
 
   -- Autocompletion
   { 'github/copilot.vim', ft = {'ruby', 'go', 'js', 'sh', 'lua', 'vim', 'yaml'} },
@@ -373,17 +375,17 @@ return require("lazy").setup({
   },
 
   -- Vim ruby
-  { 'tpope/vim-bundler', ft = {'ruby'} },
-  { 'tpope/vim-rake', ft = {'ruby'} },
-  { 'tpope/vim-rails', ft = {'ruby'} },
-  {
-    ft = {'ruby', 'go'},
-    'janko-m/vim-test',
-    config = function()
-      vim.g['test#strategy'] = "neovim"
-      vim.keymap.set("n", "<F3>", ":TestFile<CR>")
-    end
-  },
+  -- { 'tpope/vim-bundler', ft = {'ruby'} },
+  -- { 'tpope/vim-rake', ft = {'ruby'} },
+  -- { 'tpope/vim-rails', ft = {'ruby'} },
+  -- {
+  --   ft = {'ruby', 'go'},
+  --   'janko-m/vim-test',
+  --   config = function()
+  --     vim.g['test#strategy'] = "neovim"
+  --     vim.keymap.set("n", "<F3>", ":TestFile<CR>")
+  --   end
+  -- },
 
   -- Open files at line
   {'manno/file-line'},
