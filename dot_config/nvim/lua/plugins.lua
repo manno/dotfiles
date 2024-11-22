@@ -150,7 +150,7 @@ return require("lazy").setup({
         end
       })
       vim.api.nvim_create_autocmd('FileType', {
-        pattern = 'c,cpp,go,ruby,rust',
+        pattern = 'c,cpp,go,ruby,rust,typescript,vue',
         group = augroup,
         callback = function()
           vim.keymap.set("n", "<C-]>", "<Plug>(coc-definition)", silentOpt)
@@ -270,7 +270,7 @@ return require("lazy").setup({
               file_status = true,
               newfile_status = true,
               path = 1,
-              shorting_target = 20,
+              shorting_target = 30,
             }
           },
           lualine_y = {'searchcount', 'progress'},
@@ -342,36 +342,52 @@ return require("lazy").setup({
   { 'echasnovski/mini.nvim', version = false,
     config = function()
       require('mini.surround').setup()
-      local starter =  require('mini.starter')
-      starter.setup({
-        -- https://github.com/MaximilianLloyd/ascii.nvim
-        header = [[
-   ███▄    █ ▓█████  ▒█████   ██▒   █▓ ██▓ ███▄ ▄███▓
-   ██ ▀█   █ ▓█   ▀ ▒██▒  ██▒▓██░   █▒▓██▒▓██▒▀█▀ ██▒
-  ▓██  ▀█ ██▒▒███   ▒██░  ██▒ ▓██  █▒░▒██▒▓██    ▓██░
-  ▓██▒  ▐▌██▒▒▓█  ▄ ▒██   ██░  ▒██ █░░░██░▒██    ▒██
-  ▒██░   ▓██░░▒████▒░ ████▓▒░   ▒▀█░  ░██░▒██▒   ░██▒
-  ░ ▒░   ▒ ▒ ░░ ▒░ ░░ ▒░▒░▒░    ░ ▐░  ░▓  ░ ▒░   ░  ░
-  ░ ░░   ░ ▒░ ░ ░  ░  ░ ▒ ▒░    ░ ░░   ▒ ░░  ░      ░
-     ░   ░ ░    ░   ░ ░ ░ ▒       ░░   ▒ ░░      ░
-           ░    ░  ░    ░ ░        ░   ░         ░
-                                  ░
-        ]],
-        footer = function()
-          local stats = require("lazy").stats()
-          return "⚡ neovim loaded " .. stats.loaded .. "/" .. stats.count .. " plugins"
-        end,
-        items = {
-          starter.sections.recent_files(5, false),
-          starter.sections.telescope(),
-        },
-        content_hooks = {
-          starter.gen_hook.adding_bullet(),
-          starter.gen_hook.aligning('center', 'center'),
+      require('mini.sessions').setup()
+    end
         },
 
       })
     end
+  },
+
+  {
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    opts = {
+      bigfile = { enabled = true },
+      notifier = { enabled = true },
+      dashboard = {
+        enabled = true,
+        sections = {
+          { section = "keys", gap = 1, padding = 3 },
+          { icon = " ", title = "Recent Files", section = "recent_files", indent = 3, padding = 1 },
+          {
+            icon = " ",
+            title = "Git Status",
+            section = "terminal",
+            enabled = vim.fn.isdirectory(".git") == 1,
+            cmd = "git status --short --branch --renames",
+            ttl = 5 * 60,
+            height = 5,
+            padding = 1,
+            indent = 3,
+          },
+          {
+            pane = 2,
+            {
+              section = "terminal",
+              cmd = "cat ~/.config/nvim/wall.txt; sleep .1",
+              height = 17,
+              padding = 0,
+            },
+            { icon = " ", title = "Projects", section = "projects", indent = 3, padding = { 1, 1 } },
+            -- { section = "startup", padding = 1, align = "left" },
+          },
+        },
+      },
+      bufdelete = { enabled = false },
+    },
   },
 
   -- Vim ruby
