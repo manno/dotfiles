@@ -167,6 +167,7 @@ return require("lazy").setup({
       })
     end
   },
+  { 'towolf/vim-helm' },
 
   -- Telescope
   {
@@ -345,10 +346,6 @@ return require("lazy").setup({
       require('mini.sessions').setup()
     end
         },
-
-      })
-    end
-  },
 
   {
     "folke/snacks.nvim",
