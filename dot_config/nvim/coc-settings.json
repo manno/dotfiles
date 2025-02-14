@@ -35,6 +35,19 @@
     "systemd": "systemd-analyze"
   },
   "languageserver": {
+    "helm": {
+      "command": "helm_ls",
+      "args": [
+        "serve"
+      ],
+      "filetypes": [
+        "helm",
+        "helmfile"
+      ],
+      "rootPatterns": [
+        "Chart.yaml"
+      ]
+    },
     "ccls": {
       "command": "ccls",
       "filetypes": [
@@ -58,6 +71,7 @@
   "Lua.diagnostics.globals": [
     "vim"
   ],
+  "suggest.noselect": false,
   "solargraph.promptDownload": false,
   "solargraph.checkGemVersion": false,
   "solargraph.diagnostics": true,

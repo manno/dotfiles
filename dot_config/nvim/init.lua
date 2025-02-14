@@ -117,8 +117,8 @@ vim.api.nvim_set_keymap('n', '<leader>p', ':tabprev<CR>', { noremap = true })
 
 vim.o.fileignorecase = false
 --  get rid of netrw, can't close its buffer
--- let g:loaded_netrw       = 1
--- let g:loaded_netrwPlugin = 1
+-- vim.g.loaded_netrw = 1
+-- vim.g.loaded_netrwPlugin = 1
 
 vim.api.nvim_set_keymap('n', '<leader>W', ':close<CR>', { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>D', ':%bd!<CR>', { noremap = true })
