@@ -211,7 +211,14 @@ return require("lazy").setup({
               end
             }
           },
-          lualine_b = {'windows', 'diff', 'diagnostics'},
+          lualine_b = {
+            {
+              'windows',
+              mode = 1,
+            },
+            'diff',
+            'diagnostics',
+          },
           lualine_c = {
             {
               'filename',
@@ -222,7 +229,29 @@ return require("lazy").setup({
             }
           },
           lualine_y = {'searchcount', 'progress'},
+        },
+        inactive_winbar = {
+          lualine_c = {
+            {
+              'filename',
+              file_status = true,
+              newfile_status = true,
+              path = 1,
+              shorting_target = 30,
+            }
+          },
+        },
+        winbar = {
+          lualine_c = {
+            {
+              'filename',
+              file_status = true,
+              newfile_status = true,
+              path = 1,
+              shorting_target = 30,
         }
+          },
+        },
       })
     end
   },
@@ -322,13 +351,22 @@ return require("lazy").setup({
         },
       },
       explorer = { enabled = true },
-      picker = { enabled = true },
+      picker = {
+        enabled = true,
+        formatters = {
+          file = {
+            truncate = 60,
+          },
+        },
+      },
       bufdelete = { enabled = false },
     },
     keys = {
+      { "<leader>ge", function() Snacks.explorer.reveal() end, desc = "Reveal" },
       -- luacheck: push ignore 113
       { "<leader>f", function() Snacks.picker.grep() end, desc = "Grep" },
       { "<leader>g", function() Snacks.picker.git_grep() end, desc = "Git Grep" },
+      { "<leader>G", function() Snacks.picker.grep_word() end, desc = "Visual selection or word", mode = { "n", "x" } },
       { "<leader>b", function() Snacks.picker.buffers() end, desc = "Buffers" },
       { "<leader>t", function() Snacks.picker.git_files() end, desc = "Find Git Files" },
       { "<leader>s", function() Snacks.picker.icons() end, desc = "Icons" },
@@ -358,7 +396,7 @@ return require("lazy").setup({
       { "<leader>sb", function() Snacks.picker.lines() end, desc = "Buffer Lines" },
       { "<leader>sB", function() Snacks.picker.grep_buffers() end, desc = "Grep Open Buffers" },
       -- { "<leader>sg", function() Snacks.picker.grep() end, desc = "Grep" },
-      { "<leader>sw", function() Snacks.picker.grep_word() end, desc = "Visual selection or word", mode = { "n", "x" } },
+      { "<leader>gw", function() Snacks.picker.grep_word() end, desc = "Visual selection or word", mode = { "n", "x" } },
       -- search
       { '<leader>s"', function() Snacks.picker.registers() end, desc = "Registers" },
       { '<leader>s/', function() Snacks.picker.search_history() end, desc = "Search History" },
