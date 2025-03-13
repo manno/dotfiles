@@ -29,15 +29,15 @@ vim.api.nvim_create_autocmd('LspAttach', {
       })
     end
 
-    if client:supports_method('textDocument/formatting') then
-      vim.api.nvim_create_autocmd('BufWritePre', {
-
-        buffer = args.buf,
-        callback = function()
-          vim.lsp.buf.format({ bufnr = args.buf, id = client.id })
-        end,
-      })
-    end
+    -- if client:supports_method('textDocument/formatting') then
+    --   vim.api.nvim_create_autocmd('BufWritePre', {
+    --
+    --     buffer = args.buf,
+    --     callback = function()
+    --       vim.lsp.buf.format({ bufnr = args.buf, id = client.id })
+    --     end,
+    --   })
+    -- end
 
     if client:supports_method('textDocument/codeAction') then
       local autocmd = vim.api.nvim_create_autocmd
@@ -69,6 +69,30 @@ vim.api.nvim_create_autocmd('LspAttach', {
         end,
       })
     end
+
+    vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', { buffer = args.buf })
+    vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', { buffer = args.buf })
+    vim.keymap.set('n', '<c-]>', '<cmd>lua vim.lsp.buf.definition()<cr>', { buffer = args.buf })
+    vim.keymap.set('n', ']g', '<cmd>lua vim.diagnostic.goto_next()<cr>', { buffer = args.buf })
+    vim.keymap.set('n', '[g', '<cmd>lua vim.diagnostic.goto_prev()<cr>', { buffer = args.buf })
+
+    -- 0.11 keybindings
+    -- gri
+    vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', { buffer = args.buf })
+    -- grr
+    vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', { buffer = args.buf })
+    -- grn
+    vim.keymap.set('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<cr>', { buffer = args.buf })
+    -- gra
+    vim.keymap.set('n', '<space>a', '<cmd>lua vim.lsp.buf.code_action()<cr>', { buffer = args.buf })
+
+    vim.keymap.set('n', 'gO', '<cmd>lua vim.lsp.buf.document_symbol()<cr>', { buffer = args.buf })
+    vim.keymap.set('i', '<C-S>', '<cmd>lua vim.lsp.buf.signature_help()<cr>', { buffer = args.buf })
+
+    -- vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', { buffer = args.buf })
+    -- vim.keymap.set('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>', { buffer = args.buf })
+    -- vim.keymap.set('n', '<F3>', '<cmd>lua vim.lsp.buf.format()<cr>', { buffer = args.buf })
+    -- vim.keymap.set('i', '<C-Space>', '<C-x><C-o>', { buffer = args.buf })
   end,
 })
 
@@ -180,17 +204,21 @@ return require("lazy").setup({
       },
 
       sources = {
-        default = { 'lsp', 'path', 'buffer', 'snippets', 'minuet' },
+        default = { 'lsp', 'path', 'buffer', 'snippets' },
 
-        providers = {
-          minuet = {
-            name = 'minuet',
-            module = 'minuet.blink',
-            score_offset = 100,
+        -- default = { 'lsp', 'path', 'buffer', 'snippets', 'minuet' },
+        -- providers = {
+        --   minuet = {
+        --     name = 'minuet',
+        --     module = 'minuet.blink',
+        --     score_offset = 100,
+        --   },
+        -- },
           },
-        },
-      },
-      fuzzy = { implementation = "prefer_rust_with_warning" }
+      fuzzy = {
+        implementation = "prefer_rust_with_warning",
+        max_typos = function(keyword) return math.floor(#keyword / 2) end,
+      }
     },
     opts_extend = { "sources.default" }
   },
@@ -225,66 +253,68 @@ return require("lazy").setup({
   -- LLM
   {
     'github/copilot.vim',
-    cond = function()
-      return os.getenv("GEMINI_API_KEY") == "" or os.getenv("GEMINI_API_KEY") == nil
-    end,
-    ft = { 'ruby', 'go', 'js', 'sh', 'lua', 'vim', 'yaml', 'gitcommit', 'markdown' }
-  },
-
-  {
-    "olimorris/codecompanion.nvim",
-    config = true,
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
-    },
-    cond = function()
-      return os.getenv("GEMINI_API_KEY") ~= "" and os.getenv("GEMINI_API_KEY") ~= nil
-    end,
-    opts = {
-      adapters = {
-        gemini = function()
-          return require("codecompanion.adapters").extend("gemini", {
-            env = {
-              api_key = function()
-                return os.getenv("GEMINI_API_KEY")
-              end
-            },
-          })
-        end,
-      },
-      strategies = {
-        chat = {
-          adapter = "gemini",
-        },
-        inline = {
-          adapter = "gemini",
-        },
-      },
-    },
-  },
-
-  {
-    'milanglacier/minuet-ai.nvim',
-    dependencies = { "nvim-lua/plenary.nvim" },
-    config = function()
-      require('minuet').setup {
-        provider = "gemini",
-        blink = {
-          enable_auto_complete = true,
-        },
-        provider_options = {
-          gemini = {
-            model = 'gemini-2.0-flash',
-            stream = true,
-            api_key = function()
-              return os.getenv("GEMINI_API_KEY")
-            end
-          },
-        }
-      }
+    ft = function()
+      if os.getenv("COPILOT_ENABLE") == "yes" then
+      return { 'ruby', 'go', 'js', 'sh', 'lua', 'vim', 'yaml', 'gitcommit', 'markdown' }
+    end
+      return {}
     end
   },
+
+  -- {
+  --   "olimorris/codecompanion.nvim",
+  --   config = true,
+  --   dependencies = {
+  --     "nvim-lua/plenary.nvim",
+  --     "nvim-treesitter/nvim-treesitter",
+  --   },
+  --   cond = function()
+  --     return os.getenv("GEMINI_API_KEY") ~= "" and os.getenv("GEMINI_API_KEY") ~= nil
+  --   end,
+  --   opts = {
+  --     adapters = {
+  --       gemini = function()
+  --         return require("codecompanion.adapters").extend("gemini", {
+  --           env = {
+  --             api_key = function()
+  --               return os.getenv("GEMINI_API_KEY")
+  --             end
+  --           },
+  --         })
+  --       end,
+  --     },
+  --     strategies = {
+  --       chat = {
+  --         adapter = "gemini",
+  --       },
+  --       inline = {
+  --         adapter = "gemini",
+  --       },
+  --     },
+  --   },
+  -- },
+
+  -- {
+  --   'milanglacier/minuet-ai.nvim',
+  --   dependencies = { "nvim-lua/plenary.nvim" },
+  --   config = function()
+  --     require('minuet').setup {
+  --       provider = "gemini",
+  --       blink = {
+  --         enable_auto_complete = true,
+  --       },
+  --       provider_options = {
+  --         gemini = {
+  --           model = 'gemini-2.0-flash',
+  --           stream = true,
+  --           api_key = function()
+  --             return os.getenv("GEMINI_API_KEY")
+  --           end
+  --         },
+  --       }
+  --     }
+  --   end
+  -- },
 
   { 'towolf/vim-helm' },
 
