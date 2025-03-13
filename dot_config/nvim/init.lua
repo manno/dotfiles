@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global, undefined-field
 -- Mouse
 vim.o.mouse = "ivh"
 
@@ -15,10 +16,11 @@ vim.o.number = true    -- Show line numbers
 vim.o.synmaxcol = 2048
 
 -- Setup document specifics
-vim.cmd('filetype on')      -- Load filetype.vim
-vim.o.hidden = true         -- Allow hidden buffers
-vim.o.wildignore =  '*.o,*.obj,.svn,.git,tags'
-vim.o.wildignore = vim.o.wildignore .. ',blue.vim,darkblue.vim,delek.vim,desert.vim,elflord.vim,evening.vim,habamax.vim,industry.vim,koehler.vim,lunaperche.vim,morning.vim,murphy.vim,pablo.vim,peachpuff.vim,quiet.vim,retrobox.vim,ron.vim,shine.vim,slate.vim,sorbet.vim,torte.vim,wildcharm.vim,zaibatsu.vim,zellner.vim'
+vim.cmd('filetype on') -- Load filetype.vim
+vim.o.hidden = true    -- Allow hidden buffers
+vim.o.wildignore = '*.o,*.obj,.svn,.git,tags'
+vim.o.wildignore = vim.o.wildignore ..
+    ',blue.vim,darkblue.vim,delek.vim,desert.vim,elflord.vim,evening.vim,habamax.vim,industry.vim,koehler.vim,lunaperche.vim,morning.vim,murphy.vim,pablo.vim,peachpuff.vim,quiet.vim,retrobox.vim,ron.vim,shine.vim,slate.vim,sorbet.vim,torte.vim,wildcharm.vim,zaibatsu.vim,zellner.vim'
 
 -- Jump to the last position when reopening a file
 vim.api.nvim_exec([[
@@ -29,16 +31,16 @@ vim.api.nvim_exec([[
 ]], false)
 
 -- Backups & Files
-vim.o.backup = true                  -- Enable creation of a backup file.
+vim.o.backup = true -- Enable creation of a backup file.
 vim.api.nvim_exec([[
 if empty(glob('~/.local/share/nvim/backup'))
     call mkdir($HOME . "/.local/share/nvim/backup", "p", 0700)
 endif
 ]], false)
 vim.o.backupdir = vim.fn.expand('~/.local/share/nvim/backup') -- Where backups will go.
-vim.o.undofile = true                -- Persistent undo
-vim.o.undolevels = 1000               -- Maximum number of changes that can be undone
-vim.o.undoreload = 10000              -- Maximum number of lines to save for undo on a buffer reload
+vim.o.undofile = true                                         -- Persistent undo
+vim.o.undolevels = 1000                                       -- Maximum number of changes that can be undone
+vim.o.undoreload = 10000                                      -- Maximum number of lines to save for undo on a buffer reload
 
 -- Search
 vim.o.ignorecase = true
@@ -50,16 +52,17 @@ vim.o.digraph = false
 vim.o.virtualedit = 'block' -- Fix problem with yank in utf8
 
 -- Diffmode
-if vim.o.diff then
-    vim.o.syntax = 'off'
-    vim.o.diffopt = vim.o.diffopt .. ',iwhite'
-end
+vim.opt.diffopt = {
+    "internal",
+    "filler",
+    "closeoff",
 
--- Quickfix
-vim.cmd [[
-autocmd QuickFixCmdPost *grep* cwindow
-set diffopt+=vertical
-]]
+    "context:12",
+    "algorithm:histogram",
+    "linematch:200",
+    "indent-heuristic",
+    "iwhite",
+}
 
 -- Statusline
 vim.o.showcmd = true -- Show the command in the status line
@@ -134,7 +137,8 @@ vim.api.nvim_set_keymap('n', '<A-l>', '<C-w>l', { noremap = true })
 
 -- Debug
 vim.api.nvim_set_keymap('n', '<F6>', ':command', { noremap = true })
-vim.api.nvim_set_keymap('n', '<F2>', ':n ~/.config/nvim/lua/plugins.lua ~/.config/nvim/init.lua ~/.config/nvim/filetype.vim<CR>', { noremap = true })
+vim.api.nvim_set_keymap('n', '<F2>',
+    ':n ~/.config/nvim/lua/plugins.lua ~/.config/nvim/init.lua ~/.config/nvim/filetype.vim<CR>', { noremap = true })
 
 -- Make
 vim.api.nvim_set_keymap('n', '!ma', '<ESC>:w<CR>:make %<CR>', { noremap = true })
@@ -171,10 +175,7 @@ augroup languages
     autocmd FileType c           set cindent
     autocmd FileType eruby       map _rw i<%= %>
     autocmd FileType eruby       set number
-    " autocmd FileType go        map <F4> :GoImports<CR>
     autocmd FileType go          setlocal noet ts=8 sw=8 sts=8 number
-    " autocmd FileType go        set completeopt-=preview
-    autocmd BufWritePre *.go     :silent call CocAction('runCommand', 'editor.action.organizeImport')
     autocmd FileType java        set foldmethod=manual
     autocmd FileType lua         set ts=4 sw=4 et smartindent foldmethod=syntax
     autocmd FileType nfo         edit ++enc=cp437

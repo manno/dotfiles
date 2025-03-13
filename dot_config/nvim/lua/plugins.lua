@@ -1,8 +1,76 @@
 -- vim: ts=2 sw=2
 -- https://github.com/nanotee/nvim-lua-guide
+---@diagnostic disable: undefined-global, undefined-field
 
-local silentOpt = { silent = true }
-local allOpt = { noremap = true, silent = true, nowait = true }
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+
+    if client:supports_method('textDocument/inlayHint') then
+      vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
+    end
+
+    if client:supports_method('textDocument/documentHighlight') then
+      local autocmd = vim.api.nvim_create_autocmd
+      local augroup = vim.api.nvim_create_augroup('lsp_highlight', { clear = false })
+
+      vim.api.nvim_clear_autocmds({ buffer = bufnr, group = augroup })
+
+      autocmd({ 'CursorHold' }, {
+        group = augroup,
+        buffer = args.buf,
+        callback = vim.lsp.buf.document_highlight,
+      })
+
+      autocmd({ 'CursorMoved' }, {
+        group = augroup,
+        buffer = args.buf,
+        callback = vim.lsp.buf.clear_references,
+      })
+    end
+
+    if client:supports_method('textDocument/formatting') then
+      vim.api.nvim_create_autocmd('BufWritePre', {
+
+        buffer = args.buf,
+        callback = function()
+          vim.lsp.buf.format({ bufnr = args.buf, id = client.id })
+        end,
+      })
+    end
+
+    if client:supports_method('textDocument/codeAction') then
+      local autocmd = vim.api.nvim_create_autocmd
+      local augroup = vim.api.nvim_create_augroup('lsp_go_format', { clear = false })
+
+      vim.api.nvim_clear_autocmds({ buffer = bufnr, group = augroup })
+
+      autocmd({ 'BufWritePre' }, {
+        group = augroup,
+        pattern = { "*.go" },
+        callback = function()
+          local params = vim.lsp.util.make_range_params()
+          params.context = { only = { "source.organizeImports" } }
+          -- buf_request_sync defaults to a 1000ms timeout. Depending on your
+          -- machine and codebase, you may want longer. Add an additional
+          -- argument after params if you find that you have to write the file
+          -- twice for changes to be saved.
+          -- E.g., vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 3000)
+          local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params)
+          for cid, res in pairs(result or {}) do
+            for _, r in pairs(res.result or {}) do
+              if r.edit then
+                local enc = (vim.lsp.get_client_by_id(cid) or {}).offset_encoding or "utf-16"
+                vim.lsp.util.apply_workspace_edit(r.edit, enc)
+              end
+            end
+          end
+          vim.lsp.buf.format({ async = false })
+        end,
+      })
+    end
+  end,
+})
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -30,7 +98,7 @@ return require("lazy").setup({
       -- ignore_install = { "phpdoc" },
       ensure_installed = { 'bash', 'html', 'lua', 'markdown', 'vim', 'vimdoc', 'go', 'yaml' },
       highlight = {
-        enable = true,                 -- false will disable the whole extension
+        enable = true, -- false will disable the whole extension
         -- disable = { "c", "rust" },  -- list of language that will be disabled
       },
       textobjects = {
@@ -63,110 +131,161 @@ return require("lazy").setup({
   { 'nvim-treesitter/nvim-treesitter-textobjects' },
   { 'nvim-treesitter/nvim-treesitter-context' },
 
-  -- Languageservers
-  -- run :CocConfig to add language servers, e.g.
-  -- run :CocCommand go.install.gopls
-  --   go get -u golang.org/x/tools/...
-  --   https://github.com/josa42/coc-go#example-configuration
-  --   https://github.com/neoclide/coc.nvim/blob/master/data/schema.json
-  -- run :CocUpdate
-  -- run :CocInstall ft
-  -- CocInstall coc-diagnostic
+  -- Autocompletion
   {
-    'neoclide/coc.nvim',
-    branch = 'release',
-    build = ':CocInstall coc-go',
+    'saghen/blink.cmp',
+    -- use a release tag to download pre-built binaries
+    version = '*',
+    lazy = false,
+
+    ---@module 'blink.cmp'
+    ---@type blink.cmp.Config
+    opts = {
+      -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept, C-n/C-p for up/down)
+      -- 'super-tab' for mappings similar to vscode (tab to accept, arrow keys for up/down)
+      -- 'enter' for mappings similar to 'super-tab' but with 'enter' to accept
+      -- keymap = { preset = 'default' },
+      keymap = {
+        preset = "super-tab",
+        -- preset = "enter",
+        -- ["<S-Tab>"] = { "select_prev", "fallback" },
+        -- ["<Tab>"] = { "select_next", "fallback" },
+        -- ['<A-y>'] = require('minuet').make_blink_map(),
+        ['<CR>'] = { 'accept', 'fallback' },
+      },
+      cmdline = {
+        sources = { "cmdline" },
+        keymap = {
+          ['<CR>'] = { 'accept', 'fallback' },
+        }
+      },
+      completion = {
+        ghost_text = { enabled = true },
+        menu = {
+          border = "rounded",
+        },
+        documentation = {
+          auto_show = true,
+          auto_show_delay_ms = 500,
+          window = {
+            border = "rounded",
+          },
+        },
+      },
+
+      appearance = {
+        -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+        -- Adjusts spacing to ensure icons are aligned
+        nerd_font_variant = 'mono'
+      },
+
+      sources = {
+        default = { 'lsp', 'path', 'buffer', 'snippets', 'minuet' },
+
+        providers = {
+          minuet = {
+            name = 'minuet',
+            module = 'minuet.blink',
+            score_offset = 100,
+          },
+        },
+      },
+      fuzzy = { implementation = "prefer_rust_with_warning" }
+    },
+    opts_extend = { "sources.default" }
+  },
+
+  -- Languageservers
+  {
+    'neovim/nvim-lspconfig',
+    dependencies = { 'saghen/blink.cmp' },
+
+    -- example using `opts` for defining servers
+    opts = {
+      servers = {
+        gopls = {},
+        helm_ls = {},
+        jsonls = {},
+        lua_ls = {},
+        solargraph = {},
+        yamlls = {},
+      }
+    },
+    config = function(_, opts)
+      local lspconfig = require('lspconfig')
+      for server, config in pairs(opts.servers) do
+        -- passing config.capabilities to blink.cmp merges with the capabilities in your
+        -- `opts[server].capabilities, if you've defined it
+        config.capabilities = require('blink.cmp').get_lsp_capabilities(config.capabilities)
+        lspconfig[server].setup(config)
+      end
+    end,
+  },
+
+  -- LLM
+  {
+    'github/copilot.vim',
+    cond = function()
+      return os.getenv("GEMINI_API_KEY") == "" or os.getenv("GEMINI_API_KEY") == nil
+    end,
+    ft = { 'ruby', 'go', 'js', 'sh', 'lua', 'vim', 'yaml', 'gitcommit', 'markdown' }
+  },
+
+  {
+    "olimorris/codecompanion.nvim",
+    config = true,
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    cond = function()
+      return os.getenv("GEMINI_API_KEY") ~= "" and os.getenv("GEMINI_API_KEY") ~= nil
+    end,
+    opts = {
+      adapters = {
+        gemini = function()
+          return require("codecompanion.adapters").extend("gemini", {
+            env = {
+              api_key = function()
+                return os.getenv("GEMINI_API_KEY")
+              end
+            },
+          })
+        end,
+      },
+      strategies = {
+        chat = {
+          adapter = "gemini",
+        },
+        inline = {
+          adapter = "gemini",
+        },
+      },
+    },
+  },
+
+  {
+    'milanglacier/minuet-ai.nvim',
+    dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
-      vim.g.coc_global_extensions = { 'coc-json', 'coc-diagnostic', 'coc-tsserver', 'coc-go', 'coc-solargraph', 'coc-clangd', 'coc-yaml', 'coc-lua' }
-
-      -- solargraph
-      vim.g.coc_node_args = {'--dns-result-order=ipv4first'}
-
-      -- https://github.com/neoclide/coc.nvim/blob/master/data/schema.json
-      vim.keymap.set('', '<leader><F2>', ':CocConfig<CR>')
-
-      -- -- <CR> confirms completion suggestion
-      local opts = {silent = true, noremap = true, expr = true, replace_keycodes = false}
-      vim.keymap.set("i", "<TAB>", 'coc#pum#visible() ? coc#pum#next(1) : v:lua.check_back_space() ? "<TAB>" : coc#refresh()', opts)
-      vim.keymap.set("i", "<S-TAB>", [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]], opts)
-
-      -- Make <CR> to accept selected completion item or notify coc.nvim to format
-      -- <C-g>u breaks current undo, please make your own choice.
-      vim.keymap.set("i", "<cr>", [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]], opts)
-
-      -- Use `[c` and `]c` to navigate diagnostics
-      -- Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
-      vim.keymap.set("n", "[g", "<Plug>(coc-diagnostic-prev)", silentOpt)
-      vim.keymap.set("n", "]g", "<Plug>(coc-diagnostic-next)", silentOpt)
-      vim.keymap.set("n", "]d", "<Plug>(coc-definitions)", silentOpt)
-
-      -- GoTo code navigation.
-      vim.keymap.set("n", "gd", "<Plug>(coc-definition)", silentOpt)
-      vim.keymap.set("n", "gy", "<Plug>(coc-type-definition)", silentOpt)
-      vim.keymap.set("n", "gi", "<Plug>(coc-implementation)", silentOpt)
-      vim.keymap.set("n", "gr", "<Plug>(coc-references)", silentOpt)
-
-      vim.keymap.set("n", "]f", "<Plug>(coc-fix-current)", silentOpt)
-      vim.keymap.set("n", "K", ":call CocActionAsync('doHover')<CR>", silentOpt)
-
-      vim.keymap.set("n", "<leader>rn", "<Plug>(coc-rename)")
-      vim.keymap.set("n", "<leader>R", ":call CocActionAsync('rename')<CR>")
-
-      -- \aw \aap \a%
-      vim.keymap.set("x", "<leader>a", "<Plug>(coc-codeaction-selected)")
-      vim.keymap.set("n", "<leader>a", "<Plug>(coc-codeaction-selected)")
-
-
-      -- Mappings for CoCList
-      -- Show all diagnostics.
-      vim.keymap.set("n", "<space>d", ":<C-u>CocList diagnostics<cr>", allOpt)
-      -- Find symbol of current document.
-      vim.keymap.set("n", "<space>o", ":<C-u>CocList outline<cr>", allOpt)
-
-      -- Show commands.
-      vim.keymap.set("n", "<space>c", ":<C-u>CocList commands<cr>", allOpt)
-      -- Manage extensions.
-      vim.keymap.set("n", "<space>e", ":<C-u>CocList extensions<cr>", allOpt)
-
-      -- Search workspace symbols.
-      vim.keymap.set("n", "<space>s", ":<C-u>CocList -I symbols<cr>", allOpt)
-      -- Do default action for next item.
-      vim.keymap.set("n", "<space>j", ":<C-u>CocNext<CR>", allOpt)
-      -- Do default action for previous item.
-      vim.keymap.set("n", "<space>k", ":<C-u>CocPrev<CR>", allOpt)
-      -- Resume latest coc list.
-      vim.keymap.set("n", "<space>p", ":<C-u>CocListResume<CR>", allOpt)
-      --
-      vim.keymap.set("n", "<space>a", "<Plug>(coc-codeaction-cursor)", { nowait = true, silent = true })
-
-      local augroup = vim.api.nvim_create_augroup('coc', { clear = true })
-      vim.api.nvim_create_autocmd('FileType', {
-        pattern = 'c,cpp,ruby',
-        group = augroup,
-        callback = function(event)
-          -- <c-]> is overriden by ruby ftpplugin
-          vim.keymap.set("n", "<c-]>", "<Plug>(coc-definition)", { silent = true, buffer = event.buf })
-          vim.keymap.set("n", "gd", "<Plug>(coc-definition)", silentOpt)
-        end
-      })
-      vim.api.nvim_create_autocmd('FileType', {
-        pattern = 'c,cpp,go,ruby,rust,typescript,vue',
-        group = augroup,
-        callback = function()
-          vim.keymap.set("n", "<C-]>", "<Plug>(coc-definition)", silentOpt)
-        end
-      })
-      vim.api.nvim_create_autocmd('FileType', {
-        pattern = 'go',
-        group = augroup,
-        callback = function()
-          vim.keymap.set("n", "gtj", ":CocCommand go.tags.add json<cr>")
-          vim.keymap.set("n", "gty", ":CocCommand go.tags.add yaml<cr>")
-          vim.keymap.set("n", "gtx", ":CocCommand go.tags.clear<cr>")
-        end
-      })
+      require('minuet').setup {
+        provider = "gemini",
+        blink = {
+          enable_auto_complete = true,
+        },
+        provider_options = {
+          gemini = {
+            model = 'gemini-2.0-flash',
+            stream = true,
+            api_key = function()
+              return os.getenv("GEMINI_API_KEY")
+            end
+          },
+        }
+      }
     end
   },
+
   { 'towolf/vim-helm' },
 
   -- Status line
@@ -186,11 +305,11 @@ return require("lazy").setup({
     config = function()
       -- local get_mode = require('lualine.utils.mode').get_mode
       local icons = {
-        ['n']      = ' ',
-        ['i']      = '󰙏 ',
-        ['c']      = ' ',
-        ['v']      = '󰸿 ',
-        ['V']      = '󰸽 ',
+        ['n'] = ' ',
+        ['i'] = '󰙏 ',
+        ['c'] = ' ',
+        ['v'] = '󰸿 ',
+        ['V'] = '󰸽 ',
       }
       require("lualine").setup({
         options = {
@@ -228,7 +347,7 @@ return require("lazy").setup({
               shorting_target = 30,
             }
           },
-          lualine_y = {'searchcount', 'progress'},
+          lualine_y = { 'searchcount', 'progress' },
         },
         inactive_winbar = {
           lualine_c = {
@@ -249,7 +368,7 @@ return require("lazy").setup({
               newfile_status = true,
               path = 1,
               shorting_target = 30,
-        }
+            }
           },
         },
       })
@@ -257,26 +376,24 @@ return require("lazy").setup({
   },
 
   -- Colorschemes
-  -- 'chriskempson/vim-tomorrow-theme'
-  -- 'drewtempelmeyer/palenight.vim'
-  -- 'iCyMind/NeoSolarized'
-  -- 'sainnhe/sonokai'
-  -- {'embark-theme/vim', { name = 'embark' }}
-  -- { 'TroyFletcher/vim-colors-synthwave', lazy = true },
-  -- { 'jonathanfilip/vim-lucius', lazy = true },
-  -- { 'noahfrederick/vim-hemisu', lazy = true },
-  -- { 'tomasr/molokai', lazy = true },
-  -- { 'sontungexpt/witch', lazy = true },
-  { 'endel/vim-github-colorscheme', lazy = true },
+  -- { 'drewtempelmeyer/palenight.vim' },
+  -- { 'embark-theme/vim' },
+  -- { 'iCyMind/NeoSolarized' },
+  -- { 'jonathanfilip/vim-lucius' },
+  -- { 'noahfrederick/vim-hemisu' },
+  -- { 'sainnhe/sonokai' },
+  -- { 'sontungexpt/witch' },
+  -- { 'tomasr/molokai' },
+  { 'chriskempson/base16-vim' },
+  { 'TroyFletcher/vim-colors-synthwave' },
   {
     'folke/tokyonight.nvim',
-    lazy = true,
     priority = 1000,
     -- on_colors = function(c)
     --   c.border = c.blue0
     -- end,
     config = function()
-      -- vim.cmd[[colorscheme tokyonight]]
+      vim.cmd [[colorscheme tokyonight]]
     end
   },
   {
@@ -289,30 +406,29 @@ return require("lazy").setup({
           hl.WinSeparator = { fg = c.cyan }
         end
       })
-      vim.cmd[[colorscheme dracula]]
+      -- vim.cmd [[colorscheme dracula]]
     end
   },
 
   -- Tmux integration
   -- { 'edkolev/tmuxline.vim', lazy = true },
 
-  -- Autocompletion
-  { 'github/copilot.vim', ft = {'ruby', 'go', 'js', 'sh', 'lua', 'vim', 'yaml'} },
-
   -- Readline style insertion
-  {'tpope/vim-rsi'},
+  { 'tpope/vim-rsi' },
 
   -- Spider cursor movement
   { "chrisgrieser/nvim-spider" },
 
 
   -- Surround - sa%" sa$' saE" srb" sr"' sd"
-  { 'echasnovski/mini.nvim', version = false,
+  {
+    'echasnovski/mini.nvim',
+    version = false,
     config = function()
       require('mini.surround').setup()
       require('mini.sessions').setup()
     end
-        },
+  },
 
   {
     "folke/snacks.nvim",
@@ -362,63 +478,63 @@ return require("lazy").setup({
       bufdelete = { enabled = false },
     },
     keys = {
-      { "<leader>ge", function() Snacks.explorer.reveal() end, desc = "Reveal" },
+      { "<leader>ge",      function() Snacks.explorer.reveal() end,                                desc = "Reveal" },
       -- luacheck: push ignore 113
-      { "<leader>f", function() Snacks.picker.grep() end, desc = "Grep" },
-      { "<leader>g", function() Snacks.picker.git_grep() end, desc = "Git Grep" },
-      { "<leader>G", function() Snacks.picker.grep_word() end, desc = "Visual selection or word", mode = { "n", "x" } },
-      { "<leader>b", function() Snacks.picker.buffers() end, desc = "Buffers" },
-      { "<leader>t", function() Snacks.picker.git_files() end, desc = "Find Git Files" },
-      { "<leader>s", function() Snacks.picker.icons() end, desc = "Icons" },
+      { "<leader>f",       function() Snacks.picker.grep() end,                                    desc = "Grep" },
+      { "<leader>g",       function() Snacks.picker.git_grep() end,                                desc = "Git Grep" },
+      { "<leader>G",       function() Snacks.picker.grep_word() end,                               desc = "Visual selection or word", mode = { "n", "x" } },
+      { "<leader>b",       function() Snacks.picker.buffers() end,                                 desc = "Buffers" },
+      { "<leader>t",       function() Snacks.picker.git_files() end,                               desc = "Find Git Files" },
+      { "<leader>s",       function() Snacks.picker.icons() end,                                   desc = "Icons" },
       -- Top Pickers & Explorer
-      { "<leader><space>", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
+      { "<leader><space>", function() Snacks.picker.smart() end,                                   desc = "Smart Find Files" },
       -- { "<leader>,", function() Snacks.picker.buffers() end, desc = "Buffers" },
       -- { "<leader>/", function() Snacks.picker.grep() end, desc = "Grep" },
-      { "<leader>:", function() Snacks.picker.command_history() end, desc = "Command History" },
+      { "<leader>:",       function() Snacks.picker.command_history() end,                         desc = "Command History" },
       -- { "<leader>n", function() Snacks.picker.notifications() end, desc = "Notification History" },
-      { "<leader>e", function() Snacks.explorer() end, desc = "File Explorer" },
+      { "<leader>e",       function() Snacks.explorer() end,                                       desc = "File Explorer" },
       -- find
       -- { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },
-      { "<leader>fc", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
-      { "<leader>ff", function() Snacks.picker.files() end, desc = "Find Files" },
-      { "<leader>fg", function() Snacks.picker.git_files() end, desc = "Find Git Files" },
-      { "<leader>fp", function() Snacks.picker.projects() end, desc = "Projects" },
-      { "<leader>fr", function() Snacks.picker.recent() end, desc = "Recent" },
+      { "<leader>fc",      function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
+      { "<leader>ff",      function() Snacks.picker.files() end,                                   desc = "Find Files" },
+      { "<leader>fg",      function() Snacks.picker.git_files() end,                               desc = "Find Git Files" },
+      { "<leader>fp",      function() Snacks.picker.projects() end,                                desc = "Projects" },
+      { "<leader>fr",      function() Snacks.picker.recent() end,                                  desc = "Recent" },
       -- git
-      { "<leader>gb", function() Snacks.picker.git_branches() end, desc = "Git Branches" },
-      { "<leader>gl", function() Snacks.picker.git_log() end, desc = "Git Log" },
-      { "<leader>gL", function() Snacks.picker.git_log_line() end, desc = "Git Log Line" },
-      { "<leader>gs", function() Snacks.picker.git_status() end, desc = "Git Status" },
-      { "<leader>gS", function() Snacks.picker.git_stash() end, desc = "Git Stash" },
-      { "<leader>gd", function() Snacks.picker.git_diff() end, desc = "Git Diff (Hunks)" },
-      { "<leader>gf", function() Snacks.picker.git_log_file() end, desc = "Git Log File" },
+      { "<leader>gb",      function() Snacks.picker.git_branches() end,                            desc = "Git Branches" },
+      { "<leader>gl",      function() Snacks.picker.git_log() end,                                 desc = "Git Log" },
+      { "<leader>gL",      function() Snacks.picker.git_log_line() end,                            desc = "Git Log Line" },
+      { "<leader>gs",      function() Snacks.picker.git_status() end,                              desc = "Git Status" },
+      { "<leader>gS",      function() Snacks.picker.git_stash() end,                               desc = "Git Stash" },
+      { "<leader>gd",      function() Snacks.picker.git_diff() end,                                desc = "Git Diff (Hunks)" },
+      { "<leader>gf",      function() Snacks.picker.git_log_file() end,                            desc = "Git Log File" },
       -- Grep
-      { "<leader>sb", function() Snacks.picker.lines() end, desc = "Buffer Lines" },
-      { "<leader>sB", function() Snacks.picker.grep_buffers() end, desc = "Grep Open Buffers" },
+      { "<leader>sb",      function() Snacks.picker.lines() end,                                   desc = "Buffer Lines" },
+      { "<leader>sB",      function() Snacks.picker.grep_buffers() end,                            desc = "Grep Open Buffers" },
       -- { "<leader>sg", function() Snacks.picker.grep() end, desc = "Grep" },
-      { "<leader>gw", function() Snacks.picker.grep_word() end, desc = "Visual selection or word", mode = { "n", "x" } },
+      { "<leader>gw",      function() Snacks.picker.grep_word() end,                               desc = "Visual selection or word", mode = { "n", "x" } },
       -- search
-      { '<leader>s"', function() Snacks.picker.registers() end, desc = "Registers" },
-      { '<leader>s/', function() Snacks.picker.search_history() end, desc = "Search History" },
-      { "<leader>sa", function() Snacks.picker.autocmds() end, desc = "Autocmds" },
-      { "<leader>sb", function() Snacks.picker.lines() end, desc = "Buffer Lines" },
-      { "<leader>sc", function() Snacks.picker.command_history() end, desc = "Command History" },
-      { "<leader>sC", function() Snacks.picker.commands() end, desc = "Commands" },
-      { "<leader>sd", function() Snacks.picker.diagnostics() end, desc = "Diagnostics" },
-      { "<leader>sD", function() Snacks.picker.diagnostics_buffer() end, desc = "Buffer Diagnostics" },
-      { "<leader>sh", function() Snacks.picker.help() end, desc = "Help Pages" },
-      { "<leader>sH", function() Snacks.picker.highlights() end, desc = "Highlights" },
-      { "<leader>si", function() Snacks.picker.icons() end, desc = "Icons" },
-      { "<leader>sj", function() Snacks.picker.jumps() end, desc = "Jumps" },
-      { "<leader>sk", function() Snacks.picker.keymaps() end, desc = "Keymaps" },
-      { "<leader>sl", function() Snacks.picker.loclist() end, desc = "Location List" },
-      { "<leader>sm", function() Snacks.picker.marks() end, desc = "Marks" },
-      { "<leader>sM", function() Snacks.picker.man() end, desc = "Man Pages" },
-      { "<leader>sp", function() Snacks.picker.lazy() end, desc = "Search for Plugin Spec" },
-      { "<leader>sq", function() Snacks.picker.qflist() end, desc = "Quickfix List" },
-      { "<leader>sR", function() Snacks.picker.resume() end, desc = "Resume" },
-      { "<leader>su", function() Snacks.picker.undo() end, desc = "Undo History" },
-      { "<leader>uC", function() Snacks.picker.colorschemes() end, desc = "Colorschemes" },
+      { '<leader>s"',      function() Snacks.picker.registers() end,                               desc = "Registers" },
+      { '<leader>s/',      function() Snacks.picker.search_history() end,                          desc = "Search History" },
+      { "<leader>sa",      function() Snacks.picker.autocmds() end,                                desc = "Autocmds" },
+      { "<leader>sb",      function() Snacks.picker.lines() end,                                   desc = "Buffer Lines" },
+      { "<leader>sc",      function() Snacks.picker.command_history() end,                         desc = "Command History" },
+      { "<leader>sC",      function() Snacks.picker.commands() end,                                desc = "Commands" },
+      { "<leader>sd",      function() Snacks.picker.diagnostics() end,                             desc = "Diagnostics" },
+      { "<leader>sD",      function() Snacks.picker.diagnostics_buffer() end,                      desc = "Buffer Diagnostics" },
+      { "<leader>sh",      function() Snacks.picker.help() end,                                    desc = "Help Pages" },
+      { "<leader>sH",      function() Snacks.picker.highlights() end,                              desc = "Highlights" },
+      { "<leader>si",      function() Snacks.picker.icons() end,                                   desc = "Icons" },
+      { "<leader>sj",      function() Snacks.picker.jumps() end,                                   desc = "Jumps" },
+      { "<leader>sk",      function() Snacks.picker.keymaps() end,                                 desc = "Keymaps" },
+      { "<leader>sl",      function() Snacks.picker.loclist() end,                                 desc = "Location List" },
+      { "<leader>sm",      function() Snacks.picker.marks() end,                                   desc = "Marks" },
+      { "<leader>sM",      function() Snacks.picker.man() end,                                     desc = "Man Pages" },
+      { "<leader>sp",      function() Snacks.picker.lazy() end,                                    desc = "Search for Plugin Spec" },
+      { "<leader>sq",      function() Snacks.picker.qflist() end,                                  desc = "Quickfix List" },
+      { "<leader>sR",      function() Snacks.picker.resume() end,                                  desc = "Resume" },
+      { "<leader>su",      function() Snacks.picker.undo() end,                                    desc = "Undo History" },
+      { "<leader>uC",      function() Snacks.picker.colorschemes() end,                            desc = "Colorschemes" },
       -- LSP
       -- { "gd", function() Snacks.picker.lsp_definitions() end, desc = "Goto Definition" },
       -- { "gD", function() Snacks.picker.lsp_declarations() end, desc = "Goto Declaration" },
@@ -444,23 +560,36 @@ return require("lazy").setup({
   -- },
 
   -- Open files at line
-  {'manno/file-line'},
+  { 'manno/file-line' },
 
-  {"almo7aya/openingh.nvim"},
+  { "almo7aya/openingh.nvim" },
 
   -- Format SQL
-  {'vim-scripts/SQLUtilities', ft = {'sql'}},
+  { 'vim-scripts/SQLUtilities',  ft = { 'sql' } },
 
   { 'zerowidth/vim-copy-as-rtf', cond = function() return vim.fn.has('mac') end },
 
   -- Markdown preview
-  { 'davinche/godown-vim', ft = {'markdown'} },
+  { 'davinche/godown-vim',       ft = { 'markdown' } },
 
   -- Git
   {
     'lewis6991/gitsigns.nvim', config = function() require('gitsigns').setup() end,
   },
-  { "sindrets/diffview.nvim" },
+  {
+    "sindrets/diffview.nvim",
+    config = function()
+      vim.keymap.set("n", "<leader>v",
+        function()
+          if next(require("diffview.lib").views) == nil then
+            vim.cmd("DiffviewOpen")
+          else
+            vim.cmd(
+              "DiffviewClose")
+          end
+        end)
+    end
+  },
   {
     "FabijanZulj/blame.nvim",
     config = function()
