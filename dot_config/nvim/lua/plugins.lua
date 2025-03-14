@@ -214,7 +214,7 @@ return require("lazy").setup({
         --     score_offset = 100,
         --   },
         -- },
-          },
+      },
       fuzzy = {
         implementation = "prefer_rust_with_warning",
         max_typos = function(keyword) return math.floor(#keyword / 2) end,
@@ -231,6 +231,7 @@ return require("lazy").setup({
     -- example using `opts` for defining servers
     opts = {
       servers = {
+        clangd = {},
         gopls = {},
         helm_ls = {},
         jsonls = {},
@@ -254,9 +255,9 @@ return require("lazy").setup({
   {
     'github/copilot.vim',
     ft = function()
-      if os.getenv("COPILOT_ENABLE") == "yes" then
-      return { 'ruby', 'go', 'js', 'sh', 'lua', 'vim', 'yaml', 'gitcommit', 'markdown' }
-    end
+      if os.getenv("COPILOT_DISABLE") ~= nil then
+        return { 'ruby', 'go', 'js', 'sh', 'lua', 'vim', 'yaml', 'gitcommit', 'markdown' }
+      end
       return {}
     end
   },
@@ -268,9 +269,9 @@ return require("lazy").setup({
   --     "nvim-lua/plenary.nvim",
   --     "nvim-treesitter/nvim-treesitter",
   --   },
-  --   cond = function()
-  --     return os.getenv("GEMINI_API_KEY") ~= "" and os.getenv("GEMINI_API_KEY") ~= nil
-  --   end,
+  --   -- cond = function()
+  --   --   return os.getenv("GEMINI_API_KEY") ~= "" and os.getenv("GEMINI_API_KEY") ~= nil
+  --   -- end,
   --   opts = {
   --     adapters = {
   --       gemini = function()
@@ -282,13 +283,23 @@ return require("lazy").setup({
   --           },
   --         })
   --       end,
+  --       llama3 = function()
+  --         return require("codecompanion.adapters").extend("ollama", {
+  --           name = "llama3",
+  --           schema = {
+  --             model = { default = "llama3:latest", },
+  --             num_ctx = { default = 16384, },
+  --             num_predict = { default = -1, },
+  --           },
+  --         })
+  --       end,
   --     },
   --     strategies = {
   --       chat = {
-  --         adapter = "gemini",
+  --         adapter = "llama3",
   --       },
   --       inline = {
-  --         adapter = "gemini",
+  --         adapter = "llama3",
   --       },
   --     },
   --   },
@@ -299,7 +310,8 @@ return require("lazy").setup({
   --   dependencies = { "nvim-lua/plenary.nvim" },
   --   config = function()
   --     require('minuet').setup {
-  --       provider = "gemini",
+  --       --provider = "gemini",
+  --       provider = "openai_compat",
   --       blink = {
   --         enable_auto_complete = true,
   --       },
@@ -310,6 +322,12 @@ return require("lazy").setup({
   --           api_key = function()
   --             return os.getenv("GEMINI_API_KEY")
   --           end
+  --         },
+  --         openai_compat = {
+  --           name = "ollama",
+  --           api_key = "TERM",
+  --           model = 'qwen2.5-coder:7b',
+  --           end_point = "http://localhost:11434/v1/chat/completions",
   --         },
   --       }
   --     }

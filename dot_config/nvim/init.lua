@@ -61,7 +61,7 @@ vim.opt.diffopt = {
     "algorithm:histogram",
     "linematch:200",
     "indent-heuristic",
-    "iwhite",
+    --"iwhite",
 }
 
 -- Statusline
