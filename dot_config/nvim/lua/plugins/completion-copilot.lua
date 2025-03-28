@@ -4,22 +4,31 @@
 return {
   -- Autocompletion
   {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    opts = {
+      suggestion = { enabled = false },
+      panel = { enabled = false },
+      filetypes = {
+        markdown = true,
+        help = true,
+      },
+    },
+  },
+
+  {
     'saghen/blink.cmp',
     -- use a release tag to download pre-built binaries
     version = '*',
     lazy = false,
+    optional = true,
+    dependencies = { "fang2hou/blink-copilot" },
 
     ---@module 'blink.cmp'
-    ---@type blink.cmp.Config
     opts = {
-      -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept, C-n/C-p for up/down)
-      -- 'super-tab' for mappings similar to vscode (tab to accept, arrow keys for up/down)
-      -- 'enter' for mappings similar to 'super-tab' but with 'enter' to accept
       keymap = {
         preset = "super-tab",
-        -- preset = "enter",
-        -- ["<S-Tab>"] = { "select_prev", "fallback" },
-        -- ["<Tab>"] = { "select_next", "fallback" },
         ['<CR>'] = { 'accept', 'fallback' },
       },
       cmdline = {
@@ -43,13 +52,19 @@ return {
       },
 
       appearance = {
-        -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-        -- Adjusts spacing to ensure icons are aligned
         nerd_font_variant = 'mono'
       },
 
       sources = {
-        default = { 'lsp', 'path', 'buffer', 'snippets' },
+        default = { 'lsp', 'path', 'buffer', 'copilot', 'snippets' },
+        providers = {
+          copilot = {
+            name = "copilot",
+            module = "blink-copilot",
+            score_offset = 100,
+            async = true,
+          },
+        },
       },
 
       fuzzy = {
@@ -59,16 +74,5 @@ return {
     },
 
     opts_extend = { "sources.default" }
-  },
-
-  -- LLM
-  {
-    'github/copilot.vim',
-    ft = function()
-      if os.getenv("COPILOT_DISABLE") ~= nil and os.getenv("COPILOT_DISABLE") ~= "" then
-        return { 'ruby', 'go', 'js', 'sh', 'lua', 'vim', 'yaml', 'gitcommit', 'markdown' }
-      end
-      return {}
-    end
   },
 }

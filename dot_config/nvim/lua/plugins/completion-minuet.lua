@@ -12,14 +12,9 @@ return {
     ---@module 'blink.cmp'
     ---@type blink.cmp.Config
     opts = {
-      -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept, C-n/C-p for up/down)
-      -- 'super-tab' for mappings similar to vscode (tab to accept, arrow keys for up/down)
-      -- 'enter' for mappings similar to 'super-tab' but with 'enter' to accept
       keymap = {
         preset = "super-tab",
-        -- preset = "enter",
-        -- ["<S-Tab>"] = { "select_prev", "fallback" },
-        -- ["<Tab>"] = { "select_next", "fallback" },
+        -- ['<A-y>'] = require('minuet').make_blink_map(),
         ['<CR>'] = { 'accept', 'fallback' },
       },
       cmdline = {
@@ -43,13 +38,18 @@ return {
       },
 
       appearance = {
-        -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-        -- Adjusts spacing to ensure icons are aligned
         nerd_font_variant = 'mono'
       },
 
       sources = {
-        default = { 'lsp', 'path', 'buffer', 'snippets' },
+        default = { 'lsp', 'path', 'buffer', 'snippets', 'minuet' },
+        providers = {
+          minuet = {
+            name = 'minuet',
+            module = 'minuet.blink',
+            score_offset = 100,
+          },
+        },
       },
 
       fuzzy = {
@@ -63,12 +63,34 @@ return {
 
   -- LLM
   {
-    'github/copilot.vim',
-    ft = function()
-      if os.getenv("COPILOT_DISABLE") ~= nil and os.getenv("COPILOT_DISABLE") ~= "" then
-        return { 'ruby', 'go', 'js', 'sh', 'lua', 'vim', 'yaml', 'gitcommit', 'markdown' }
-      end
-      return {}
+    'milanglacier/minuet-ai.nvim',
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require('minuet').setup {
+        blink = {
+          enable_auto_complete = true,
+        },
+        provider = "openai_compat",
+        provider_options = {
+          openai_compat = {
+            name = "ollama",
+            api_key = "TERM",
+            model = 'qwen2.5-coder:7b',
+            end_point = "http://localhost:11434/v1/chat/completions",
+          },
+        }
+        -- provider = "gemini",
+        -- provider_options = {
+          -- gemini = {
+          --   model = 'gemini-2.0-flash',
+          --   stream = true,
+          --   api_key = function()
+          --     return os.getenv("GEMINI_API_KEY")
+          --   end
+          -- },
+        -- }
+      }
     end
   },
 }
+

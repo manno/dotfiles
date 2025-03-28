@@ -360,5 +360,8 @@ return require("lazy").setup({
   },
 
   { import = "plugins/completion" },
+  -- { import = "plugins/completion-copilot" },
+  -- { import = "plugins/completion-minuet" },
+  -- { import = "plugins/assistance"},
   { import = "plugins/lsp-config" },
 })

@@ -3,14 +3,17 @@
 
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
+    local autocmd = vim.api.nvim_create_autocmd
     local client = vim.lsp.get_client_by_id(args.data.client_id)
+
+    -- TODO gq vs gw
+    vim.bo[args.buf].formatprg = nil
 
     if client:supports_method('textDocument/inlayHint') then
       vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
     end
 
     if client:supports_method('textDocument/documentHighlight') then
-      local autocmd = vim.api.nvim_create_autocmd
       local augroup = vim.api.nvim_create_augroup('lsp_highlight', { clear = false })
 
       vim.api.nvim_clear_autocmds({ buffer = bufnr, group = augroup })
@@ -39,7 +42,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     -- end
 
     if client:supports_method('textDocument/codeAction') then
-      local autocmd = vim.api.nvim_create_autocmd
       local augroup = vim.api.nvim_create_augroup('lsp_go_format', { clear = false })
 
       vim.api.nvim_clear_autocmds({ buffer = bufnr, group = augroup })
