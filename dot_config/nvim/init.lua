@@ -138,7 +138,7 @@ vim.api.nvim_set_keymap('n', '<A-l>', '<C-w>l', { noremap = true })
 -- Debug
 vim.api.nvim_set_keymap('n', '<F6>', ':command', { noremap = true })
 vim.api.nvim_set_keymap('n', '<F2>',
-    ':n ~/.config/nvim/lua/plugins.lua ~/.config/nvim/init.lua ~/.config/nvim/filetype.vim<CR>', { noremap = true })
+    ':n ~/.config/nvim/lua/{plugins,lsp}.lua ~/.config/nvim/lua/plugins/*.lua ~/.config/nvim/init.lua ~/.config/nvim/filetype.vim<CR>', { noremap = true })
 
 -- Make
 vim.api.nvim_set_keymap('n', '!ma', '<ESC>:w<CR>:make %<CR>', { noremap = true })
@@ -194,4 +194,5 @@ augroup END
 
 -- ----- Plugins
 
+require('lsp')
 require('plugins')
