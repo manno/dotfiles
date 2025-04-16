@@ -54,21 +54,10 @@ return {
 
       fuzzy = {
         implementation = "prefer_rust_with_warning",
-        max_typos = function(keyword) return math.floor(#keyword / 2) end,
+        max_typos = function(keyword) return math.floor(#keyword / 9) end,
       }
     },
 
     opts_extend = { "sources.default" }
-  },
-
-  -- LLM
-  {
-    'github/copilot.vim',
-    ft = function()
-      if os.getenv("COPILOT_DISABLE") ~= nil and os.getenv("COPILOT_DISABLE") ~= "" then
-        return { 'ruby', 'go', 'js', 'sh', 'lua', 'vim', 'yaml', 'gitcommit', 'markdown' }
-      end
-      return {}
-    end
   },
 }

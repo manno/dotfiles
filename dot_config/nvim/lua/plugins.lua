@@ -253,8 +253,9 @@ return require("lazy").setup({
       bufdelete = { enabled = false },
     },
     keys = {
-      { "<leader>ge",      function() Snacks.explorer.reveal() end,                                desc = "Reveal" },
       -- luacheck: push ignore 113
+      { "<leader>ge",      function() Snacks.explorer.reveal() end,                                desc = "Reveal" },
+      { "<leader>sn",      function() Snacks.notifier.show_history() end,                          desc = "Notification History" },
       { "<leader>f",       function() Snacks.picker.grep() end,                                    desc = "Grep" },
       { "<leader>g",       function() Snacks.picker.git_grep() end,                                desc = "Git Grep" },
       { "<leader>G",       function() Snacks.picker.grep_word() end,                               desc = "Visual selection or word", mode = { "n", "x" } },

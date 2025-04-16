@@ -8,13 +8,38 @@ return {
     cmd = "Copilot",
     event = "InsertEnter",
     opts = {
-      suggestion = { enabled = false },
+      suggestion = {
+        enabled = false,
+        auto_trigger = false,
+      },
       panel = { enabled = false },
       filetypes = {
         markdown = true,
         help = true,
       },
     },
+    config = function()
+      require("copilot").setup {
+        filetypes = {
+          ruby = true,
+          go = true,
+          js = true,
+          lua = true,
+          vim = true,
+          yaml = true,
+          gitcommit = true,
+          markdown = true,
+          sh = function ()
+            if string.match(vim.fs.basename(vim.api.nvim_buf_get_name(0)), '^%.env.*') then
+              -- disable for .env files
+              return false
+            end
+            return true
+          end,
+          ["*"] = false,
+        },
+      }
+    end,
   },
 
   {
@@ -69,7 +94,7 @@ return {
 
       fuzzy = {
         implementation = "prefer_rust_with_warning",
-        max_typos = function(keyword) return math.floor(#keyword / 2) end,
+        max_typos = function(keyword) return math.floor(#keyword / 9) end,
       }
     },
 
