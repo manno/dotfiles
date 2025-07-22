@@ -76,13 +76,6 @@ if vim.fn.has("nvim-0.5.0") == 1 then
     vim.o.signcolumn = 'number'
 end
 
--- Don't show quickfix in buffer list
-vim.api.nvim_exec([[
-  augroup QFix
-    autocmd!
-    autocmd FileType qf setlocal nobuflisted
-  augroup END
-]], false)
 
 -- Spelling
 vim.api.nvim_exec([[

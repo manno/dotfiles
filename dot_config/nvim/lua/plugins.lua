@@ -108,42 +108,41 @@ return require("lazy").setup({
           lualine_b = {
             {
               'windows',
-              mode = 1,
+              mode = 0,
             },
             'diff',
             'diagnostics',
           },
           lualine_c = {
-            {
-              'filename',
-              file_status = true,
-              newfile_status = true,
-              path = 1,
-              shorting_target = 30,
-            }
           },
           lualine_y = { 'searchcount', 'progress' },
         },
+
         inactive_winbar = {
+          lualine_a = { 'filetype' },
           lualine_c = {
             {
               'filename',
+              color = 'Search',
               file_status = true,
               newfile_status = true,
               path = 1,
-              shorting_target = 30,
+              shorting_target = 60,
             }
           },
         },
+
         winbar = {
+          lualine_a = { 'filetype' },
           lualine_c = {
             {
               'filename',
+              color = 'CurSearch',
               file_status = true,
               newfile_status = true,
               path = 1,
-              shorting_target = 30,
-            }
+              shorting_target = 60,
+            },
           },
         },
       })
@@ -257,8 +256,8 @@ return require("lazy").setup({
       { "<leader>ge",      function() Snacks.explorer.reveal() end,                                desc = "Reveal" },
       { "<leader>sn",      function() Snacks.notifier.show_history() end,                          desc = "Notification History" },
       { "<leader>f",       function() Snacks.picker.grep() end,                                    desc = "Grep" },
-      { "<leader>g",       function() Snacks.picker.git_grep() end,                                desc = "Git Grep" },
-      { "<leader>G",       function() Snacks.picker.grep_word() end,                               desc = "Visual selection or word", mode = { "n", "x" } },
+      { "<leader>G",       function() Snacks.picker.git_grep() end,                                desc = "Git Grep" },
+      { "<leader>g",       function() Snacks.picker.grep_word() end,                               desc = "Visual selection or word", mode = { "n", "x" } },
       { "<leader>b",       function() Snacks.picker.buffers() end,                                 desc = "Buffers" },
       { "<leader>t",       function() Snacks.picker.git_files() end,                               desc = "Find Git Files" },
       { "<leader>s",       function() Snacks.picker.icons() end,                                   desc = "Icons" },
