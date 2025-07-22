@@ -16,6 +16,7 @@ return {
         jsonls = {},
         lua_ls = {},
         solargraph = {},
+        ts_ls = {},
         yamlls = {},
       }
     },
