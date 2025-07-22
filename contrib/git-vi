@@ -21,6 +21,6 @@ case "$1" in
     ;;
 
   *|head|h|-h)
-    nvim $(git diff-tree --no-commit-id --name-only -r HEAD)
+    eval $(echo nvim $(git diff-tree --no-commit-id --name-only -M --diff-filter="ACMRU" -r HEAD | awk 'NF { print "\""$0"\""}'))
     ;;
 esac
