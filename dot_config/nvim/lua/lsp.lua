@@ -1,6 +1,10 @@
 -- vim: ts=2 sw=2
 ---@diagnostic disable: undefined-global, undefined-field
 
+vim.diagnostic.config({
+  virtual_text = true,
+})
+
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
     local autocmd = vim.api.nvim_create_autocmd

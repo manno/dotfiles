@@ -22,6 +22,7 @@ return {
       require("copilot").setup {
         filetypes = {
           ruby = true,
+          haml = true,
           go = true,
           js = true,
           lua = true,
