@@ -1,6 +1,20 @@
 -- vim: ts=2 sw=2
 ---@diagnostic disable: undefined-global, undefined-field
 
+-- Enable native LSP servers
+vim.lsp.enable({
+  "clangd",
+  "gopls",
+  "helm_ls",
+  "html",
+  "jsonls",
+  "lua_ls",
+  "pylsp",
+  "solargraph",
+  "ts_ls",
+  "yamlls",
+})
+
 vim.diagnostic.config({
   virtual_text = true,
 })

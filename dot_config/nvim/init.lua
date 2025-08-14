@@ -131,7 +131,7 @@ vim.api.nvim_set_keymap('n', '<A-l>', '<C-w>l', { noremap = true })
 -- Debug
 vim.api.nvim_set_keymap('n', '<F6>', ':command', { noremap = true })
 vim.api.nvim_set_keymap('n', '<F2>',
-    ':n ~/.config/nvim/lua/{plugins,lsp}.lua ~/.config/nvim/lua/plugins/{completion,lsp-config}.lua ~/.config/nvim/init.lua ~/.config/nvim/filetype.vim<CR>', { noremap = true })
+    ':n ~/.config/nvim/lua/{plugins,lsp}.lua ~/.config/nvim/lua/plugins/completion*.lua ~/.config/nvim/init.lua ~/.config/nvim/filetype.vim<CR>', { noremap = true })
 
 -- Make
 vim.api.nvim_set_keymap('n', '!ma', '<ESC>:w<CR>:make %<CR>', { noremap = true })
@@ -159,6 +159,31 @@ vim.api.nvim_set_keymap('v', '_ta', ':TOansi<CR>', { noremap = true, silent = tr
 
 -- yy vs y$
 -- vim.api.nvim_set_keymap('n', 'Y', 'y$', { noremap = true, silent = true })
+
+-- ----- Filetypes
+vim.filetype.add({
+  extension = {
+    coffee = 'coffee',
+    es6 = 'javascript',
+    jbuilder = 'ruby',
+    mirah = 'ruby',
+    nfo = 'nfo',
+    prawn = 'ruby',
+    prolog = 'prolog',
+    rhtml = 'eruby',
+    tt = 'html',
+    txt = 'text',
+    wiki = 'Wikipedia',
+    xwt = 'xml',
+  },
+  filename = {
+    PKGBUILD = 'sh',
+  },
+  pattern = {
+    ['svn%-commit%..*'] = 'svn',
+    ['svn%-log%..*'] = 'svn',
+  },
+})
 
 -- ----- Filetype Specific Settings -----
 vim.api.nvim_exec([[
