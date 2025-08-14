@@ -1,4 +1,5 @@
 README.md
+*.md
 contrib
 .ssh/authorized_keys
 
