@@ -18,10 +18,6 @@ if [[ -s "$HOME/.rvm/scripts/rvm" ]]; then
   . "$HOME/.rvm/scripts/rvm" 
 fi
 
-# Add GOPATH/bin to PATH
-if [[ -d "$HOME/go/bin" ]]; then
-    path=($HOME/go/bin "$path[@]")
-fi
 
 # direnv
 if [ -x "$(command -v direnv)" ]; then

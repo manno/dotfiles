@@ -6,11 +6,9 @@ export WORDCHARS='*?_.[]~=&;!#$%^(){}<>|-'        # use /- as word seperator
 eval `dircolors -b`
 
 # zsh - options
-#setopt autocd
 setopt NOhup
 setopt extendedglob
 setopt NOcheckjobs
-setopt globcomplete
 
 # zsh - modules
 # mmv *.c.orig orig/*.c

@@ -12,9 +12,6 @@ function qwhich ()
 # ls aliases
 #
 #alias ls='ls --color=auto'
-if [ `uname` = "FreeBSD" ]; then 
-  unalias ls
-fi
 qwhich lsd  && alias ls='lsd --date "+%b %d %H:%M"'
 [ -x "$HOME/bin/lsd" ] && alias ls="$HOME/bin/lsd"
 alias l='ls -lh'
@@ -35,7 +32,11 @@ alias fg3='fg %3'
 # aliases that enhance programs default options
 #
 alias bc='bc -l'
-alias df='df -Th -x tmpfs -x usbfs'
+if [[ $(uname) == "Darwin" ]]; then
+    alias df='df -h'
+else
+    alias df='df -Th -x tmpfs -x usbfs'
+fi
 alias diff='diff --exclude ".svn" -up'
 alias du='du -h'
 alias gdb='gdb -q'
@@ -53,9 +54,6 @@ alias egrep='grep -E --color=auto'
 alias grep='grep --color=auto'
 alias Grep='grep -rsi '
 alias grep='grep --color --exclude-dir=.svn --exclude-dir=.git'
-if [ `uname` = "FreeBSD" ]; then 
-    alias grep='grep --color'
-fi
 alias dmesgtail='sudo dmesg -T|tail'
 if echo "$SHELL" | grep -q bash; then
   alias reload='source $HOME/.bashrc'
@@ -73,7 +71,7 @@ qwhich rg  && alias rg="rg --hidden --sort=path --glob '!.git'"
 
 # debian aliases
 #
-if [ -f /proc/version ] && grep -Eqi "(debian|ubuntu)" /proc/version; then
+if [[ -f /etc/os-release ]] && grep -qi "ubuntu\|debian" /etc/os-release; then
     alias acp='apt-cache policy'
     alias acs='apt-cache search'
     alias acS='apt-cache show'

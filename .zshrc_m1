@@ -7,26 +7,23 @@
 ## Load Libs
 fpath=(~/.zsh/func $fpath)
 
-## Overide PATH
-#
-# prepend user bin, arm homebrew, local
-if [ "$(arch)" = "arm64" ]; then
-    path=(/opt/homebrew/sbin /usr/local/sbin ~/bin /opt/homebrew/bin /usr/local/bin $path)
-else
-    path=(/usr/local/sbin /opt/homebrew/sbin ~/bin /usr/local/bin /opt/homebrew/bin $path)
-fi
-
 ## Parse ~/.zsh files
 autoload load_zshd
 load_zshd
 
-# add super user paths
-path=(/sbin /usr/sbin $path)
-
-# unique elements
-typeset -U path
-
-# only keep existing dirs
+## Configure PATH (ARM64 Mac)
+typeset -U PATH path  # Keep unique elements in both
+path=(
+    /opt/homebrew/{bin,sbin}
+    /usr/local/{bin,sbin}
+    ~/bin
+    $HOME/.local/bin
+    $HOME/go/bin
+    /sbin
+    /usr/sbin
+    $path
+)
+# Only keep existing directories
 path=($^path(N))
 
 ## Load more modules

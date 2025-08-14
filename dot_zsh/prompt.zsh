@@ -29,15 +29,6 @@ vcs_info_wrapper() {
     fi
 }
 
-rvm_prompt_wrapper () {
-    if [ -x ~/.rvm/bin/rvm-prompt ]; then
-        ruby_version=$(~/.rvm/bin/rvm-prompt | sed 's/ruby-//')
-        if [ -n "$ruby_version" ]; then
-            echo "%{$fg[green]%}[%{$fg[magenta]%}$ruby_version%{$fg[green]%}]%{$reset_color%}"
-        fi
-    fi
-}
-
 kubectl_wrapper () {
     if [ -x "$(command -v kubectl)" ]; then
         kubectl_context=$(kubectl config current-context 2> /dev/null)
@@ -49,7 +40,6 @@ kubectl_wrapper () {
 }
 
 if [ "$TERM" != "screen" ]; then
-    #RPROMPT=$'${del}$(vcs_info_wrapper)$(rvm_prompt_wrapper)%{$reset_color%}'
     RPROMPT=$'${del}$(vcs_info_wrapper)$(kubectl_wrapper)%{$reset_color%}'
 fi
 
