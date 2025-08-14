@@ -359,10 +359,15 @@ return require("lazy").setup({
     end
   },
 
-  { import = "plugins/completion" },
-  -- { import = "plugins/completion-copilot" },
-  -- { import = "plugins/completion-minuet" },
-  -- { import = "plugins/assistance"},
+  -- Dynamic completion backend selection via environment variable
+  -- NVIM_COMPLETION=copilot|minuet|vanilla (default: vanilla)
+  { import = "plugins/" .. (vim.env.NVIM_COMPLETION == "copilot" and "completion-copilot" or
+                          vim.env.NVIM_COMPLETION == "minuet" and "completion-minuet" or
+                          "completion") },
+
+  -- Optional AI assistance via environment variable
+  -- NVIM_ASSISTANCE=true to enable CodeCompanion chat interface
+  vim.env.NVIM_ASSISTANCE == "true" and { import = "plugins/assistance" } or {},
   {
     'neovim/nvim-lspconfig',
     dependencies = { 'saghen/blink.cmp' },

@@ -23,12 +23,16 @@ vim.o.wildignore = vim.o.wildignore ..
     ',blue.vim,darkblue.vim,delek.vim,desert.vim,elflord.vim,evening.vim,habamax.vim,industry.vim,koehler.vim,lunaperche.vim,morning.vim,murphy.vim,pablo.vim,peachpuff.vim,quiet.vim,retrobox.vim,ron.vim,shine.vim,slate.vim,sorbet.vim,torte.vim,wildcharm.vim,zaibatsu.vim,zellner.vim'
 
 -- Jump to the last position when reopening a file
-vim.api.nvim_exec([[
-  augroup jump_to_last_position
-    autocmd!
-    autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g'\"" | endif
-  augroup END
-]], false)
+vim.api.nvim_create_autocmd('BufReadPost', {
+  group = vim.api.nvim_create_augroup('jump_to_last_position', { clear = true }),
+  pattern = '*',
+  callback = function()
+    local mark = vim.api.nvim_buf_get_mark(0, '"')
+    if mark[1] > 0 and mark[1] <= vim.api.nvim_buf_line_count(0) then
+      vim.api.nvim_win_set_cursor(0, mark)
+    end
+  end,
+})
 
 -- Backups & Files
 vim.o.backup = true -- Enable creation of a backup file.
@@ -130,8 +134,34 @@ vim.api.nvim_set_keymap('n', '<A-l>', '<C-w>l', { noremap = true })
 
 -- Debug
 vim.api.nvim_set_keymap('n', '<F6>', ':command', { noremap = true })
-vim.api.nvim_set_keymap('n', '<F2>',
-    ':n ~/.config/nvim/lua/{plugins,lsp}.lua ~/.config/nvim/lua/plugins/completion*.lua ~/.config/nvim/init.lua ~/.config/nvim/filetype.vim<CR>', { noremap = true })
+-- Dynamic completion file selection for F2
+local function get_completion_file()
+  local completion_type = vim.env.NVIM_COMPLETION or "vanilla"
+  if completion_type == "copilot" then
+    return "completion-copilot"
+  elseif completion_type == "minuet" then
+    return "completion-minuet"
+  else
+    return "completion"
+  end
+end
+
+vim.keymap.set('n', '<F2>', function()
+  local completion_file = get_completion_file()
+  local files = {
+    '~/.config/nvim/lua/plugins.lua',
+    '~/.config/nvim/lua/lsp.lua',
+    '~/.config/nvim/lua/plugins/' .. completion_file .. '.lua',
+    '~/.config/nvim/init.lua'
+  }
+
+  -- Add assistance.lua if enabled
+  if vim.env.NVIM_ASSISTANCE == "true" then
+    table.insert(files, 3, '~/.config/nvim/lua/plugins/assistance.lua')
+  end
+
+  vim.cmd(':n ' .. table.concat(files, ' '))
+end, { noremap = true })
 
 -- Make
 vim.api.nvim_set_keymap('n', '!ma', '<ESC>:w<CR>:make %<CR>', { noremap = true })
@@ -186,29 +216,26 @@ vim.filetype.add({
 })
 
 -- ----- Filetype Specific Settings -----
-vim.api.nvim_exec([[
-augroup languages
-    " autocmd FileType csv       set nofoldenable
-    " autocmd FileType xml       let g:xml_syntax_folding = 1
-    autocmd FileType c           set cindent
-    autocmd FileType eruby       map _rw i<%= %>
-    autocmd FileType eruby       set number
-    autocmd FileType go          setlocal noet ts=8 sw=8 sts=8 number
-    autocmd FileType java        set foldmethod=manual
-    autocmd FileType lua         set ts=4 sw=4 et smartindent foldmethod=syntax
-    autocmd FileType nfo         edit ++enc=cp437
-    autocmd FileType nfo         silent edit ++enc=cp437
-    autocmd FileType ruby        set number foldmethod=manual
-    autocmd FileType vim         set ts=4 sw=4
-    autocmd FileType xml         set ts=4 sw=4
-    autocmd FileType xwt         set foldmethod=syntax
-    autocmd FileType zsh         set ts=4 sw=4 et
-    autocmd filetype crontab     setlocal nobackup nowritebackup
+local group = vim.api.nvim_create_augroup('languages', { clear = true })
 
-    " strip trailing whitespace
-    autocmd FileType c,vim,ruby,lua,yaml,haml,css,html,eruby,coffee,javascript,markdown,sh,python autocmd BufWritePre <buffer> :%s/\s\+$//e
-augroup END
-]], false)
+vim.api.nvim_create_autocmd('FileType', { group = group, pattern = 'c', command = 'setlocal cindent' })
+vim.api.nvim_create_autocmd('FileType', { group = group, pattern = 'eruby', command = 'setlocal number | map <buffer> _rw i<%= %>' })
+vim.api.nvim_create_autocmd('FileType', { group = group, pattern = 'go', command = 'setlocal noet ts=8 sw=8 sts=8 number' })
+vim.api.nvim_create_autocmd('FileType', { group = group, pattern = 'java', command = 'setlocal foldmethod=manual' })
+vim.api.nvim_create_autocmd('FileType', { group = group, pattern = 'lua', command = 'setlocal ts=4 sw=4 et smartindent foldmethod=syntax' })
+vim.api.nvim_create_autocmd('BufReadPost', { group = group, pattern = '*.nfo', command = 'edit ++enc=cp437' })
+vim.api.nvim_create_autocmd('FileType', { group = group, pattern = 'ruby', command = 'setlocal number foldmethod=manual' })
+vim.api.nvim_create_autocmd('FileType', { group = group, pattern = { 'vim', 'xml' }, command = 'setlocal ts=4 sw=4' })
+vim.api.nvim_create_autocmd('FileType', { group = group, pattern = 'xwt', command = 'setlocal foldmethod=syntax' })
+vim.api.nvim_create_autocmd('FileType', { group = group, pattern = 'zsh', command = 'setlocal ts=4 sw=4 et' })
+vim.api.nvim_create_autocmd('FileType', { group = group, pattern = 'crontab', command = 'setlocal nobackup nowritebackup' })
+
+-- Strip trailing whitespace
+vim.api.nvim_create_autocmd('BufWritePre', {
+  group = group,
+  pattern = { '*.c', '*.vim', '*.ruby', '*.lua', '*.yaml', '*.haml', '*.css', '*.html', '*.eruby', '*.coffee', '*.javascript', '*.markdown', '*.sh', '*.python' },
+  command = '%s/\\s\\+$//e'
+})
 
 -- ----- Plugins
 
