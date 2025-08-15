@@ -4,13 +4,6 @@
 ## Checks
 [ -d $HOME/.zsh ] || echo "no resource&config dir: .zsh"
 
-## Load Libs
-fpath=(~/.zsh/func $fpath)
-
-## Parse ~/.zsh files
-autoload load_zshd
-load_zshd
-
 ## Configure PATH (ARM64 Mac)
 typeset -U PATH path  # Keep unique elements in both
 path=(
@@ -23,6 +16,14 @@ path=(
     /usr/sbin
     $path
 )
+
+## Load Libs
+fpath=(~/.zsh/func $fpath)
+
+## Parse ~/.zsh files
+autoload load_zshd
+load_zshd
+
 # Only keep existing directories
 path=($^path(N))
 

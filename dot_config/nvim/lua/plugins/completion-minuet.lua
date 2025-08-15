@@ -20,7 +20,7 @@ return {
       cmdline = {
         sources = { "cmdline" },
         keymap = {
-          ['<CR>'] = { 'accept', 'fallback' },
+          ['<CR>'] = { 'accept_and_enter', 'fallback' },
         }
       },
       completion = {
