@@ -210,7 +210,10 @@ return require("lazy").setup({
     lazy = false,
     opts = {
       bigfile = { enabled = true },
-      notifier = { enabled = true },
+      notifier = {
+        enabled = true,
+        timeout = 10000,
+      },
       dashboard = {
         enabled = true,
         sections = {
@@ -247,7 +250,15 @@ return require("lazy").setup({
           file = {
             truncate = 60,
           },
+          notification = {
+            wrap = true,
+          },
         },
+      },
+      styles = {
+        notification = {
+          wo = { wrap = true },
+        }
       },
       bufdelete = { enabled = false },
     },

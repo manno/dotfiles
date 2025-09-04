@@ -15,25 +15,27 @@ return {
     -- end,
     opts = {
       adapters = {
-        gemini = function()
-          return require("codecompanion.adapters").extend("gemini", {
-            env = {
-              api_key = function()
-                return os.getenv("GEMINI_API_KEY")
-              end
-            },
-          })
-        end,
-        llama3 = function()
-          return require("codecompanion.adapters").extend("ollama", {
-            name = "llama3",
-            schema = {
-              model = { default = "llama3:latest", },
-              num_ctx = { default = 16384, },
-              num_predict = { default = -1, },
-            },
-          })
-        end,
+        http = {
+          gemini = function()
+            return require("codecompanion.adapters").extend("gemini", {
+              env = {
+                api_key = function()
+                  return os.getenv("GEMINI_API_KEY")
+                end
+              },
+            })
+          end,
+          llama3 = function()
+            return require("codecompanion.adapters").extend("ollama", {
+              name = "llama3",
+              schema = {
+                model = { default = "llama3:latest", },
+                num_ctx = { default = 16384, },
+                num_predict = { default = -1, },
+              },
+            })
+          end,
+        },
       },
       strategies = {
         chat = {

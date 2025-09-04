@@ -8,9 +8,11 @@ vim.o.softtabstop = 2
 vim.o.shiftwidth = 2
 vim.o.tabstop = 2
 vim.o.expandtab = true
+
 vim.o.cf = true        -- Enable error files & error jumping.
 vim.o.autowrite = true -- Writes on make/shell commands
 vim.o.number = true    -- Show line numbers
+vim.o.completeopt = 'menuone,noselect,fuzzy,nosort'
 
 -- Stop highlighting after a certain column
 vim.o.synmaxcol = 2048
@@ -116,9 +118,6 @@ vim.api.nvim_set_keymap('n', '<leader>n', ':tabnext<CR>', { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>p', ':tabprev<CR>', { noremap = true })
 
 vim.o.fileignorecase = false
---  get rid of netrw, can't close its buffer
--- vim.g.loaded_netrw = 1
--- vim.g.loaded_netrwPlugin = 1
 
 vim.api.nvim_set_keymap('n', '<leader>W', ':close<CR>', { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>D', ':%bd!<CR>', { noremap = true })
@@ -134,6 +133,7 @@ vim.api.nvim_set_keymap('n', '<A-l>', '<C-w>l', { noremap = true })
 
 -- Debug
 vim.api.nvim_set_keymap('n', '<F6>', ':command', { noremap = true })
+
 -- Dynamic completion file selection for F2
 local function get_completion_file()
   local completion_type = vim.env.NVIM_COMPLETION or "vanilla"
