@@ -215,6 +215,14 @@ vim.filetype.add({
   },
 })
 
+-- Don't show quickfix in buffer list
+vim.api.nvim_create_augroup('QFix', { clear = true })
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'qf',
+  command = 'setlocal nobuflisted',
+  group = 'QFix',
+})
+
 -- ----- Filetype Specific Settings -----
 local group = vim.api.nvim_create_augroup('languages', { clear = true })
 

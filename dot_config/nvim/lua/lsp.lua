@@ -15,6 +15,7 @@ vim.lsp.enable({
   "yamlls",
 })
 
+-- `<C-w>d` shows diagnostic at cursor in a floating window. |CTRL-W_d-default|
 vim.diagnostic.config({
   virtual_text = true,
 })
