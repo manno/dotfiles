@@ -16,6 +16,11 @@ return {
     },
     config = function()
       require("copilot").setup {
+        server_opts_overrides = {
+          settings = {
+            telemetry = { disabled = true },
+          }
+        },
         filetypes = {
           ruby = true,
           help = true,

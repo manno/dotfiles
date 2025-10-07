@@ -233,7 +233,7 @@ vim.api.nvim_create_autocmd('FileType', { group = group, pattern = 'crontab', co
 -- Strip trailing whitespace
 vim.api.nvim_create_autocmd('BufWritePre', {
   group = group,
-  pattern = { '*.c', '*.vim', '*.ruby', '*.lua', '*.yaml', '*.haml', '*.css', '*.html', '*.eruby', '*.coffee', '*.javascript', '*.markdown', '*.sh', '*.python' },
+  pattern = { '*.c', '*.vim', '*.ruby', '*.lua', '*.yaml', '*.haml', '*.css', '*.html', '*.eruby', '*.coffee', '*.javascript', '*.js', '*.md', '*.sh', '*.zsh', '*.py' },
   command = '%s/\\s\\+$//e'
 })
 
