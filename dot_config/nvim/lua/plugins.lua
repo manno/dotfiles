@@ -67,11 +67,12 @@ return require("lazy").setup({
   {
     'romgrk/barbar.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons', 'lewis6991/gitsigns.nvim' },
-    config = function()
-      vim.keymap.set('', '<leader>w', ':BufferWipeout<cr>')
-      vim.keymap.set('', '<C-n>', ':BufferNext<cr>')
-      vim.keymap.set('', '<C-p>', ':BufferPrevious<cr>')
-    end
+    event = "VeryLazy",
+    keys = {
+      { '<leader>w', '<cmd>BufferWipeout<cr>', desc = "Close Buffer" },
+      { '<C-n>', '<cmd>BufferNext<cr>', desc = "Next Buffer" },
+      { '<C-p>', '<cmd>BufferPrevious<cr>', desc = "Previous Buffer" },
+    },
   },
 
   {
@@ -196,7 +197,7 @@ return require("lazy").setup({
 
   -- Surround - sa%" sa$' saE" srb" sr"' sd"
   {
-    'echasnovski/mini.nvim',
+    'nvim-mini/mini.nvim',
     version = false,
     config = function()
       require('mini.surround').setup()
@@ -335,7 +336,13 @@ return require("lazy").setup({
   -- Open files at line
   { 'manno/file-line' },
 
-  { "almo7aya/openingh.nvim" },
+  {
+    "almo7aya/openingh.nvim",
+    keys = {
+      { "<leader>gh", "<cmd>OpenInGHRepo<cr>", desc = "Open Repo in GitHub" },
+      { "<leader>gH", "<cmd>OpenInGHFile<cr>", desc = "Open File in GitHub" },
+    },
+  },
 
   -- Format SQL
   { 'vim-scripts/SQLUtilities',  ft = { 'sql' } },
@@ -351,17 +358,19 @@ return require("lazy").setup({
   },
   {
     "sindrets/diffview.nvim",
-    config = function()
-      vim.keymap.set("n", "<leader>v",
+    keys = {
+      {
+        "<leader>v",
         function()
           if next(require("diffview.lib").views) == nil then
             vim.cmd("DiffviewOpen")
           else
-            vim.cmd(
-              "DiffviewClose")
+            vim.cmd("DiffviewClose")
           end
-        end)
-    end
+        end,
+        desc = "Toggle Diff View"
+      },
+    },
   },
   {
     "FabijanZulj/blame.nvim",
