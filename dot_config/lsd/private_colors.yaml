@@ -1,0 +1,27 @@
+# Tokyo Night Moon
+# A theme for lsd based on the Tokyo Night Moon color scheme
+# Generated from vivid tokyonight-moon palette
+user: 117                          # cyan (137, 221, 255)
+group: 103                         # muted purple (99, 109, 166)
+permission:
+  read: 111                        # blue (130, 170, 255)
+  write: 215                       # orange (255, 199, 119)
+  exec: 150                        # green (195, 232, 141)
+  exec-sticky: 117                 # cyan (137, 221, 255)
+  no-access: 210                   # red (255, 117, 127)
+date:
+  hour-old: 117                    # cyan (137, 221, 255)
+  day-old: 103                     # muted purple (99, 109, 166)
+  older: 60                        # dark muted (68, 74, 115)
+size:
+  none: 60                         # dark muted
+  small: 150                       # green (195, 232, 141)
+  medium: 215                      # orange (255, 199, 119)
+  large: 210                       # red (255, 117, 127)
+inode:
+  valid: 103                       # muted purple (99, 109, 166)
+  invalid: 210                     # red (255, 117, 127)
+links:
+  valid: 117                       # cyan (137, 221, 255)
+  invalid: 210                     # red (255, 117, 127)
+tree-edge: 111                     # blue (130, 170, 255)
