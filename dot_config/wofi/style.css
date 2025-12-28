@@ -1,0 +1,59 @@
+window {
+    margin: 5px;
+    border: 2px solid #FF00FF;
+    background-color: #000000;
+    font-family: monospace;
+}
+
+@keyframes erscheinen {
+    from {opacity: 0;}
+      to {opacity: 1;}
+}
+
+#input {
+    margin: 0px 0px 5px;
+    border: 3px solid #00FFFF;
+    background-color: #000000;
+    border-radius: 0px;
+    color: #FFFFFF;
+}
+
+#inner-box {
+    margin: 0px;
+    border: 0px;
+    background-color: #000000;
+}
+
+/* #inner-box flowboxchild:nth-child(even) { */
+/*     background-color: #555555; */
+/* } */
+
+#outer-box {
+    margin: 0px;
+    border: 0px;
+    background-color: #000000;
+}
+
+#scroll {
+    margin: 0px;
+    border: 2px solid #FF00FF;
+    border-radius: 0px;
+    background-color: #000000;
+}
+
+#text {
+    margin: 1px;
+    border: 0px;
+    background-color: #000000;
+    color: #00FFFF;
+}
+
+#selected {
+    background-color: #00FFFF;
+    color: #000000;
+}
+
+#selected #text {
+    background-color: #00FFFF;
+    color: #000000;
+}

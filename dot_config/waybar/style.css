@@ -1,0 +1,121 @@
+* {
+    font-family: monospace;
+    font-size: 13px;
+}
+
+window#waybar {
+    background-color: #AAAAAA;
+    color: #000000;
+}
+
+button {
+    box-shadow: inset 0 -3px transparent;
+    border: none;
+    border-radius: 0;
+}
+
+button:hover {
+    background: inherit;
+}
+
+#workspaces button {
+    padding: 0 5px;
+    background-color: transparent;
+    color: #000000;
+}
+
+#workspaces button:hover {
+    background: rgba(0, 255, 255, 0.2);
+}
+
+#workspaces button.active {
+    background-color: #FF00FF;
+    color: #FFFFFF;
+}
+
+#workspaces button.urgent {
+    background-color: #FF0000;
+    color: #FFFFFF;
+}
+
+#window,
+#workspaces,
+#clock,
+#battery,
+#cpu,
+#memory,
+#disk,
+#temperature,
+#backlight,
+#network,
+#pulseaudio,
+#custom-media,
+#tray,
+#mode,
+#idle_inhibitor,
+#scratchpad,
+#mpd {
+    padding: 0 10px;
+    color: #000000;
+    background-color: #AAAAAA;
+}
+
+#window {
+    color: #000000;
+}
+
+#battery.charging, #battery.plugged {
+    color: #00FF00;
+}
+
+#battery.critical:not(.charging) {
+    background-color: #FF0000;
+    color: #FFFFFF;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+#battery.warning:not(.charging) {
+    color: #FFFF00;
+}
+
+#temperature.critical {
+    background-color: #FF0000;
+    color: #FFFFFF;
+}
+
+#network.disconnected {
+    color: #FF0000;
+}
+
+#pulseaudio.muted {
+    color: #555555;
+}
+
+@keyframes blink {
+    to {
+        background-color: #FFFFFF;
+        color: #FF0000;
+    }
+}
+
+/* CGA color classes for pango markup */
+.cga-black { color: #000000; }
+.cga-blue { color: #0000AA; }
+.cga-green { color: #00AA00; }
+.cga-cyan { color: #00AAAA; }
+.cga-red { color: #AA0000; }
+.cga-magenta { color: #AA00AA; }
+.cga-brown { color: #AA5500; }
+.cga-lightgray { color: #AAAAAA; }
+.cga-darkgray { color: #555555; }
+.cga-lightblue { color: #5555FF; }
+.cga-lightgreen { color: #55FF55; }
+.cga-lightcyan { color: #55FFFF; }
+.cga-lightred { color: #FF5555; }
+.cga-lightmagenta { color: #FF55FF; }
+.cga-yellow { color: #FFFF55; }
+.cga-white { color: #FFFFFF; }
