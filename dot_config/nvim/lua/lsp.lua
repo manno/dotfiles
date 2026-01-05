@@ -10,6 +10,7 @@ vim.lsp.enable({
   "jsonls",
   "lua_ls",
   "pylsp",
+  "rust_analyzer",
   "solargraph",
   "ts_ls",
   "yamlls",

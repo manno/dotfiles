@@ -183,10 +183,6 @@ vim.api.nvim_set_keymap('n', '_tt', ':source $VIMRUNTIME/syntax/2tex.vim<CR>', {
 -- convert to colored ansi
 vim.api.nvim_set_keymap('v', '_ta', ':TOansi<CR>', { noremap = true, silent = true })
 
--- Shift + J/K moves selected lines down/up in visual mode
--- vim.api.nvim_set_keymap('x', 'J', ':m \'>+1<CR>gv=gv', { noremap = true, silent = true })
--- vim.api.nvim_set_keymap('x', 'K', ':m \'<-2<CR>gv=gv', { noremap = true, silent = true })
-
 -- yy vs y$
 -- vim.api.nvim_set_keymap('n', 'Y', 'y$', { noremap = true, silent = true })
 

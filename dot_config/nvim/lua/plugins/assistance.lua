@@ -54,7 +54,7 @@ return {
         },
       },
       prompt_library = {
-        ["Short Commit Message"] = {
+        ["Git Commit Message (cbeams)"] = {
           strategy = "inline",
           description = "Generate a commit message for the current buffer",
           opts = {

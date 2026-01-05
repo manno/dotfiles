@@ -218,6 +218,20 @@ return require("lazy").setup({
       dashboard = {
         enabled = true,
         sections = {
+          {
+            key = "T",
+            icon = "💡",
+            desc = "Show Tips",
+            action = function() require("utils").open_in_float(vim.fn.stdpath("config") .. "/tips.md") end,
+            padding = { 1, 0 }
+          },
+          {
+            key = "K",
+            icon = "⌨️",
+            desc = "Show Keybindings",
+            action = function() require("utils").open_in_float(vim.fn.stdpath("config") .. "/README.md", "## ⌨️ Key Bindings") end,
+            padding = { 1, 0 }
+          },
           { section = "keys", gap = 1, padding = 3 },
           { icon = " ", title = "Recent Files", section = "recent_files", indent = 3, padding = 1 },
           {

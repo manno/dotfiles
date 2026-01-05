@@ -80,9 +80,10 @@
   cmd = nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
 [commit]
   verbose = true
+	gpgsign = true
 [init]
   defaultBranch = main
 [pull]
   rebase = true
-[gpg]
-	format = ssh
+[credential]
+	helper = store
