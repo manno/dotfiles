@@ -2,6 +2,7 @@
 
 - Surround - `sa%"` `sa$'` `saE"` `srb"` `sr"'` `sd"`
 - `<C-w>d` shows diagnostic at cursor in a floating window
+- yy vs y$ vs vY
 
 # #1 Global Command: `:g/pattern/cmd`
 
@@ -13,6 +14,8 @@ Run Ex command on all matching lines
 | `:g/^$/d` | Delete empty lines |
 | `:g/error/t$` | Copy error lines to end |
 | `:g/func/norm A;` | Append `;` to all functions |
+
+# #2 Registers:
 
 # #2 Command-line Registers: `Ctrl-r`
 
@@ -59,7 +62,21 @@ Auto-marks vim sets for you
 | `` `" `` | Position when file was last closed |
 | `` `[ `` / `` `] `` | Start/end of last yank or change |
 
-# #6 Command History Window: `q:`
+# #6 Motions
+
+    { }
+    ctrl-f / ctrl-b forward / backward
+    ctrl-d / ctrl-u down / up
+    ctrl-e / ctrl-y scroll up (extra lines) / down
+    ctrl-o / ctrl-i older cursor position in jump list
+
+    Okay let me [d]elete [i]nside ["]
+    Let's [c]hange [i]nside the [b]rackets
+    [f]rom [a] [d]elete [t]o [(], when you want to remove async from const myFunction = async () => {
+
+
+
+# #7 Command History Window: `q:`
 
 Editable command history in buffer
 

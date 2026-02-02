@@ -2,6 +2,7 @@ README.md
 *.md
 contrib
 .ssh/authorized_keys
+.zsh/asdf.zsh
 
 {{- if ne .chezmoi.hostname "ws" }}
 .ssh/rc
@@ -9,6 +10,10 @@ contrib
 
 {{ if ne .chezmoi.os "linux" -}}
 .inputrc
+.config/ghostty
+.config/hypr
+.config/waybar
+.config/wofi
 {{- end }}
 
 {{ if ne .chezmoi.os "darwin" -}}
@@ -24,10 +29,6 @@ contrib
 {{ if or (ne .chezmoi.os "darwin") (ne .chezmoi.arch "arm64") -}}
 .config/nvim/lua/m1.lua
 .zsh/m1brew.zsh
-{{- end }}
-
-{{ if ne .chezmoi.hostname "air" -}}
-.zsh/asdf.zsh
 {{- end }}
 
 {{ if eq .category "server" -}}
