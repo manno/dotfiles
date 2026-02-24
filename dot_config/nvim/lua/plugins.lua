@@ -250,9 +250,10 @@ return require("lazy").setup({
             {
               section = "terminal",
               cmd = "cat ~/.config/nvim/wall.txt; sleep .1",
-              height = 17,
+              height = 10,
               padding = 0,
             },
+            { text = "v" .. tostring(vim.version()), align = "center", padding = { 0, 0 } },
             { icon = " ", title = "Projects", section = "projects", indent = 3, padding = { 1, 1 } },
             -- { section = "startup", padding = 1, align = "left" },
           },

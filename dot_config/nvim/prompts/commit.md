@@ -1,12 +1,12 @@
 ---
 # https://codecompanion.olimorris.dev/configuration/prompt-library#basic-structure
 name: Git Commit Message (cbeams)
-interaction: chat
+interaction: inline
 description: Generate a commit message for the current buffer
 opts:
   alias: commit
   index: 11
-  placement: chat
+  placement: replace
   modes:
     - n
   auto_submit: true
