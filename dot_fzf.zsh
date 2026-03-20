@@ -20,5 +20,7 @@ elif [ -d "$HOMEBREW_PREFIX/opt/fzf/shell" ]; then
     source "$HOMEBREW_PREFIX/opt/fzf/shell/key-bindings.zsh"
 fi
 
+zle     -N   fzf-history-widget
+zle     -N   history-incremental-search-backward
 bindkey "^R" fzf-history-widget
 bindkey '\er' history-incremental-search-backward
