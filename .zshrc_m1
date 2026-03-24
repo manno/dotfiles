@@ -37,6 +37,7 @@ fi
 
 ## Needs to go after other bindkey statements
 if command -v sk >/dev/null 2>&1; then
+    SKIM_CTRL_R_OPTS='--tiebreak=index'
     source <(sk --shell zsh --shell-bindings)
     bindkey "^R" skim-history-widget
     zle -N history-incremental-search-backward
