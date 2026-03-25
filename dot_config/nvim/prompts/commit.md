@@ -5,7 +5,7 @@ interaction: inline
 description: Generate a commit message for the current buffer
 opts:
   alias: commit
-  index: 11
+  index: 1
   placement: replace
   modes:
     - n

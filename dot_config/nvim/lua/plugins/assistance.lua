@@ -41,6 +41,9 @@ return {
         },
       },
       display = {
+        diff = {
+          enabled = false,
+        },
         action_palette = {
           provider = "snacks",
           -- this hides my prompts, not the builtins?

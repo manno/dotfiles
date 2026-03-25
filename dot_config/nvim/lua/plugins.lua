@@ -348,9 +348,6 @@ return require("lazy").setup({
     },
   },
 
-  -- Open files at line
-  { 'manno/file-line' },
-
   {
     "almo7aya/openingh.nvim",
     keys = {
@@ -416,8 +413,12 @@ return require("lazy").setup({
     'neovim/nvim-lspconfig',
     dependencies = { 'saghen/blink.cmp' },
   },
+
+  -- Open files at line
+  { 'manno/file-line.nvim' },
+
   {
-    "manno/qrencode-nvim",
+    "manno/qrencode.nvim",
     opts = {
       ecl = "M",
       prefer_image = true,
