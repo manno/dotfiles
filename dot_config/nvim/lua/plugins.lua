@@ -416,4 +416,12 @@ return require("lazy").setup({
     'neovim/nvim-lspconfig',
     dependencies = { 'saghen/blink.cmp' },
   },
+  {
+    "manno/qrencode-nvim",
+    opts = {
+      ecl = "M",
+      prefer_image = true,
+    },
+  },
+
 })
