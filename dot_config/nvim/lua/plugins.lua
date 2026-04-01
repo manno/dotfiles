@@ -26,7 +26,7 @@ return require("lazy").setup({
     opts = {
       -- ensure_installed = "all",
       -- ignore_install = { "phpdoc" },
-      ensure_installed = { 'bash', 'html', 'lua', 'markdown', 'vim', 'vimdoc', 'go', 'yaml' },
+      ensure_installed = { 'bash', 'html', 'lua', 'markdown', 'markdown_inline', 'vim', 'vimdoc', 'go', 'yaml' },
       highlight = {
         enable = true, -- false will disable the whole extension
         -- disable = { "c", "rust" },  -- list of language that will be disabled
