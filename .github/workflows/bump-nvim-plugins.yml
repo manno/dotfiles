@@ -1,0 +1,56 @@
+name: Bump Neovim Plugins
+
+on:
+  schedule:
+    # Every Monday at 09:00 UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install anthropic
+
+      - name: Check and bump plugins
+        id: bump
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python scripts/bump-nvim-plugins.py
+
+      - name: Open pull request
+        if: steps.bump.outputs.has_updates == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DATE=$(date -u +%Y-%m-%d)
+          BRANCH="bump/nvim-plugins-${DATE}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git checkout -b "${BRANCH}"
+          git add dot_config/nvim/lua/
+          git commit -m "${{ steps.bump.outputs.pr_title }}"
+          git push origin "${BRANCH}"
+
+          gh pr create \
+            --title "${{ steps.bump.outputs.pr_title }}" \
+            --body-file .github/pr-body.md \
+            --base main \
+            --head "${BRANCH}"
