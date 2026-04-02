@@ -271,6 +271,18 @@ alias ce='chezmoi edit --apply'      # Edit and apply in one command
 
 ## Advanced Features
 
+### FZF Integration
+
+fzf is loaded inline in platform-specific zshrc files (`.zshrc_m1`, `.zshrc_linux`) after other key bindings:
+
+```zsh
+if command -v fzf >/dev/null 2>&1; then
+    FZF_CTRL_T_COMMAND= source <(fzf --zsh)
+fi
+```
+
+`FZF_CTRL_T_COMMAND=` is unset to disable fzf's Ctrl+T file search binding, which would otherwise overwrite the normal shell Ctrl+T binding. This keeps only history search (Ctrl+R) and directory navigation (Alt+C). The dedicated `dot_fzf.zsh` module was removed in favor of this inline approach.
+
 ### Help System (`~/.zsh/help.zsh`)
 
 **Built-in Documentation**:
@@ -285,19 +297,24 @@ alias ce='chezmoi edit --apply'      # Edit and apply in one command
 
 **Development Environment Setup**:
 ```zsh
-# Go development
-if [[ -d "$HOME/go/bin" ]]; then
-    path=($HOME/go/bin "$path[@]")
-fi
-
 # Directory environment
 if [ -x "$(command -v direnv)" ]; then
     eval "$(direnv hook zsh)"
 fi
 
-# Ruby version management
+# Ruby version management (RVM)
 if [[ -s "$HOME/.rvm/scripts/rvm" ]]; then
     . "$HOME/.rvm/scripts/rvm"
+fi
+
+# Ruby version management (rbenv)
+if [ -x "$(command -v rbenv)" ]; then
+    eval "$(rbenv init - --no-rehash zsh)"
+fi
+
+# ASDF version manager
+if [ -x "$(command -v asdf)" ]; then
+    . $(brew --prefix asdf)/asdf.sh
 fi
 ```
 
@@ -367,10 +384,8 @@ esac
 ├── func/
 │   └── load_zshd           # Modular loading system
 ├── plugins/
-│   ├── autosuggestions.zsh # Fish-like suggestions
-│   └── zsh-syntax-highlighting.zsh
+│   └── autosuggestions.zsh # Fish-like suggestions
 ├── aliases.zsh             # Global aliases and shortcuts
-├── asdf.zsh               # ASDF version manager
 ├── completion.zsh         # Advanced completion system
 ├── ext.zsh                # Development environment setup
 ├── help.zsh               # Built-in documentation
