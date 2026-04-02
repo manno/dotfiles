@@ -2,7 +2,6 @@ README.md
 *.md
 contrib
 .ssh/authorized_keys
-.zsh/asdf.zsh
 
 {{- if ne .chezmoi.hostname "ws" }}
 .ssh/rc
