@@ -35,10 +35,10 @@ if [ -x /usr/bin/ssh-add ] && [ "$SSH_AUTH_SOCK" != "" ] && [ -r "$SSH_AUTH_SOCK
     /usr/bin/ssh-add -l
 fi
 
-## Needs to go after other bindkey statements
-if [ -f ~/.fzf.zsh ]; then
-    source ~/.fzf.zsh
-fi
-
 # remove # from EXTENDED_GLOB
 disable -p '#'
+#
+## Needs to go after other bindkey statements
+if command -v fzf >/dev/null 2>&1; then
+    FZF_CTRL_T_COMMAND= source <(fzf --zsh)
+fi
