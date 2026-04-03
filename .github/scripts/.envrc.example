@@ -1,0 +1,13 @@
+# Copy to .envrc and fill in values, then run: direnv allow
+#
+# GITHUB_TOKEN is used for:
+#   - GitHub Releases API (bump-nvim-plugins.go)
+#   - GitHub Models API / gpt-4o (analyze-plugin.mjs)
+#   - gh CLI calls inside analyze-plugin.mjs
+#
+# A classic PAT with no scopes is enough for public repos.
+# For private repos add: repo (read)
+# The Models API requires the token to be tied to an account
+# with an active GitHub Copilot subscription.
+
+export GITHUB_TOKEN=ghp_your_token_here

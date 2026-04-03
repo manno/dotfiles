@@ -12,8 +12,16 @@ permissions:
   models: read
 
 jobs:
-  bump:
+
+  # ── Job 1: detect ─────────────────────────────────────────────────────────
+  # Scans Lua plugin files, fetches latest GitHub release SHAs, updates
+  # commit = "sha" pins in place, and emits a matrix for the analyze jobs.
+
+  detect:
     runs-on: ubuntu-latest
+    outputs:
+      has_updates: ${{ steps.bump.outputs.has_updates }}
+      matrix: ${{ steps.bump.outputs.matrix }}
 
     steps:
       - name: Checkout
@@ -31,44 +39,195 @@ jobs:
         id: bump
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: go run scripts/bump-nvim-plugins.go
+        run: go run .github/scripts/bump-nvim-plugins.go
 
-      - name: Open pull request
+      - name: Upload updated Lua files
         if: steps.bump.outputs.has_updates == 'true'
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f  # v7.0.0
+        with:
+          name: nvim-lua
+          path: dot_config/nvim/lua/
+
+      - name: Upload bump metadata
+        if: steps.bump.outputs.has_updates == 'true'
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f  # v7.0.0
+        with:
+          name: bump-meta
+          path: .github/bump/
+
+  # ── Job 2: analyze ────────────────────────────────────────────────────────
+  # One job per plugin. Uses GitHub Models API (gpt-4o) with tool calling
+  # to examine the actual diff and produce a security verdict.
+
+  analyze:
+    needs: detect
+    if: needs.detect.outputs.has_updates == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        plugin: ${{ fromJSON(needs.detect.outputs.matrix) }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f  # v6.3.0
+        with:
+          node-version: '20'
+
+      - name: Analyze ${{ matrix.plugin.slug }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PLUGIN_SLUG: ${{ matrix.plugin.slug }}
+          PLUGIN_SLUG_SAFE: ${{ matrix.plugin.slug_safe }}
+          PLUGIN_OWNER: ${{ matrix.plugin.owner }}
+          PLUGIN_REPO: ${{ matrix.plugin.repo }}
+          PLUGIN_OLD_SHA: ${{ matrix.plugin.old_sha }}
+          PLUGIN_NEW_SHA: ${{ matrix.plugin.new_sha }}
+          PLUGIN_TAG: ${{ matrix.plugin.tag }}
+        run: node .github/scripts/analyze-plugin.mjs
+
+      - name: Upload analysis report
+        if: always()
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f  # v7.0.0
+        with:
+          name: analysis-${{ matrix.plugin.slug_safe }}
+          path: ${{ matrix.plugin.slug_safe }}-analysis.md
+
+  # ── Job 3: pr ─────────────────────────────────────────────────────────────
+  # Downloads updated Lua files and all analysis reports, builds the PR body,
+  # then commits the changes and opens (or updates) the pull request.
+
+  pr:
+    needs: [detect, analyze]
+    if: always() && needs.detect.outputs.has_updates == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download updated Lua files
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8.0.1
+        with:
+          name: nvim-lua
+          path: dot_config/nvim/lua/
+
+      - name: Download bump metadata
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8.0.1
+        with:
+          name: bump-meta
+          path: .github/bump/
+
+      - name: Download all analysis reports
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8.0.1
+        with:
+          pattern: analysis-*
+          path: .github/bump/analyses/
+          merge-multiple: true
+
+      - name: Build PR body
+        env:
+          MATRIX: ${{ needs.detect.outputs.matrix }}
+        run: |
+          set -euo pipefail
+
+          {
+            echo "## Neovim Plugin Updates"
+            echo ""
+            echo "| Plugin | Tag | Old SHA | New SHA |"
+            echo "|--------|-----|---------|---------|"
+            echo "$MATRIX" | jq -r '
+              .[] |
+              "| [\(.slug)](https://github.com/\(.owner)/\(.repo)) | `\(.tag)` | " +
+              (if .old_sha == "" then "unpinned" else .old_sha[:8] end) +
+              " | \(.new_sha[:8]) |"
+            '
+            echo ""
+
+            if [ -f .github/bump/unpinnable.json ]; then
+              UNPINNABLE=$(jq -r '.[]' .github/bump/unpinnable.json)
+              if [ -n "$UNPINNABLE" ]; then
+                echo "<details>"
+                echo "<summary>Unpinnable plugins (bare dependency strings)</summary>"
+                echo ""
+                echo "These plugins appear as bare strings and cannot be pinned automatically."
+                echo "Convert to a full spec table to enable pinning:"
+                echo '```lua'
+                echo '-- before'
+                echo 'dependencies = { "nvim-lua/plenary.nvim" }'
+                echo '-- after'
+                echo 'dependencies = { { "nvim-lua/plenary.nvim", commit = "sha" } }'
+                echo '```'
+                echo ""
+                echo "$UNPINNABLE" | while IFS= read -r slug; do echo "- \`${slug}\`"; done
+                echo ""
+                echo "</details>"
+                echo ""
+              fi
+            fi
+
+            echo "---"
+            echo ""
+            echo "## Security Analysis"
+            echo ""
+
+            if compgen -G ".github/bump/analyses/*.md" > /dev/null 2>&1; then
+              for f in .github/bump/analyses/*.md; do
+                cat "$f"
+                echo ""
+              done
+            else
+              echo "_No analysis reports available._"
+            fi
+          } > .github/pr-body.md
+
+          echo "PR body preview:"
+          head -20 .github/pr-body.md
+
+      - name: Commit and open pull request
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MATRIX: ${{ needs.detect.outputs.matrix }}
         run: |
           set -euo pipefail
 
           DATE=$(date -u +%Y-%m-%d)
           BRANCH="bump/nvim-plugins-${DATE}"
+          COUNT=$(echo "$MATRIX" | jq 'length')
+          TITLE="chore: bump ${COUNT} Neovim plugin(s) — ${DATE}"
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Create or reset the branch.
           if git ls-remote --exit-code --heads origin "${BRANCH}" >/dev/null 2>&1; then
+            git fetch origin "${BRANCH}"
             git checkout "${BRANCH}"
-            git reset --hard HEAD
           else
             git checkout -b "${BRANCH}"
           fi
 
           git add dot_config/nvim/lua/
-          git diff --cached --quiet && { echo "Nothing to commit"; exit 0; }
-          git commit -m "${{ steps.bump.outputs.pr_title }}"
+          if git diff --cached --quiet; then
+            echo "Nothing to commit — Lua files unchanged."
+            exit 0
+          fi
+          git commit -m "${TITLE}"
           git push origin "${BRANCH}"
 
-          # Update existing PR or create a new one.
           EXISTING=$(gh pr list --head "${BRANCH}" --json number --jq '.[0].number // empty')
           if [ -n "${EXISTING}" ]; then
             gh pr edit "${EXISTING}" \
-              --title "${{ steps.bump.outputs.pr_title }}" \
+              --title "${TITLE}" \
               --body-file .github/pr-body.md
             echo "Updated existing PR #${EXISTING}"
           else
             gh pr create \
-              --title "${{ steps.bump.outputs.pr_title }}" \
+              --title "${TITLE}" \
               --body-file .github/pr-body.md \
               --base main \
               --head "${BRANCH}"

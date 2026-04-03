@@ -1,9 +1,9 @@
 // bump-nvim-plugins.go
 //
+// Job 1 of the plugin-bump workflow.
 // Scans Neovim plugin Lua files for lazy.nvim specs, checks each plugin's
-// latest GitHub release, and updates commit = "sha" pins. Calls the GitHub
-// Models API (via GITHUB_TOKEN) for a security-focused review and writes
-// .github/pr-body.md.
+// latest GitHub release, updates commit = "sha" pins in place, and outputs
+// a JSON matrix for the per-plugin analyze jobs.
 //
 // Usage (from repo root):
 //
@@ -11,7 +11,6 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -21,7 +20,6 @@ import (
 	"regexp"
 	"sort"
 	"strings"
-	"time"
 )
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -31,18 +29,27 @@ type pluginSpec struct {
 	owner         string
 	repo          string
 	file          string
-	pos           int // position of opening quote of slug in file
-	slugEnd       int // position after closing quote
+	pos           int
+	slugEnd       int
 	currentCommit string
 	pinnable      bool
 }
 
 type pluginUpdate struct {
-	spec         pluginSpec
-	newSHA       string
-	tag          string
-	releaseNotes string
-	commits      []string
+	spec   pluginSpec
+	newSHA string
+	tag    string
+}
+
+// matrixEntry is one element of the JSON array passed to the analyze matrix job.
+type matrixEntry struct {
+	Slug     string `json:"slug"`
+	SlugSafe string `json:"slug_safe"` // "/" replaced with "-", safe for artifact names
+	Owner    string `json:"owner"`
+	Repo     string `json:"repo"`
+	OldSHA   string `json:"old_sha"` // empty string when previously unpinned
+	NewSHA   string `json:"new_sha"`
+	Tag      string `json:"tag"`
 }
 
 // ── GitHub API ────────────────────────────────────────────────────────────────
@@ -93,96 +100,56 @@ func resolveTagSHA(owner, repo, tag string) (string, error) {
 	if ref.Object.Type != "tag" {
 		return ref.Object.SHA, nil
 	}
-	// Annotated tag — dereference to the commit it points to.
 	tagData, err := ghGet(fmt.Sprintf("/repos/%s/%s/git/tags/%s", owner, repo, ref.Object.SHA))
 	if err != nil || tagData == nil {
 		return "", err
 	}
 	var tagObj struct {
-		Object struct {
-			SHA string `json:"sha"`
-		} `json:"object"`
+		Object struct{ SHA string `json:"sha"` } `json:"object"`
 	}
 	json.Unmarshal(tagData, &tagObj)
 	return tagObj.Object.SHA, nil
 }
 
-// getLatestRelease returns (commitSHA, tagName, releaseNotes).
+// getLatestRelease returns (commitSHA, tagName, error).
 // Tries GitHub Releases first; falls back to the most recent tag.
-func getLatestRelease(owner, repo string) (string, string, string, error) {
+func getLatestRelease(owner, repo string) (string, string, error) {
 	data, err := ghGet(fmt.Sprintf("/repos/%s/%s/releases/latest", owner, repo))
 	if err != nil {
-		return "", "", "", err
+		return "", "", err
 	}
 	if data != nil {
 		var rel struct {
 			TagName    string `json:"tag_name"`
-			Body       string `json:"body"`
 			PreRelease bool   `json:"prerelease"`
 		}
 		if json.Unmarshal(data, &rel) == nil && !rel.PreRelease && rel.TagName != "" {
 			sha, err := resolveTagSHA(owner, repo, rel.TagName)
-			return sha, rel.TagName, rel.Body, err
+			return sha, rel.TagName, err
 		}
 	}
-	// Fall back to most recent tag.
 	tagsData, err := ghGet(fmt.Sprintf("/repos/%s/%s/tags?per_page=1", owner, repo))
 	if err != nil || tagsData == nil {
-		return "", "", "", err
+		return "", "", err
 	}
 	var tags []struct {
 		Name string `json:"name"`
 	}
 	if json.Unmarshal(tagsData, &tags) != nil || len(tags) == 0 {
-		return "", "", "", nil
+		return "", "", nil
 	}
 	sha, err := resolveTagSHA(owner, repo, tags[0].Name)
-	return sha, tags[0].Name, "", err
-}
-
-func getCommitsBetween(owner, repo, oldSHA, newSHA string) []string {
-	data, _ := ghGet(fmt.Sprintf("/repos/%s/%s/compare/%s...%s", owner, repo, oldSHA, newSHA))
-	if data == nil {
-		return nil
-	}
-	var cmp struct {
-		Commits []struct {
-			SHA    string `json:"sha"`
-			Commit struct{ Message string `json:"message"` } `json:"commit"`
-		} `json:"commits"`
-	}
-	if json.Unmarshal(data, &cmp) != nil {
-		return nil
-	}
-	lines := make([]string, 0, len(cmp.Commits))
-	for i, c := range cmp.Commits {
-		if i >= 30 {
-			break
-		}
-		msg := c.Commit.Message
-		if nl := strings.IndexByte(msg, '\n'); nl != -1 {
-			msg = msg[:nl]
-		}
-		lines = append(lines, fmt.Sprintf("- %s %s", c.SHA[:8], msg))
-	}
-	return lines
+	return sha, tags[0].Name, err
 }
 
 // ── Lua parsing ───────────────────────────────────────────────────────────────
 
 var (
-	// Matches 'owner/repo' or "owner/repo"; capture group 1 is the slug.
-	slugRE = regexp.MustCompile(`['"]([A-Za-z0-9][A-Za-z0-9_.\-]*/[A-Za-z0-9][A-Za-z0-9_.\-]*)['"]`)
-
-	// Keys whose string values are not plugin slugs.
+	slugRE         = regexp.MustCompile(`['"]([A-Za-z0-9][A-Za-z0-9_.\-]*/[A-Za-z0-9][A-Za-z0-9_.\-]*)['"]`)
 	nonPluginKeyRE = regexp.MustCompile(`\b(import|cmd|event|ft|cond|dir|section|pattern|adapter)\s*=\s*$`)
-
-	// Existing commit pin inside a plugin spec.
-	commitRE = regexp.MustCompile(`commit\s*=\s*['"]([a-f0-9]{7,40})['"]`)
+	commitRE       = regexp.MustCompile(`commit\s*=\s*['"]([a-f0-9]{7,40})['"]`)
 )
 
-// findEnclosingBrace returns the (start, end) indices of the { ... } table
-// that immediately encloses the position pos.
 func findEnclosingBrace(content string, pos int) (int, int) {
 	start := -1
 	lo := pos - 300
@@ -195,7 +162,6 @@ func findEnclosingBrace(content string, pos int) (int, int) {
 			start = i
 			goto scan
 		case ' ', '\t', '\n', ',':
-			// keep scanning
 		default:
 			return -1, -1
 		}
@@ -205,11 +171,7 @@ scan:
 		return -1, -1
 	}
 	depth := 0
-	hi := start + 8000
-	if hi > len(content) {
-		hi = len(content)
-	}
-	for i := start; i < hi; i++ {
+	for i := start; i < len(content); i++ {
 		switch content[i] {
 		case '{':
 			depth++
@@ -223,13 +185,10 @@ scan:
 	return start, -1
 }
 
-// isPinnableSpec returns true when the slug is the first element of a
-// standalone table spec (not a value in an assignment like dependencies = { }).
 func isPinnableSpec(content string, pos, braceStart int) bool {
 	if braceStart == -1 {
 		return false
 	}
-	// Only whitespace between { and slug.
 	for _, ch := range content[braceStart+1 : pos] {
 		if ch != ' ' && ch != '\t' && ch != '\n' {
 			return false
@@ -243,17 +202,15 @@ func isPinnableSpec(content string, pos, braceStart int) bool {
 	if last != '=' {
 		return true
 	}
-	// Distinguish assignment `=` from `==`, `>=`, `<=`, `~=`.
 	if len(before) >= 2 {
 		prev := before[len(before)-2]
 		if prev == '=' || prev == '!' || prev == '<' || prev == '>' || prev == '~' {
 			return true
 		}
 	}
-	return false // `key = {` — assignment value
+	return false
 }
 
-// discoverPluginFiles returns plugins.lua plus every *.lua under plugins/.
 func discoverPluginFiles() ([]string, error) {
 	var files []string
 	main := filepath.Join("dot_config", "nvim", "lua", "plugins.lua")
@@ -269,9 +226,7 @@ func discoverPluginFiles() ([]string, error) {
 }
 
 func parsePlugins(luaFiles []string) []pluginSpec {
-	type key struct {
-		file, slug string
-	}
+	type key struct{ file, slug string }
 	seen := map[key]bool{}
 	var specs []pluginSpec
 
@@ -284,7 +239,6 @@ func parsePlugins(luaFiles []string) []pluginSpec {
 		content := string(raw)
 
 		for _, loc := range slugRE.FindAllStringSubmatchIndex(content, -1) {
-			// loc[0]:loc[1] = full match, loc[2]:loc[3] = capture group (slug)
 			slug := content[loc[2]:loc[3]]
 			pos := loc[0]
 
@@ -293,13 +247,11 @@ func parsePlugins(luaFiles []string) []pluginSpec {
 			}
 			seen[key{file, slug}] = true
 
-			// Skip values of known non-plugin keys.
 			before := strings.TrimRight(content[max(0, pos-30):pos], " \t")
 			if nonPluginKeyRE.MatchString(before) {
 				continue
 			}
 
-			// Skip commented-out lines.
 			lineStart := strings.LastIndex(content[:pos], "\n") + 1
 			if strings.HasPrefix(strings.TrimLeft(content[lineStart:pos], " \t"), "--") {
 				continue
@@ -338,7 +290,6 @@ func updateCommitInFile(file, slug, newSHA string) bool {
 	}
 	content := string(raw)
 
-	// Locate slug in this file.
 	pos, slugEnd := -1, -1
 	for _, loc := range slugRE.FindAllStringSubmatchIndex(content, -1) {
 		if content[loc[2]:loc[3]] == slug {
@@ -359,11 +310,9 @@ func updateCommitInFile(file, slug, newSHA string) bool {
 
 	var newContent string
 	if commitRE.MatchString(block) {
-		// Replace existing commit SHA.
 		newBlock := commitRE.ReplaceAllString(block, fmt.Sprintf(`commit = "%s"`, newSHA))
 		newContent = content[:braceStart] + newBlock + content[braceEnd+1:]
 	} else {
-		// Add commit field.
 		eol := strings.IndexByte(content[slugEnd:], '\n')
 		if eol == -1 {
 			eol = len(content) - slugEnd
@@ -371,12 +320,9 @@ func updateCommitInFile(file, slug, newSHA string) bool {
 		lineAfterSlug := content[slugEnd : slugEnd+eol]
 
 		if strings.Contains(lineAfterSlug, "}") {
-			// Single-line spec: { 'owner/repo' } or { 'owner/repo', ft = 'x' }
-			// Insert before the closing }.
 			closePos := strings.LastIndex(content[:slugEnd+eol+1], "}")
 			newContent = content[:closePos] + fmt.Sprintf(`, commit = "%s"`, newSHA) + content[closePos:]
 		} else {
-			// Multi-line spec: add a new line after the slug's line.
 			lineStart := strings.LastIndex(content[:pos], "\n") + 1
 			slugLine := content[lineStart : slugEnd+eol]
 			indent := len(slugLine) - len(strings.TrimLeft(slugLine, " \t"))
@@ -392,153 +338,10 @@ func updateCommitInFile(file, slug, newSHA string) bool {
 	return os.WriteFile(file, []byte(newContent), 0644) == nil
 }
 
-// ── Claude API ────────────────────────────────────────────────────────────────
-
-// callModel calls the GitHub Models API using GITHUB_TOKEN.
-// The endpoint is OpenAI-compatible and available to GitHub Copilot subscribers.
-func callModel(prompt string) (string, error) {
-	type msg struct {
-		Role    string `json:"role"`
-		Content string `json:"content"`
-	}
-	payload, _ := json.Marshal(struct {
-		Model     string `json:"model"`
-		MaxTokens int    `json:"max_tokens"`
-		Messages  []msg  `json:"messages"`
-	}{
-		Model:     "openai/gpt-4o",
-		MaxTokens: 2048,
-		Messages:  []msg{{Role: "user", Content: prompt}},
-	})
-
-	req, err := http.NewRequest("POST", "https://models.github.ai/inference/chat/completions", bytes.NewReader(payload))
-	if err != nil {
-		return "", err
-	}
-	req.Header.Set("Authorization", "Bearer "+os.Getenv("GITHUB_TOKEN"))
-	req.Header.Set("Content-Type", "application/json")
-
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return "", err
-	}
-	defer resp.Body.Close()
-	body, _ := io.ReadAll(resp.Body)
-	if resp.StatusCode != 200 {
-		return "", fmt.Errorf("GitHub Models API %d: %s", resp.StatusCode, body[:min(len(body), 200)])
-	}
-	var result struct {
-		Choices []struct {
-			Message struct {
-				Content string `json:"content"`
-			} `json:"message"`
-		} `json:"choices"`
-	}
-	if err := json.Unmarshal(body, &result); err != nil || len(result.Choices) == 0 {
-		return "", fmt.Errorf("unexpected response from GitHub Models: %s", body[:min(len(body), 200)])
-	}
-	return result.Choices[0].Message.Content, nil
-}
-
-func buildSecurityPrompt(updates []pluginUpdate) string {
-	var b strings.Builder
-	fmt.Fprintf(&b, "You are auditing %d Neovim plugin update(s) before they are merged into a personal dotfiles repository. These plugins run inside Neovim with full access to the filesystem and shell.\n\n", len(updates))
-	b.WriteString("For each plugin, review the commit log and release notes with a security lens. Flag:\n")
-	b.WriteString("- New shell commands, system calls, or process execution (vim.fn.system, io.popen, os.execute)\n")
-	b.WriteString("- New or changed network requests, remote endpoints, or data exfiltration paths\n")
-	b.WriteString("- File writes outside ~/.config or ~/.local\n")
-	b.WriteString("- New handling of credentials, tokens, environment variables, or secrets\n")
-	b.WriteString("- Obfuscated code, unusual encoding, or base64/hex blobs\n")
-	b.WriteString("- New transitive dependencies pulled in by the plugin\n")
-	b.WriteString("- Surprising behavioral changes inconsistent with the plugin's stated purpose\n\n")
-	b.WriteString("Format for each plugin:\n")
-	b.WriteString("**<slug>** — <one sentence: what changed functionally>  \n")
-	b.WriteString("Verdict: CLEAN | REVIEW | SUSPICIOUS — <one sentence justification>\n\n")
-	b.WriteString("---\n\n")
-
-	for _, u := range updates {
-		old := u.spec.currentCommit
-		if old == "" {
-			old = "unpinned"
-		}
-		fmt.Fprintf(&b, "### %s  (%s)\n", u.spec.slug, u.tag)
-		fmt.Fprintf(&b, "Commits: %s → %s\n", old, u.newSHA)
-		if notes := strings.TrimSpace(u.releaseNotes); notes != "" {
-			if len(notes) > 800 {
-				notes = notes[:800]
-			}
-			fmt.Fprintf(&b, "Release notes:\n%s\n", notes)
-		}
-		if len(u.commits) > 0 {
-			fmt.Fprintf(&b, "Commits:\n%s\n", strings.Join(u.commits, "\n"))
-		}
-		b.WriteString("\n")
-	}
-	return b.String()
-}
-
-// ── PR body ───────────────────────────────────────────────────────────────────
-
-func buildPRBody(updates []pluginUpdate, analysis string, unpinnable []pluginSpec) string {
-	var b strings.Builder
-	b.WriteString("## Neovim Plugin Bumps\n\n")
-	b.WriteString("| Plugin | Old | New | Release |\n")
-	b.WriteString("|--------|-----|-----|--------|\n")
-	for _, u := range updates {
-		old := "*unpinned*"
-		if u.spec.currentCommit != "" {
-			old = fmt.Sprintf("`%s`", u.spec.currentCommit[:8])
-		}
-		gh := fmt.Sprintf("https://github.com/%s/%s", u.spec.owner, u.spec.repo)
-		compare := ""
-		if u.spec.currentCommit != "" {
-			compare = fmt.Sprintf(" ([compare](%s/compare/%s...%s))", gh, u.spec.currentCommit, u.newSHA)
-		}
-		tagLink := "–"
-		if u.tag != "" {
-			tagLink = fmt.Sprintf("[%s](%s/releases/tag/%s)", u.tag, gh, u.tag)
-		}
-		fmt.Fprintf(&b, "| [%s](%s) | %s | `%s`%s | %s |\n",
-			u.spec.slug, gh, old, u.newSHA[:8], compare, tagLink)
-	}
-
-	b.WriteString("\n## Security Analysis\n\n")
-	b.WriteString(analysis)
-
-	// Collect unique unpinnable slugs (only those not also pinnable elsewhere).
-	seen := map[string]bool{}
-	var uniqueUnpinnable []string
-	for _, s := range unpinnable {
-		if !seen[s.slug] {
-			seen[s.slug] = true
-			uniqueUnpinnable = append(uniqueUnpinnable, s.slug)
-		}
-	}
-	if len(uniqueUnpinnable) > 0 {
-		sort.Strings(uniqueUnpinnable)
-		b.WriteString("\n\n<details>\n<summary>Plugins needing manual conversion before they can be pinned</summary>\n\n")
-		b.WriteString("These appear as bare strings in `dependencies = { ... }` arrays.\n")
-		b.WriteString("Convert them to full spec objects to enable commit pinning:\n\n")
-		b.WriteString("```lua\n-- Before:\ndependencies = { \"owner/repo\" }\n-- After:\ndependencies = { { \"owner/repo\", commit = \"sha\" } }\n```\n\n")
-		for _, s := range uniqueUnpinnable {
-			fmt.Fprintf(&b, "- `%s`\n", s)
-		}
-		b.WriteString("</details>")
-	}
-	return b.String()
-}
-
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 func max(a, b int) int {
 	if a > b {
-		return a
-	}
-	return b
-}
-
-func min(a, b int) int {
-	if a < b {
 		return a
 	}
 	return b
@@ -554,6 +357,10 @@ func setOutput(key, value string) {
 	} else {
 		fmt.Printf("[output] %s=%s\n", key, value)
 	}
+}
+
+func slugSafe(slug string) string {
+	return strings.ReplaceAll(slug, "/", "-")
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────────
@@ -573,7 +380,6 @@ func main() {
 
 	allSpecs := parsePlugins(luaFiles)
 
-	// Group by slug; each slug may appear across multiple files.
 	bySlug := map[string][]pluginSpec{}
 	for _, s := range allSpecs {
 		bySlug[s.slug] = append(bySlug[s.slug], s)
@@ -587,7 +393,7 @@ func main() {
 	fmt.Printf("Checking %d unique plugins against GitHub releases...\n\n", len(slugs))
 
 	var updates []pluginUpdate
-	var unpinnable []pluginSpec
+	var unpinnableSlugs []string
 
 	for _, slug := range slugs {
 		specs := bySlug[slug]
@@ -596,19 +402,18 @@ func main() {
 		for _, s := range specs {
 			if s.pinnable {
 				pinnable = append(pinnable, s)
-			} else {
-				unpinnable = append(unpinnable, s)
 			}
 		}
 		if len(pinnable) == 0 {
 			fmt.Printf("  %-46s bare dependency string\n", slug)
+			unpinnableSlugs = append(unpinnableSlugs, slug)
 			continue
 		}
 
 		fmt.Printf("  %-46s", slug)
 		rep := pinnable[0]
 
-		newSHA, tag, notes, err := getLatestRelease(rep.owner, rep.repo)
+		newSHA, tag, err := getLatestRelease(rep.owner, rep.repo)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "error: %v\n", err)
 			continue
@@ -618,7 +423,6 @@ func main() {
 			continue
 		}
 
-		// Use first non-empty current commit across all pinnable specs.
 		currentCommit := ""
 		for _, s := range pinnable {
 			if s.currentCommit != "" {
@@ -630,11 +434,6 @@ func main() {
 		if currentCommit == newSHA {
 			fmt.Printf("up to date  (%s)\n", tag)
 			continue
-		}
-
-		var commits []string
-		if currentCommit != "" {
-			commits = getCommitsBetween(rep.owner, rep.repo, currentCommit, newSHA)
 		}
 
 		oldDisplay := "unpinned"
@@ -650,10 +449,8 @@ func main() {
 				repo:          rep.repo,
 				currentCommit: currentCommit,
 			},
-			newSHA:       newSHA,
-			tag:          tag,
-			releaseNotes: notes,
-			commits:      commits,
+			newSHA: newSHA,
+			tag:    tag,
 		})
 	}
 
@@ -661,13 +458,6 @@ func main() {
 		fmt.Println("\nAll pinned plugins are up to date.")
 		setOutput("has_updates", "false")
 		return
-	}
-
-	fmt.Printf("\nCalling GitHub Models (gpt-4o) for security analysis of %d update(s)...\n", len(updates))
-	analysis, err := callModel(buildSecurityPrompt(updates))
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Claude API error: %v\n", err)
-		os.Exit(1)
 	}
 
 	fmt.Println("\nUpdating Lua files...")
@@ -685,14 +475,29 @@ func main() {
 		}
 	}
 
-	prBody := buildPRBody(updates, analysis, unpinnable)
-	prTitle := fmt.Sprintf("chore: bump neovim plugins (%s)", time.Now().UTC().Format("2006-01-02"))
-
-	if err := os.MkdirAll(".github", 0755); err == nil {
-		os.WriteFile(".github/pr-body.md", []byte(prBody), 0644)
+	// Build matrix JSON for the analyze jobs.
+	matrix := make([]matrixEntry, 0, len(updates))
+	for _, u := range updates {
+		matrix = append(matrix, matrixEntry{
+			Slug:     u.spec.slug,
+			SlugSafe: slugSafe(u.spec.slug),
+			Owner:    u.spec.owner,
+			Repo:     u.spec.repo,
+			OldSHA:   u.spec.currentCommit,
+			NewSHA:   u.newSHA,
+			Tag:      u.tag,
+		})
 	}
+	matrixJSON, _ := json.Marshal(matrix)
+
+	// Write matrix.json and unpinnable.json for the pr job artifact.
+	os.MkdirAll(".github/bump", 0755)
+	os.WriteFile(".github/bump/matrix.json", matrixJSON, 0644)
+
+	unpinnableJSON, _ := json.Marshal(unpinnableSlugs)
+	os.WriteFile(".github/bump/unpinnable.json", unpinnableJSON, 0644)
 
 	setOutput("has_updates", "true")
-	setOutput("pr_title", prTitle)
-	fmt.Printf("\nDone. %d plugin(s) updated. PR body written to .github/pr-body.md\n", len(updates))
+	setOutput("matrix", string(matrixJSON))
+	fmt.Printf("\nDone. %d plugin(s) to update.\n", len(updates))
 }
