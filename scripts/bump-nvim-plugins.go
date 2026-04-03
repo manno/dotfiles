@@ -1,12 +1,13 @@
 // bump-nvim-plugins.go
 //
 // Scans Neovim plugin Lua files for lazy.nvim specs, checks each plugin's
-// latest GitHub release, and updates commit = "sha" pins. Calls the Claude
-// API for a security-focused review and writes .github/pr-body.md.
+// latest GitHub release, and updates commit = "sha" pins. Calls the GitHub
+// Models API (via GITHUB_TOKEN) for a security-focused review and writes
+// .github/pr-body.md.
 //
 // Usage (from repo root):
 //
-//	GITHUB_TOKEN=... ANTHROPIC_API_KEY=... go run scripts/bump-nvim-plugins.go
+//	GITHUB_TOKEN=... go run scripts/bump-nvim-plugins.go
 package main
 
 import (
@@ -393,7 +394,9 @@ func updateCommitInFile(file, slug, newSHA string) bool {
 
 // ── Claude API ────────────────────────────────────────────────────────────────
 
-func callClaude(prompt string) (string, error) {
+// callModel calls the GitHub Models API using GITHUB_TOKEN.
+// The endpoint is OpenAI-compatible and available to GitHub Copilot subscribers.
+func callModel(prompt string) (string, error) {
 	type msg struct {
 		Role    string `json:"role"`
 		Content string `json:"content"`
@@ -403,17 +406,16 @@ func callClaude(prompt string) (string, error) {
 		MaxTokens int    `json:"max_tokens"`
 		Messages  []msg  `json:"messages"`
 	}{
-		Model:     "claude-opus-4-6",
+		Model:     "openai/gpt-4o",
 		MaxTokens: 2048,
 		Messages:  []msg{{Role: "user", Content: prompt}},
 	})
 
-	req, err := http.NewRequest("POST", "https://api.anthropic.com/v1/messages", bytes.NewReader(payload))
+	req, err := http.NewRequest("POST", "https://models.github.ai/inference/chat/completions", bytes.NewReader(payload))
 	if err != nil {
 		return "", err
 	}
-	req.Header.Set("x-api-key", os.Getenv("ANTHROPIC_API_KEY"))
-	req.Header.Set("anthropic-version", "2023-06-01")
+	req.Header.Set("Authorization", "Bearer "+os.Getenv("GITHUB_TOKEN"))
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := http.DefaultClient.Do(req)
@@ -423,17 +425,19 @@ func callClaude(prompt string) (string, error) {
 	defer resp.Body.Close()
 	body, _ := io.ReadAll(resp.Body)
 	if resp.StatusCode != 200 {
-		return "", fmt.Errorf("Anthropic API %d: %s", resp.StatusCode, body[:min(len(body), 200)])
+		return "", fmt.Errorf("GitHub Models API %d: %s", resp.StatusCode, body[:min(len(body), 200)])
 	}
 	var result struct {
-		Content []struct {
-			Text string `json:"text"`
-		} `json:"content"`
+		Choices []struct {
+			Message struct {
+				Content string `json:"content"`
+			} `json:"message"`
+		} `json:"choices"`
 	}
-	if err := json.Unmarshal(body, &result); err != nil || len(result.Content) == 0 {
-		return "", fmt.Errorf("unexpected Claude response: %s", body[:min(len(body), 200)])
+	if err := json.Unmarshal(body, &result); err != nil || len(result.Choices) == 0 {
+		return "", fmt.Errorf("unexpected response from GitHub Models: %s", body[:min(len(body), 200)])
 	}
-	return result.Content[0].Text, nil
+	return result.Choices[0].Message.Content, nil
 }
 
 func buildSecurityPrompt(updates []pluginUpdate) string {
@@ -559,10 +563,6 @@ func main() {
 		fmt.Fprintln(os.Stderr, "error: GITHUB_TOKEN not set")
 		os.Exit(1)
 	}
-	if os.Getenv("ANTHROPIC_API_KEY") == "" {
-		fmt.Fprintln(os.Stderr, "error: ANTHROPIC_API_KEY not set")
-		os.Exit(1)
-	}
 
 	luaFiles, err := discoverPluginFiles()
 	if err != nil || len(luaFiles) == 0 {
@@ -663,8 +663,8 @@ func main() {
 		return
 	}
 
-	fmt.Printf("\nCalling Claude for security analysis of %d update(s)...\n", len(updates))
-	analysis, err := callClaude(buildSecurityPrompt(updates))
+	fmt.Printf("\nCalling GitHub Models (gpt-4o) for security analysis of %d update(s)...\n", len(updates))
+	analysis, err := callModel(buildSecurityPrompt(updates))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Claude API error: %v\n", err)
 		os.Exit(1)

@@ -9,6 +9,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  models: read
 
 jobs:
   bump:
@@ -29,8 +30,7 @@ jobs:
       - name: Check and bump plugins
         id: bump
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # auto-provided, no manual setup needed
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}  # add this to repo secrets
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: go run scripts/bump-nvim-plugins.go
 
       - name: Open pull request
