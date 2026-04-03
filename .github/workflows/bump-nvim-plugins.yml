@@ -205,12 +205,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          if git ls-remote --exit-code --heads origin "${BRANCH}" >/dev/null 2>&1; then
-            git fetch origin "${BRANCH}"
-            git checkout "${BRANCH}"
-          else
-            git checkout -b "${BRANCH}"
-          fi
+          # Create or reset the branch at current HEAD.
+          # -B keeps the working tree intact (the downloaded Lua files stay).
+          git checkout -B "${BRANCH}"
 
           git add dot_config/nvim/lua/
           if git diff --cached --quiet; then
@@ -218,7 +215,7 @@ jobs:
             exit 0
           fi
           git commit -m "${TITLE}"
-          git push origin "${BRANCH}"
+          git push -f origin "${BRANCH}"
 
           EXISTING=$(gh pr list --head "${BRANCH}" --json number --jq '.[0].number // empty')
           if [ -n "${EXISTING}" ]; then
