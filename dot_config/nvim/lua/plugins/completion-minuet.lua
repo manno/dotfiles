@@ -5,6 +5,7 @@ return {
   -- Autocompletion
   {
     'saghen/blink.cmp',
+    commit = "451168851e8e2466bc97ee3e026c3dcb9141ce07",
     -- use a release tag to download pre-built binaries
     version = '*',
     lazy = false,
@@ -64,6 +65,7 @@ return {
   -- LLM
   {
     'milanglacier/minuet-ai.nvim',
+    commit = "1922bc3eeff38d2c3d98f7a90142e4aba79270ec",
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
       require('minuet').setup {
