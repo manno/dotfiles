@@ -20,6 +20,7 @@ vim.opt.rtp:prepend(lazypath)
 return require("lazy").setup({
   {
     'nvim-treesitter/nvim-treesitter',
+    commit = "42fc28ba918343ebfd5565147a42a26580579482",
     branch = 'main',
     build = ':TSUpdate',
     lazy = false,
@@ -33,6 +34,7 @@ return require("lazy").setup({
   -- Status line
   {
     'romgrk/barbar.nvim',
+    commit = "53b5a2f34b68875898f0531032fbf090e3952ad7",
     dependencies = { 'nvim-tree/nvim-web-devicons', 'lewis6991/gitsigns.nvim' },
     event = "VeryLazy",
     keys = {
@@ -44,6 +46,7 @@ return require("lazy").setup({
 
   {
     'hoob3rt/lualine.nvim',
+    commit = "c55af3b39cc50109aa75d445e38f2089b023e5df",
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
       -- local get_mode = require('lualine.utils.mode').get_mode
@@ -130,6 +133,7 @@ return require("lazy").setup({
   { 'TroyFletcher/vim-colors-synthwave' },
   {
     'folke/tokyonight.nvim',
+    commit = "545d72cde6400835d895160ecb5853874fd5156d",
     priority = 1000,
     -- on_colors = function(c)
     --   c.border = c.blue0
@@ -140,6 +144,7 @@ return require("lazy").setup({
   },
   {
     'binhtran432k/dracula.nvim',
+    commit = "d2a8fe71323c958bdf46e8e69c97016fa7f7d703",
     config = function(_, opts)
       require("dracula").setup({
         lualine_bold = true,
@@ -165,6 +170,7 @@ return require("lazy").setup({
   -- Surround - sa%" sa$' saE" srb" sr"' sd"
   {
     'nvim-mini/mini.nvim',
+    commit = "a995fe9cd4193fb492b5df69175a351a74b3d36b",
     version = false,
     config = function()
       require('mini.surround').setup()
@@ -174,6 +180,7 @@ return require("lazy").setup({
 
   {
     "folke/snacks.nvim",
+    commit = "e6fd58c82f2f3fcddd3fe81703d47d6d48fc7b9f",
     priority = 1000,
     lazy = false,
     opts = {
@@ -317,6 +324,7 @@ return require("lazy").setup({
 
   {
     "almo7aya/openingh.nvim",
+    commit = "0f1a90e70edacf8caace89bb80acd7eddc6234a6",
     keys = {
       { "<leader>gh", "<cmd>OpenInGHRepo<cr>", desc = "Open Repo in GitHub" },
       { "<leader>gH", "<cmd>OpenInGHFile<cr>", desc = "Open File in GitHub" },
@@ -324,14 +332,15 @@ return require("lazy").setup({
   },
 
   -- Format SQL
-  { 'vim-scripts/SQLUtilities',  ft = { 'sql' } },
+  { 'vim-scripts/SQLUtilities',  ft = { 'sql' } , commit = "566184530da81aa05ae4ac4ba6cf5034292a9b89"},
 
-  { 'zerowidth/vim-copy-as-rtf', cond = function() return vim.fn.has('mac') end },
+  { 'zerowidth/vim-copy-as-rtf', cond = function() return vim.fn.has('mac') end , commit = "ad90899d8a4178319252dc24c2671b26dae520d7"},
 
   -- Markdown preview
   { 'davinche/godown-vim',       ft = { 'markdown' } },
   {
     'MeanderingProgrammer/render-markdown.nvim',
+    commit = "e3c18ddd27a853f85a6f513a864cf4f2982b9f26",
     dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' },            -- if you use the mini.nvim suite
     -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' },        -- if you use standalone mini plugins
     -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
@@ -378,6 +387,7 @@ return require("lazy").setup({
   vim.env.NVIM_ASSISTANCE == "true" and { import = "plugins/assistance" } or {},
   {
     'neovim/nvim-lspconfig',
+    commit = "0203a9608d63eda57679b01e69f33a7b4c34b0d1",
     dependencies = { 'saghen/blink.cmp' },
   },
 

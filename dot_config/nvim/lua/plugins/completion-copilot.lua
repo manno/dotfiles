@@ -5,6 +5,7 @@ return {
   -- Autocompletion
   {
     "zbirenbaum/copilot.lua",
+    commit = "538f15c4eaad8661389a4a0d1ace2d6e079fac29",
     cmd = "Copilot",
     event = "InsertEnter",
     opts = {
@@ -62,6 +63,7 @@ return {
 
   {
     'saghen/blink.cmp',
+    commit = "451168851e8e2466bc97ee3e026c3dcb9141ce07",
     -- use a release tag to download pre-built binaries
     version = '*',
     lazy = false,

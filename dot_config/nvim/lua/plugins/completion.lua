@@ -5,6 +5,7 @@ return {
   -- Autocompletion
   {
     'saghen/blink.cmp',
+    commit = "451168851e8e2466bc97ee3e026c3dcb9141ce07",
     -- use a release tag to download pre-built binaries
     version = '*',
     lazy = false,
