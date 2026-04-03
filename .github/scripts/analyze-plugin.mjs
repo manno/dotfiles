@@ -153,29 +153,49 @@ function executeTool(name, args) {
 
 // ── GitHub Models API ─────────────────────────────────────────────────────────
 
-async function callModels(messages) {
-  const res = await fetch('https://models.github.ai/inference/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${GITHUB_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: 'openai/gpt-4o',
-      messages,
-      tools,
-      tool_choice: 'auto',
-      max_tokens: 4096,
-    }),
-  });
+async function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-  if (!res.ok) {
-    const body = await res.text();
-    throw new Error(`GitHub Models API ${res.status}: ${body.slice(0, 300)}`);
+async function callModels(messages) {
+  const maxRetries = 5;
+  let delay = 10_000; // start at 10 s; 429s come in bursts at job startup
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    const res = await fetch('https://models.github.ai/inference/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'openai/gpt-4o',
+        messages,
+        tools,
+        tool_choice: 'auto',
+        max_tokens: 4096,
+      }),
+    });
+
+    if (res.status === 429) {
+      const retryAfter = parseInt(res.headers.get('retry-after') ?? '0', 10);
+      const wait = retryAfter > 0 ? retryAfter * 1000 : delay;
+      console.error(`[${PLUGIN_SLUG}] 429 rate-limited — waiting ${wait / 1000}s (attempt ${attempt}/${maxRetries})`);
+      await sleep(wait);
+      delay *= 2;
+      continue;
+    }
+
+    if (!res.ok) {
+      const body = await res.text();
+      throw new Error(`GitHub Models API ${res.status}: ${body.slice(0, 300)}`);
+    }
+
+    const data = await res.json();
+    return data.choices[0].message;
   }
 
-  const data = await res.json();
-  return data.choices[0].message;
+  throw new Error(`GitHub Models API still rate-limiting after ${maxRetries} retries`);
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────────

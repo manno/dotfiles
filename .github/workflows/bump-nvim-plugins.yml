@@ -65,6 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
+      max-parallel: 3
       matrix:
         plugin: ${{ fromJSON(needs.detect.outputs.matrix) }}
 
