@@ -18,48 +18,15 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 return require("lazy").setup({
-  -- Parsers
-  -- TSInstall ft
   {
     'nvim-treesitter/nvim-treesitter',
+    branch = 'main',
     build = ':TSUpdate',
-    opts = {
-      -- ensure_installed = "all",
-      -- ignore_install = { "phpdoc" },
-      ensure_installed = { 'bash', 'html', 'lua', 'markdown', 'markdown_inline', 'vim', 'vimdoc', 'go', 'yaml' },
-      highlight = {
-        enable = true, -- false will disable the whole extension
-        -- disable = { "c", "rust" },  -- list of language that will be disabled
-      },
-      textobjects = {
-        move = {
-          enable = true,
-          set_jumps = true, -- whether to set jumps in the jumplist
-          goto_next_start = {
-            ["]]"] = "@function.outer",
-            ["]m"] = "@class.outer",
-          },
-          goto_next_end = {
-            ["]["] = "@function.outer",
-            ["]M"] = "@class.outer",
-          },
-          goto_previous_start = {
-            ["[["] = "@function.outer",
-            ["[m"] = "@class.outer",
-          },
-          goto_previous_end = {
-            ["[]"] = "@function.outer",
-            ["[M"] = "@class.outer",
-          },
-        },
-      },
-    },
+    lazy = false,
     config = function(_, opts)
-      require 'nvim-treesitter.configs'.setup(opts)
+      require('nvim-treesitter').install { 'bash', 'html', 'lua', 'markdown', 'markdown_inline', 'vim', 'vimdoc', 'go', 'yaml' }
     end
   },
-  { 'nvim-treesitter/nvim-treesitter-textobjects' },
-  { 'nvim-treesitter/nvim-treesitter-context' },
 
   { 'towolf/vim-helm' },
 
