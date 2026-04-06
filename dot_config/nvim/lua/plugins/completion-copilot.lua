@@ -63,7 +63,7 @@ return {
 
   {
     'saghen/blink.cmp',
-    commit = "451168851e8e2466bc97ee3e026c3dcb9141ce07",
+    commit = "78336bc89ee5365633bcf754d93df01678b5c08f",
     -- use a release tag to download pre-built binaries
     version = '*',
     lazy = false,
