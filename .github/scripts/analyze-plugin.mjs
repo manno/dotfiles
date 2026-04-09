@@ -266,6 +266,39 @@ async function main() {
         content: truncated,
       });
     }
+
+    // GitHub Models caps the total request body at 8000 tokens. The messages
+    // array grows each iteration: every tool call adds an assistant message
+    // (with tool_calls) and one tool message (with the result). For large
+    // plugins this blows the limit after just a few diffs.
+    //
+    // We prune by dropping the oldest assistant+tool pair after each
+    // iteration, keeping only messages[0] (the system prompt) and everything
+    // from the current and previous iteration. The OpenAI API requires that
+    // tool results immediately follow the assistant message that requested
+    // them, so pairs must be dropped together — never individually.
+    //
+    // The model loses the text of diffs it already read, but it has already
+    // acted on them (decided which file to look at next). It will not
+    // re-call list_changed_files because it remembers from its own prior
+    // assistant turns that it has already done so.
+    //
+    // messages layout after two iterations:
+    //   [0] user: system prompt          ← always kept
+    //   [1] assistant: tool_calls        ← oldest pair, pruned first
+    //   [2] tool: result
+    //   [3] assistant: tool_calls        ← current pair, kept
+    //   [4] tool: result
+    //
+    // We keep the system prompt plus the two most recent pairs (4 messages),
+    // which leaves enough budget for the next request.
+    const KEEP_PAIRS = 2;
+    const tail = messages.slice(1); // everything after the system prompt
+    const maxTail = KEEP_PAIRS * 2; // each pair is assistant + tool message(s)
+    if (tail.length > maxTail) {
+      messages.splice(1, tail.length - maxTail);
+      console.error(`[${PLUGIN_SLUG}]   pruned history to ${messages.length} messages`);
+    }
   }
 
   if (!finalContent) {
