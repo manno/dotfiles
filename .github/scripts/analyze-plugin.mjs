@@ -247,7 +247,7 @@ Rules:
 - Keep the report concise: verdict line, 2–4 sentence summary, findings section if WARN/BLOCK.`;
 
 async function main() {
-  const messages = [{ role: 'user', content: systemPrompt }];
+  const messages = [{ role: 'system', content: systemPrompt }];
 
   let finalContent = '';
   const maxIterations = 10;
@@ -257,6 +257,11 @@ async function main() {
 
     const msg = await callModels(messages);
     messages.push(msg);
+
+    const finish = msg.finish_reason ?? (msg.tool_calls?.length ? 'tool_calls' : 'stop');
+    if (finish === 'length') {
+      console.error(`[${PLUGIN_SLUG}]   warning: finish_reason=length — response was truncated`);
+    }
 
     if (!msg.tool_calls || msg.tool_calls.length === 0) {
       finalContent = msg.content ?? '';
@@ -274,40 +279,43 @@ async function main() {
       messages.push({
         role: 'tool',
         tool_call_id: tc.id,
+        name: tc.function.name,  // required by OpenAI spec
         content: truncated,
       });
     }
 
     // GitHub Models caps the total request body at 8000 tokens. The messages
     // array grows each iteration: every tool call adds an assistant message
-    // (with tool_calls) and one tool message (with the result). For large
-    // plugins this blows the limit after just a few diffs.
+    // (with tool_calls) and one or more tool messages (one per tool called).
+    // For large plugins this blows the limit after just a few diffs.
     //
-    // We prune by dropping the oldest assistant+tool pair after each
-    // iteration, keeping only messages[0] (the system prompt) and everything
-    // from the current and previous iteration. The OpenAI API requires that
-    // tool results immediately follow the assistant message that requested
-    // them, so pairs must be dropped together — never individually.
+    // We prune by dropping the oldest assistant+tool block after each
+    // iteration, keeping only messages[0] (the system prompt) and the
+    // KEEP_PAIRS most recent assistant turns with their tool responses.
     //
-    // The model loses the text of diffs it already read, but it has already
-    // acted on them (decided which file to look at next). It will not
-    // re-call list_changed_files because it remembers from its own prior
-    // assistant turns that it has already done so.
+    // The OpenAI API requires that tool results immediately follow the
+    // assistant message that requested them, so we must cut at an assistant
+    // message boundary — never in the middle of a block. We find the index
+    // of the (N - KEEP_PAIRS)th assistant message and splice up to there.
     //
-    // messages layout after two iterations:
-    //   [0] user: system prompt          ← always kept
-    //   [1] assistant: tool_calls        ← oldest pair, pruned first
-    //   [2] tool: result
-    //   [3] assistant: tool_calls        ← current pair, kept
-    //   [4] tool: result
+    // Example: model called two tools in turn 1, one tool in turn 2.
+    //   [0] user: system prompt              ← always kept
+    //   [1] assistant: tool_calls [a, b]     ← oldest block
+    //   [2] tool: result for a
+    //   [3] tool: result for b
+    //   [4] assistant: tool_calls [c]        ← kept (KEEP_PAIRS = 2 means keep last 2)
+    //   [5] tool: result for c
     //
-    // We keep the system prompt plus the two most recent pairs (4 messages),
-    // which leaves enough budget for the next request.
+    // Cutting at index 1 (the oldest assistant) gives the correct result.
+    // The naive KEEP_PAIRS * 2 offset would cut at index 3, leaving an
+    // orphaned tool message at [1] and causing a 400 invalid_request_error.
     const KEEP_PAIRS = 2;
-    const tail = messages.slice(1); // everything after the system prompt
-    const maxTail = KEEP_PAIRS * 2; // each pair is assistant + tool message(s)
-    if (tail.length > maxTail) {
-      messages.splice(1, tail.length - maxTail);
+    const assistantIndices = messages
+      .map((m, i) => (m.role === 'assistant' && i > 0 ? i : -1))
+      .filter(i => i >= 0);
+    if (assistantIndices.length > KEEP_PAIRS) {
+      const cutAt = assistantIndices[assistantIndices.length - KEEP_PAIRS];
+      messages.splice(1, cutAt - 1);
       console.error(`[${PLUGIN_SLUG}]   pruned history to ${messages.length} messages`);
     }
   }
