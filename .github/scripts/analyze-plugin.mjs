@@ -192,11 +192,22 @@ async function callModels(messages) {
     }
 
     const data = await res.json();
+    const u = data.usage;
+    if (u) {
+      console.error(`[${PLUGIN_SLUG}]   tokens — prompt: ${u.prompt_tokens}, completion: ${u.completion_tokens}, total: ${u.total_tokens}`);
+      totalTokens.prompt     += u.prompt_tokens     ?? 0;
+      totalTokens.completion += u.completion_tokens ?? 0;
+      totalTokens.total      += u.total_tokens      ?? 0;
+    }
     return data.choices[0].message;
   }
 
   throw new Error(`GitHub Models API still rate-limiting after ${maxRetries} retries`);
 }
+
+// ── Token usage accumulator ───────────────────────────────────────────────────
+
+const totalTokens = { prompt: 0, completion: 0, total: 0 };
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 
@@ -304,6 +315,8 @@ async function main() {
   if (!finalContent) {
     finalContent = `**Verdict: WARN**\n\nAnalysis reached the iteration limit (${maxIterations}) without producing a final verdict. Manual review recommended.`;
   }
+
+  console.error(`[${PLUGIN_SLUG}] total tokens — prompt: ${totalTokens.prompt}, completion: ${totalTokens.completion}, total: ${totalTokens.total}`);
 
   const report = `## ${PLUGIN_SLUG} — ${tag}\n\n${finalContent}\n`;
   writeFileSync(outFile, report, 'utf8');
