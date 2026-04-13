@@ -20,7 +20,7 @@ vim.opt.rtp:prepend(lazypath)
 return require("lazy").setup({
   {
     'nvim-treesitter/nvim-treesitter',
-    commit = "4916d6592ede8c07973490d9322f187e07dfefac",
+    commit = "42fc28ba918343ebfd5565147a42a26580579482",
     branch = 'main',
     build = ':TSUpdate',
     lazy = false,
@@ -387,7 +387,7 @@ return require("lazy").setup({
   vim.env.NVIM_ASSISTANCE == "true" and { import = "plugins/assistance" } or {},
   {
     'neovim/nvim-lspconfig',
-    commit = "0203a9608d63eda57679b01e69f33a7b4c34b0d1",
+    commit = "9bafffaeaae363c5211080e06e04ed5b422fd5ad",
     dependencies = { 'saghen/blink.cmp' },
   },
 
