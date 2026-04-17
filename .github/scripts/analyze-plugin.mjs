@@ -61,11 +61,12 @@ const tools = [
     type: 'function',
     function: {
       name: 'get_file_diff',
-      description: 'Get the unified diff patch for a specific file in this update.',
+      description: 'Get the unified diff patch for a specific file in this update. Large diffs are returned in chunks of 2000 chars. If the result ends with a "... N chars remaining" note, call again with offset set to the next position to read the next chunk.',
       parameters: {
         type: 'object',
         properties: {
           filename: { type: 'string', description: 'File path within the repo, as returned by list_changed_files.' },
+          offset:   { type: 'number', description: 'Character offset to start reading from. Omit or set to 0 for the first chunk.' },
         },
         required: ['filename'],
       },
@@ -75,11 +76,12 @@ const tools = [
     type: 'function',
     function: {
       name: 'get_file_content',
-      description: 'Get the full content of a file at the new commit. Use for files where a diff alone is not enough context.',
+      description: 'Get the full content of a file at the new commit. Use for files where a diff alone is not enough context. Large files are returned in chunks of 2000 chars. If the result ends with a "... N chars remaining" note, call again with offset set to the next position.',
       parameters: {
         type: 'object',
         properties: {
-          path: { type: 'string', description: 'File path within the repo.' },
+          path:   { type: 'string', description: 'File path within the repo.' },
+          offset: { type: 'number', description: 'Character offset to start reading from. Omit or set to 0 for the first chunk.' },
         },
         required: ['path'],
       },
@@ -103,6 +105,20 @@ const tools = [
 
 // ── Tool execution ────────────────────────────────────────────────────────────
 
+const CHUNK_SIZE = 2000; // chars per tool result (~500 tokens)
+
+// Return a slice of `text` starting at `offset`, with a continuation hint
+// appended when more content follows. The model can request the next chunk
+// by calling the same tool again with offset set to the returned next position.
+function chunk(text, offset) {
+  const slice = text.slice(offset, offset + CHUNK_SIZE);
+  const remaining = text.length - (offset + CHUNK_SIZE);
+  if (remaining > 0) {
+    return `${slice}\n... ${remaining} chars remaining — call with offset: ${offset + CHUNK_SIZE}`;
+  }
+  return slice;
+}
+
 function executeTool(name, args) {
   const base = oldSHA || `${newSHA}^`;
 
@@ -117,21 +133,22 @@ function executeTool(name, args) {
   }
 
   if (name === 'get_file_diff') {
-    const { filename } = args;
+    const { filename, offset = 0 } = args;
     const data = ghApi(`/repos/${owner}/${repo}/compare/${base}...${newSHA}`);
     if (data._error) return `Error: ${data._error}`;
     const file = (data.files || []).find(f => f.filename === filename);
     if (!file) return `File not found in diff: ${filename}`;
-    return file.patch || '(binary file or patch not available)';
+    return chunk(file.patch || '(binary file or patch not available)', offset);
   }
 
   if (name === 'get_file_content') {
-    const { path } = args;
+    const { path, offset = 0 } = args;
     const data = ghApi(`/repos/${owner}/${repo}/contents/${path}?ref=${newSHA}`);
     if (data._error) return `Error: ${data._error}`;
     if (!data.content) return 'No content available (directory or binary file).';
     try {
-      return Buffer.from(data.content.replace(/\n/g, ''), 'base64').toString('utf8');
+      const text = Buffer.from(data.content.replace(/\n/g, ''), 'base64').toString('utf8');
+      return chunk(text, offset);
     } catch {
       return '(failed to decode content)';
     }
@@ -244,7 +261,8 @@ After your investigation, issue one of these verdicts:
 Rules:
 - Do NOT use WARN without a specific file+line citation.
 - Do NOT tell the user to review the diff themselves — you are the reviewer; give a conclusion.
-- Keep the report concise: verdict line, 2–4 sentence summary, findings section if WARN/BLOCK.`;
+- Keep the report concise: verdict line, 2–4 sentence summary, findings section if WARN/BLOCK.
+- Request at most 3 files per turn. Diffs are returned in 2000-char chunks; use the offset parameter to page through large files.`;
 
 async function main() {
   const messages = [{ role: 'system', content: systemPrompt }];
@@ -273,14 +291,11 @@ async function main() {
       try { args = JSON.parse(tc.function.arguments); } catch {}
       console.error(`[${PLUGIN_SLUG}]   → ${tc.function.name}(${JSON.stringify(args)})`);
       const result = executeTool(tc.function.name, args);
-      const truncated = typeof result === 'string' && result.length > 60000
-        ? result.slice(0, 60000) + '\n... (truncated)'
-        : result;
       messages.push({
         role: 'tool',
         tool_call_id: tc.id,
         name: tc.function.name,  // required by OpenAI spec
-        content: truncated,
+        content: result,
       });
     }
 
