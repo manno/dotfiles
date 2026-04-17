@@ -387,7 +387,7 @@ return require("lazy").setup({
   vim.env.NVIM_ASSISTANCE == "true" and { import = "plugins/assistance" } or {},
   {
     'neovim/nvim-lspconfig',
-    commit = "0203a9608d63eda57679b01e69f33a7b4c34b0d1",
+    commit = "9bafffaeaae363c5211080e06e04ed5b422fd5ad",
     dependencies = { 'saghen/blink.cmp' },
   },
 
