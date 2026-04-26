@@ -32,6 +32,7 @@ type pluginSpec struct {
 	pos           int
 	slugEnd       int
 	currentCommit string
+	branch        string
 	pinnable      bool
 }
 
@@ -142,12 +143,30 @@ func getLatestRelease(owner, repo string) (string, string, error) {
 	return sha, tags[0].Name, err
 }
 
+// getBranchHead returns the HEAD commit SHA of a branch.
+func getBranchHead(owner, repo, branch string) (string, error) {
+	data, err := ghGet(fmt.Sprintf("/repos/%s/%s/branches/%s", owner, repo, branch))
+	if err != nil || data == nil {
+		return "", err
+	}
+	var b struct {
+		Commit struct {
+			SHA string `json:"sha"`
+		} `json:"commit"`
+	}
+	if err := json.Unmarshal(data, &b); err != nil {
+		return "", err
+	}
+	return b.Commit.SHA, nil
+}
+
 // ── Lua parsing ───────────────────────────────────────────────────────────────
 
 var (
 	slugRE         = regexp.MustCompile(`['"]([A-Za-z0-9][A-Za-z0-9_.\-]*/[A-Za-z0-9][A-Za-z0-9_.\-]*)['"]`)
 	nonPluginKeyRE = regexp.MustCompile(`\b(import|cmd|event|ft|cond|dir|section|pattern|adapter)\s*=\s*$`)
 	commitRE       = regexp.MustCompile(`commit\s*=\s*['"]([a-f0-9]{7,40})['"]`)
+	branchRE       = regexp.MustCompile(`branch\s*=\s*['"]([^'"]+)['"]`)
 )
 
 func findEnclosingBrace(content string, pos int) (int, int) {
@@ -259,9 +278,14 @@ func parsePlugins(luaFiles []string) []pluginSpec {
 
 			braceStart, braceEnd := findEnclosingBrace(content, pos)
 			currentCommit := ""
+			branch := ""
 			if braceStart != -1 && braceEnd != -1 {
-				if m := commitRE.FindStringSubmatch(content[braceStart : braceEnd+1]); m != nil {
+				block := content[braceStart : braceEnd+1]
+				if m := commitRE.FindStringSubmatch(block); m != nil {
 					currentCommit = m[1]
+				}
+				if m := branchRE.FindStringSubmatch(block); m != nil {
+					branch = m[1]
 				}
 			}
 
@@ -274,6 +298,7 @@ func parsePlugins(luaFiles []string) []pluginSpec {
 				pos:           pos,
 				slugEnd:       loc[1],
 				currentCommit: currentCommit,
+				branch:        branch,
 				pinnable:      isPinnableSpec(content, pos, braceStart),
 			})
 		}
@@ -413,7 +438,13 @@ func main() {
 		fmt.Printf("  %-46s", slug)
 		rep := pinnable[0]
 
-		newSHA, tag, err := getLatestRelease(rep.owner, rep.repo)
+		var newSHA, tag string
+		if rep.branch != "" {
+			newSHA, err = getBranchHead(rep.owner, rep.repo, rep.branch)
+			tag = "branch:" + rep.branch
+		} else {
+			newSHA, tag, err = getLatestRelease(rep.owner, rep.repo)
+		}
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "error: %v\n", err)
 			continue
@@ -448,6 +479,7 @@ func main() {
 				owner:         rep.owner,
 				repo:          rep.repo,
 				currentCommit: currentCommit,
+				branch:        rep.branch,
 			},
 			newSHA: newSHA,
 			tag:    tag,
