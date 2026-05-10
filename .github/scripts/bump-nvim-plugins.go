@@ -261,10 +261,12 @@ func parsePlugins(luaFiles []string) []pluginSpec {
 			slug := content[loc[2]:loc[3]]
 			pos := loc[0]
 
+			// Skip if we've already found a pinnable spec for this slug in this
+			// file. Unpinnable occurrences (e.g. bare dep strings) don't set the
+			// seen flag, so a later full-spec occurrence can still be recorded.
 			if seen[key{file, slug}] {
 				continue
 			}
-			seen[key{file, slug}] = true
 
 			before := strings.TrimRight(content[max(0, pos-30):pos], " \t")
 			if nonPluginKeyRE.MatchString(before) {
@@ -277,6 +279,11 @@ func parsePlugins(luaFiles []string) []pluginSpec {
 			}
 
 			braceStart, braceEnd := findEnclosingBrace(content, pos)
+			pinnable := isPinnableSpec(content, pos, braceStart)
+			if pinnable {
+				seen[key{file, slug}] = true
+			}
+
 			currentCommit := ""
 			branch := ""
 			if braceStart != -1 && braceEnd != -1 {
@@ -299,7 +306,7 @@ func parsePlugins(luaFiles []string) []pluginSpec {
 				slugEnd:       loc[1],
 				currentCommit: currentCommit,
 				branch:        branch,
-				pinnable:      isPinnableSpec(content, pos, braceStart),
+				pinnable:      pinnable,
 			})
 		}
 	}
@@ -316,17 +323,21 @@ func updateCommitInFile(file, slug, newSHA string) bool {
 	content := string(raw)
 
 	pos, slugEnd := -1, -1
+	var braceStart, braceEnd int
 	for _, loc := range slugRE.FindAllStringSubmatchIndex(content, -1) {
-		if content[loc[2]:loc[3]] == slug {
+		if content[loc[2]:loc[3]] != slug {
+			continue
+		}
+		bs, be := findEnclosingBrace(content, loc[0])
+		if isPinnableSpec(content, loc[0], bs) {
 			pos, slugEnd = loc[0], loc[1]
+			braceStart, braceEnd = bs, be
 			break
 		}
 	}
 	if pos == -1 {
 		return false
 	}
-
-	braceStart, braceEnd := findEnclosingBrace(content, pos)
 	if braceStart == -1 || braceEnd == -1 {
 		fmt.Fprintf(os.Stderr, "  warning: cannot find table bounds for %s in %s\n", slug, file)
 		return false
@@ -444,6 +455,10 @@ func main() {
 			tag = "branch:" + rep.branch
 		} else {
 			newSHA, tag, err = getLatestRelease(rep.owner, rep.repo)
+			if err == nil && newSHA == "" {
+				newSHA, err = getBranchHead(rep.owner, rep.repo, "main")
+				tag = "branch:main"
+			}
 		}
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "error: %v\n", err)

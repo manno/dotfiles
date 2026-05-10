@@ -29,7 +29,7 @@ return require("lazy").setup({
     end
   },
 
-  { 'towolf/vim-helm' },
+  { 'towolf/vim-helm', branch = "master" },
 
   -- Status line
   {
@@ -129,8 +129,8 @@ return require("lazy").setup({
   -- { 'sainnhe/sonokai' },
   -- { 'sontungexpt/witch' },
   -- { 'tomasr/molokai' },
-  { 'chriskempson/base16-vim' },
-  { 'TroyFletcher/vim-colors-synthwave' },
+  { 'chriskempson/base16-vim', branch = "master" },
+  { 'TroyFletcher/vim-colors-synthwave', branch = "master" },
   {
     'folke/tokyonight.nvim',
     commit = "545d72cde6400835d895160ecb5853874fd5156d",
@@ -161,7 +161,7 @@ return require("lazy").setup({
   -- { 'edkolev/tmuxline.vim', lazy = true },
 
   -- Readline style insertion
-  { 'tpope/vim-rsi' },
+  { 'tpope/vim-rsi', branch = "master" },
 
   -- Spider cursor movement
   { "chrisgrieser/nvim-spider" },
@@ -337,7 +337,7 @@ return require("lazy").setup({
   { 'zerowidth/vim-copy-as-rtf', cond = function() return vim.fn.has('mac') end , commit = "ad90899d8a4178319252dc24c2671b26dae520d7"},
 
   -- Markdown preview
-  { 'davinche/godown-vim',       ft = { 'markdown' } },
+  { 'davinche/godown-vim',       ft = { 'markdown' }, branch = "master" },
   {
     'MeanderingProgrammer/render-markdown.nvim',
     commit = "e3c18ddd27a853f85a6f513a864cf4f2982b9f26",
