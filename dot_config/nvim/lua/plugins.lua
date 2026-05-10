@@ -29,7 +29,7 @@ return require("lazy").setup({
     end
   },
 
-  { 'towolf/vim-helm', branch = "master" },
+  { 'towolf/vim-helm', branch = "master" , commit = "2c8525fd98e57472769d137317bca83e477858ce"},
 
   -- Status line
   {
@@ -129,8 +129,8 @@ return require("lazy").setup({
   -- { 'sainnhe/sonokai' },
   -- { 'sontungexpt/witch' },
   -- { 'tomasr/molokai' },
-  { 'chriskempson/base16-vim', branch = "master" },
-  { 'TroyFletcher/vim-colors-synthwave', branch = "master" },
+  { 'chriskempson/base16-vim', branch = "master" , commit = "3be3cd82cd31acfcab9a41bad853d9c68d30478d"},
+  { 'TroyFletcher/vim-colors-synthwave', branch = "master" , commit = "be5e1512f93e1ed461a9bfb2a03e8ab1284f7679"},
   {
     'folke/tokyonight.nvim',
     commit = "545d72cde6400835d895160ecb5853874fd5156d",
@@ -161,10 +161,10 @@ return require("lazy").setup({
   -- { 'edkolev/tmuxline.vim', lazy = true },
 
   -- Readline style insertion
-  { 'tpope/vim-rsi', branch = "master" },
+  { 'tpope/vim-rsi', branch = "master" , commit = "45540637ead22f011e8215f1c90142e49d946a54"},
 
   -- Spider cursor movement
-  { "chrisgrieser/nvim-spider" },
+  { "chrisgrieser/nvim-spider" , commit = "4fdd56a4f45bca13a607632e15a6f9f8d1b1f99e"},
 
 
   -- Surround - sa%" sa$' saE" srb" sr"' sd"
@@ -337,7 +337,7 @@ return require("lazy").setup({
   { 'zerowidth/vim-copy-as-rtf', cond = function() return vim.fn.has('mac') end , commit = "ad90899d8a4178319252dc24c2671b26dae520d7"},
 
   -- Markdown preview
-  { 'davinche/godown-vim',       ft = { 'markdown' }, branch = "master" },
+  { 'davinche/godown-vim',       ft = { 'markdown' }, branch = "master" , commit = "60c019e45283b3713075c829c5dbe2549c1521e1"},
   {
     'MeanderingProgrammer/render-markdown.nvim',
     commit = "e3c18ddd27a853f85a6f513a864cf4f2982b9f26",
@@ -352,9 +352,11 @@ return require("lazy").setup({
   -- Git
   {
     'lewis6991/gitsigns.nvim', config = function() require('gitsigns').setup() end,
+    commit = "a462f416e2ce4744531c6256252dee99a7d34a83",
   },
   {
     "sindrets/diffview.nvim",
+    commit = "4516612fe98ff56ae0415a259ff6361a89419b0a",
     keys = {
       {
         "<leader>v",
@@ -371,6 +373,7 @@ return require("lazy").setup({
   },
   {
     "FabijanZulj/blame.nvim",
+    commit = "179da7aaacce7c52874af636255ede72dd6fe796",
     config = function()
       require("blame").setup()
     end
@@ -387,15 +390,16 @@ return require("lazy").setup({
   vim.env.NVIM_ASSISTANCE == "true" and { import = "plugins/assistance" } or {},
   {
     'neovim/nvim-lspconfig',
-    commit = "9bafffaeaae363c5211080e06e04ed5b422fd5ad",
+    commit = "f6738ef65dabade340b473d4ff2a1ad3352c10e7",
     dependencies = { 'saghen/blink.cmp' },
   },
 
   -- Open files at line
-  { 'manno/file-line.nvim' },
+  { 'manno/file-line.nvim' , commit = "66ca121379617f6ff8920fb2fcc08881e08734a1"},
 
   {
     "manno/qrencode.nvim",
+    commit = "0d59d644a5981266adcfaf65d901c3d7b554cb18",
     opts = {
       ecl = "M",
       prefer_image = true,
