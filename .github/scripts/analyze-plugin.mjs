@@ -175,7 +175,8 @@ async function sleep(ms) {
 }
 
 async function callModels(messages) {
-  const maxRetries = 5;
+  const maxRetries = 10;
+  const maxDelay = 600_000; // cap at 10 min
   let delay = 10_000; // start at 10 s; 429s come in bursts at job startup
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
@@ -196,10 +197,10 @@ async function callModels(messages) {
 
     if (res.status === 429) {
       const retryAfter = parseInt(res.headers.get('retry-after') ?? '0', 10);
-      const wait = retryAfter > 0 ? retryAfter * 1000 : delay;
+      const wait = Math.min(retryAfter > 0 ? retryAfter * 1000 : delay, maxDelay);
       console.error(`[${PLUGIN_SLUG}] 429 rate-limited — waiting ${wait / 1000}s (attempt ${attempt}/${maxRetries})`);
       await sleep(wait);
-      delay *= 2;
+      delay = Math.min(delay * 2, maxDelay);
       continue;
     }
 
@@ -219,7 +220,7 @@ async function callModels(messages) {
     return data.choices[0].message;
   }
 
-  throw new Error(`GitHub Models API still rate-limiting after ${maxRetries} retries`);
+  throw new Error(`GitHub Models API still rate-limiting after ${maxRetries} retries (max wait ${maxDelay / 60_000}min each)`);
 }
 
 // ── Token usage accumulator ───────────────────────────────────────────────────
