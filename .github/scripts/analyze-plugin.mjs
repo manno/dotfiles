@@ -145,7 +145,16 @@ function executeTool(name, args) {
     const { path, offset = 0 } = args;
     const data = ghApi(`/repos/${owner}/${repo}/contents/${path}?ref=${newSHA}`);
     if (data._error) return `Error: ${data._error}`;
-    if (!data.content) return 'No content available (directory or binary file).';
+    if (data.type === 'dir') return 'Path is a directory, not a file.';
+
+    // The GitHub Contents API does not return content for files >1MB.
+    // A large file with no readable diff is likely minified or bundled code
+    // copied from an external source and cannot be audited.
+    if (!data.content) {
+      const kb = data.size ? ` (${Math.round(data.size / 1024)} KB)` : '';
+      return `UNREADABLE_LARGE_FILE: ${path}${kb} — file exceeds the GitHub Contents API limit. Content cannot be reviewed; treat as unauditable.`;
+    }
+
     try {
       const text = Buffer.from(data.content.replace(/\n/g, ''), 'base64').toString('utf8');
       return chunk(text, offset);
@@ -260,7 +269,8 @@ After your investigation, issue one of these verdicts:
 **Verdict: BLOCK** — strong evidence of malicious behaviour; you MUST cite exact file and line(s).
 
 Rules:
-- Do NOT use WARN without a specific file+line citation.
+- Do NOT use WARN without a specific file+line citation — EXCEPT when a tool returns UNREADABLE_LARGE_FILE: in that case cite the filename and its size as the finding.
+- If any changed file returns UNREADABLE_LARGE_FILE, issue **Verdict: WARN** citing that file. Large minified or bundled files copied from an external source cannot be audited and must be treated as suspicious.
 - Do NOT tell the user to review the diff themselves — you are the reviewer; give a conclusion.
 - Keep the report concise: verdict line, 2–4 sentence summary, findings section if WARN/BLOCK.
 - Request at most 3 files per turn. Diffs are returned in 2000-char chunks; use the offset parameter to page through large files.`;
