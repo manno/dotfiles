@@ -65,6 +65,7 @@ return {
   -- LLM
   {
     'milanglacier/minuet-ai.nvim',
+    branch = "main",
     commit = "e993fdcd39c008d14e403fa521a0bbb08e580f77",
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()

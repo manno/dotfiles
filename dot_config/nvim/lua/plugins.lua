@@ -34,6 +34,7 @@ return require("lazy").setup({
   -- Status line
   {
     'romgrk/barbar.nvim',
+    branch = "master",
     commit = "53b5a2f34b68875898f0531032fbf090e3952ad7",
     dependencies = { 'nvim-tree/nvim-web-devicons', 'lewis6991/gitsigns.nvim' },
     event = "VeryLazy",
@@ -133,6 +134,7 @@ return require("lazy").setup({
   { 'TroyFletcher/vim-colors-synthwave', branch = "master" , commit = "be5e1512f93e1ed461a9bfb2a03e8ab1284f7679"},
   {
     'folke/tokyonight.nvim',
+    branch = "main",
     commit = "545d72cde6400835d895160ecb5853874fd5156d",
     priority = 1000,
     -- on_colors = function(c)
@@ -144,6 +146,7 @@ return require("lazy").setup({
   },
   {
     'binhtran432k/dracula.nvim',
+    branch = "main",
     commit = "d2a8fe71323c958bdf46e8e69c97016fa7f7d703",
     config = function(_, opts)
       require("dracula").setup({
@@ -170,6 +173,7 @@ return require("lazy").setup({
   -- Surround - sa%" sa$' saE" srb" sr"' sd"
   {
     'nvim-mini/mini.nvim',
+    branch = "main",
     commit = "a995fe9cd4193fb492b5df69175a351a74b3d36b",
     version = false,
     config = function()
@@ -180,6 +184,7 @@ return require("lazy").setup({
 
   {
     "folke/snacks.nvim",
+    branch = "main",
     commit = "e6fd58c82f2f3fcddd3fe81703d47d6d48fc7b9f",
     priority = 1000,
     lazy = false,
@@ -324,6 +329,7 @@ return require("lazy").setup({
 
   {
     "almo7aya/openingh.nvim",
+    branch = "main",
     commit = "0f1a90e70edacf8caace89bb80acd7eddc6234a6",
     keys = {
       { "<leader>gh", "<cmd>OpenInGHRepo<cr>", desc = "Open Repo in GitHub" },
@@ -340,6 +346,7 @@ return require("lazy").setup({
   { 'davinche/godown-vim',       ft = { 'markdown' }, branch = "master" , commit = "60c019e45283b3713075c829c5dbe2549c1521e1"},
   {
     'MeanderingProgrammer/render-markdown.nvim',
+    branch = "main",
     commit = "e3c18ddd27a853f85a6f513a864cf4f2982b9f26",
     dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' },            -- if you use the mini.nvim suite
     -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' },        -- if you use standalone mini plugins
@@ -352,6 +359,7 @@ return require("lazy").setup({
   -- Git
   {
     'lewis6991/gitsigns.nvim', config = function() require('gitsigns').setup() end,
+    branch = "main",
     commit = "a462f416e2ce4744531c6256252dee99a7d34a83",
   },
   {
