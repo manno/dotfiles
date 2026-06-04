@@ -35,7 +35,7 @@ return require("lazy").setup({
   {
     'romgrk/barbar.nvim',
     branch = "master",
-    commit = "53b5a2f34b68875898f0531032fbf090e3952ad7",
+    commit = "a4bef5b4fc1f064f2f673172252028eae18191c9",
     dependencies = { 'nvim-tree/nvim-web-devicons', 'lewis6991/gitsigns.nvim' },
     event = "VeryLazy",
     keys = {
@@ -135,7 +135,7 @@ return require("lazy").setup({
   {
     'folke/tokyonight.nvim',
     branch = "main",
-    commit = "545d72cde6400835d895160ecb5853874fd5156d",
+    commit = "cdc07ac78467a233fd62c493de29a17e0cf2b2b6",
     priority = 1000,
     -- on_colors = function(c)
     --   c.border = c.blue0
@@ -147,7 +147,7 @@ return require("lazy").setup({
   {
     'binhtran432k/dracula.nvim',
     branch = "main",
-    commit = "d2a8fe71323c958bdf46e8e69c97016fa7f7d703",
+    commit = "c3fe55bc0384f01581fe7f15ec28792eb3aa7c53",
     config = function(_, opts)
       require("dracula").setup({
         lualine_bold = true,
@@ -174,7 +174,7 @@ return require("lazy").setup({
   {
     'nvim-mini/mini.nvim',
     branch = "main",
-    commit = "a995fe9cd4193fb492b5df69175a351a74b3d36b",
+    commit = "cbae4fa396bbf9c802b3d2dc2e9c5362e8fb9468",
     version = false,
     config = function()
       require('mini.surround').setup()
@@ -185,7 +185,7 @@ return require("lazy").setup({
   {
     "folke/snacks.nvim",
     branch = "main",
-    commit = "e6fd58c82f2f3fcddd3fe81703d47d6d48fc7b9f",
+    commit = "882c996cf28183f4d63640de0b4c02ec886d01f2",
     priority = 1000,
     lazy = false,
     opts = {
@@ -330,7 +330,7 @@ return require("lazy").setup({
   {
     "almo7aya/openingh.nvim",
     branch = "main",
-    commit = "0f1a90e70edacf8caace89bb80acd7eddc6234a6",
+    commit = "7cc8c897cb6b34d8ed28e99d95baccef609ed251",
     keys = {
       { "<leader>gh", "<cmd>OpenInGHRepo<cr>", desc = "Open Repo in GitHub" },
       { "<leader>gH", "<cmd>OpenInGHFile<cr>", desc = "Open File in GitHub" },
@@ -347,7 +347,7 @@ return require("lazy").setup({
   {
     'MeanderingProgrammer/render-markdown.nvim',
     branch = "main",
-    commit = "e3c18ddd27a853f85a6f513a864cf4f2982b9f26",
+    commit = "5adf0895310c1904e5abfaad40a2baad7fe44a07",
     dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' },            -- if you use the mini.nvim suite
     -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' },        -- if you use standalone mini plugins
     -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
@@ -360,7 +360,7 @@ return require("lazy").setup({
   {
     'lewis6991/gitsigns.nvim', config = function() require('gitsigns').setup() end,
     branch = "main",
-    commit = "a462f416e2ce4744531c6256252dee99a7d34a83",
+    commit = "25050e4ed39e628282831d4cbecb1850454ce915",
   },
   {
     "sindrets/diffview.nvim",
