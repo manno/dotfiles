@@ -5,7 +5,7 @@ return {
 
   {
     "olimorris/codecompanion.nvim",
-    commit = "74046d6a44bc15508e7182e6da69f7953f9c6971",
+    commit = "65b8938ec42d0226bb456b8df20aa6729e2849b3",
     config = true,
     dependencies = {
       "nvim-lua/plenary.nvim",
