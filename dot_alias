@@ -58,7 +58,7 @@ alias dmesgtail='sudo dmesg -T|tail'
 if echo "$SHELL" | grep -q bash; then
   alias reload='source $HOME/.bashrc'
 elif echo "$SHELL" | grep -q zsh; then
-  alias reload='source $HOME/.zshrc'
+  alias reload='exec zsh'
 fi
 alias wm="wget -m -k -np"
 alias zl='zless'

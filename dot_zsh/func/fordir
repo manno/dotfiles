@@ -1,0 +1,22 @@
+# Run a command in each depth-1 subdirectory, with ripgrep-style dir headers.
+#
+# Usage: fordir <cmd> [args...]
+# Example: fordir git status
+#          fordir go test ./...
+
+if [[ $# -eq 0 ]]; then
+    echo "Usage: fordir <cmd> [args...]" >&2
+    return 1
+fi
+
+local dir rc any=0
+local bold=$'\e[1m' cyan=$'\e[36m' red=$'\e[31m' reset=$'\e[0m'
+
+for dir in *(N/); do
+    [[ $any -eq 1 ]] && echo
+    any=1
+    printf "${bold}${cyan}%s${reset}\n" "$dir"
+    (cd "$dir" && "$@")
+    rc=$?
+    [[ $rc -ne 0 ]] && printf "${red}[exit %d]${reset}\n" "$rc"
+done
