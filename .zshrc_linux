@@ -21,7 +21,7 @@ path=(
 fpath=(~/.zsh/func $fpath)
 
 ## Parse ~/.zsh files
-autoload load_zshd
+autoload load_zshd fordir
 load_zshd
 
 # Only keep existing directories
