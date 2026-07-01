@@ -2,6 +2,7 @@ README.md
 *.md
 contrib
 .ssh/authorized_keys
+tmp/
 
 {{- if ne .chezmoi.hostname "ws" }}
 .ssh/rc

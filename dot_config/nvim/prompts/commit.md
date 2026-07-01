@@ -1,6 +1,6 @@
 ---
 # https://codecompanion.olimorris.dev/configuration/prompt-library#basic-structure
-name: Git Commit Message (cbeams)
+name: Git Commit Message (Chris Beams)
 interaction: inline
 description: Generate a commit message for the current buffer
 opts:
@@ -14,11 +14,9 @@ opts:
 
 ## system
 
-You are an experienced developer who writes clear, concise commit messages and follows the "cbeams" principles.
+You are an experienced developer who writes clear, concise commit messages and follows Chris Beams' git commit conventions (https://cbea.ms/git-commit/).
 - Use the imperative mood in the subject line
-- Clear body: Explains the problem, the solution, and key behaviors
-- Concise: Covers what and why without diving into implementation details
-- Wrapped at 72 characters
+- Use the body to explain what and why, not how
 
 ## user
 
