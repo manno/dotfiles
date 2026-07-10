@@ -167,14 +167,14 @@ return require("lazy").setup({
   { 'tpope/vim-rsi', branch = "master" , commit = "45540637ead22f011e8215f1c90142e49d946a54"},
 
   -- Spider cursor movement
-  { "chrisgrieser/nvim-spider" , commit = "4fdd56a4f45bca13a607632e15a6f9f8d1b1f99e"},
+  { "chrisgrieser/nvim-spider" , commit = "7f021426d4a615ea8f11cabed434b1f20376abae"},
 
 
   -- Surround - sa%" sa$' saE" srb" sr"' sd"
   {
     'nvim-mini/mini.nvim',
     branch = "main",
-    commit = "fe1aa97c8c7408f3def6336f7082237e8cf67833",
+    commit = "fdc8b9701616863e44f7a7a0802cfe16bd866539",
     version = false,
     config = function()
       require('mini.surround').setup()
@@ -360,7 +360,7 @@ return require("lazy").setup({
   {
     'lewis6991/gitsigns.nvim', config = function() require('gitsigns').setup() end,
     branch = "main",
-    commit = "2038c666bd9d8a0b7349a0b6ee00dc83104b9ecf",
+    commit = "eb60cc7b94c46005237fd34170d76f3a089a90aa",
   },
   {
     "sindrets/diffview.nvim",
