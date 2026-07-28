@@ -20,7 +20,7 @@ vim.opt.rtp:prepend(lazypath)
 return require("lazy").setup({
   {
     'nvim-treesitter/nvim-treesitter',
-    commit = "4916d6592ede8c07973490d9322f187e07dfefac",
+    commit = "61df84986b4b4ec469ee745a182e433d49f8c27e",
     branch = 'main',
     build = ':TSUpdate',
     lazy = false,
@@ -147,7 +147,7 @@ return require("lazy").setup({
   {
     'binhtran432k/dracula.nvim',
     branch = "main",
-    commit = "c3fe55bc0384f01581fe7f15ec28792eb3aa7c53",
+    commit = "839dcca1fa33c1ce371645176f13bf0026e79ce6",
     config = function(_, opts)
       require("dracula").setup({
         lualine_bold = true,
@@ -174,7 +174,7 @@ return require("lazy").setup({
   {
     'nvim-mini/mini.nvim',
     branch = "main",
-    commit = "fdc8b9701616863e44f7a7a0802cfe16bd866539",
+    commit = "946ae64e0ee807ae3c41f382f0114b4ed4915b2c",
     version = false,
     config = function()
       require('mini.surround').setup()
@@ -360,7 +360,7 @@ return require("lazy").setup({
   {
     'lewis6991/gitsigns.nvim', config = function() require('gitsigns').setup() end,
     branch = "main",
-    commit = "eb60cc7b94c46005237fd34170d76f3a089a90aa",
+    commit = "31d6fb2d618bca1482b9f274751ead5f03461408",
   },
   {
     "sindrets/diffview.nvim",
@@ -398,7 +398,7 @@ return require("lazy").setup({
   vim.env.NVIM_ASSISTANCE == "true" and { import = "plugins/assistance" } or {},
   {
     'neovim/nvim-lspconfig',
-    commit = "229b79051b380377664edc4cbd534930154921a1",
+    commit = "b89138d9af0a96e6048e202a15765fc6b6416bd4",
     dependencies = { 'saghen/blink.cmp' },
   },
 
