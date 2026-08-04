@@ -20,7 +20,7 @@ vim.opt.rtp:prepend(lazypath)
 return require("lazy").setup({
   {
     'nvim-treesitter/nvim-treesitter',
-    commit = "61df84986b4b4ec469ee745a182e433d49f8c27e",
+    commit = "7b6cc8949f9999c5ed91436cbe24aa5f99c42025",
     branch = 'main',
     build = ':TSUpdate',
     lazy = false,
@@ -167,14 +167,14 @@ return require("lazy").setup({
   { 'tpope/vim-rsi', branch = "master" , commit = "45540637ead22f011e8215f1c90142e49d946a54"},
 
   -- Spider cursor movement
-  { "chrisgrieser/nvim-spider" , commit = "7f021426d4a615ea8f11cabed434b1f20376abae"},
+  { "chrisgrieser/nvim-spider" , commit = "38f74f733734566bec3b23a9dcf968a5a5559cd6"},
 
 
   -- Surround - sa%" sa$' saE" srb" sr"' sd"
   {
     'nvim-mini/mini.nvim',
     branch = "main",
-    commit = "946ae64e0ee807ae3c41f382f0114b4ed4915b2c",
+    commit = "8cef23520832134c05e4524e49f0468623501053",
     version = false,
     config = function()
       require('mini.surround').setup()
