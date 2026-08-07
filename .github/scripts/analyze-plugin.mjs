@@ -45,6 +45,12 @@ const MAX_TOKENS = 16384;
 // should not come back CLEAN one run and WARN the next.
 const TEMPERATURE = 0.2;
 
+// A socket that hangs instead of failing cannot be recovered by retrying, so
+// bound every request. Observed turns finish in 20-90s; 5 min leaves room for
+// a long reasoning turn while still failing fast enough to retry within the
+// job's runtime.
+const REQUEST_TIMEOUT = 300_000;
+
 const outFile = `${PLUGIN_SLUG_SAFE}-analysis.md`;
 
 // ── GitHub API via gh CLI ─────────────────────────────────────────────────────
@@ -202,28 +208,58 @@ async function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+// undici reports every transport failure as "fetch failed" and hides the real
+// reason (ECONNRESET, ENOTFOUND, "other side closed", a TLS error) in a nested
+// `cause`. Flatten that chain so a log line is actually diagnosable.
+function describeCause(err) {
+  const parts = [];
+  for (let e = err.cause; e && parts.length < 4; e = e.cause) {
+    parts.push(e.code ?? e.message ?? String(e));
+  }
+  return parts.length ? parts.join(' ← ') : 'no cause';
+}
+
 // `allowTools: false` omits the tool definitions entirely, which forces the
 // model to answer in prose instead of requesting more files.
 async function callModel(messages, { allowTools = true } = {}) {
   const maxRetries = 10;
   const maxDelay = 600_000; // cap at 10 min
   let delay = 10_000; // start at 10 s; 429s come in bursts at job startup
+  let netDelay = 1_000; // network errors are transient; retry fast
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${ZAI_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        messages,
-        ...(allowTools ? { tools, tool_choice: 'auto' } : {}),
-        max_tokens: MAX_TOKENS,
-        temperature: TEMPERATURE,
-      }),
-    });
+    let res;
+    try {
+      res = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${ZAI_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: MODEL,
+          messages,
+          ...(allowTools ? { tools, tool_choice: 'auto' } : {}),
+          max_tokens: MAX_TOKENS,
+          temperature: TEMPERATURE,
+        }),
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT),
+      });
+    } catch (e) {
+      // A turn's tool calls can take tens of seconds, long enough for z.ai to
+      // close the idle keep-alive socket. undici then picks the dead socket
+      // out of its pool and rejects within milliseconds; a retry gets a fresh
+      // connection. Every such error surfaces as the useless message "fetch
+      // failed", so log the cause chain to tell it apart from a real outage.
+      const reason = e.name === 'TimeoutError'
+        ? `no response within ${REQUEST_TIMEOUT / 1000}s`
+        : describeCause(e);
+      if (attempt === maxRetries) throw new Error(`${e.message} (${reason})`);
+      console.error(`[${PLUGIN_SLUG}] request failed: ${e.message} (${reason}) — retrying in ${netDelay / 1000}s (attempt ${attempt}/${maxRetries})`);
+      await sleep(netDelay);
+      netDelay = Math.min(netDelay * 2, 60_000);
+      continue;
+    }
 
     if (res.status === 429) {
       const retryAfter = parseInt(res.headers.get('retry-after') ?? '0', 10);
@@ -389,10 +425,11 @@ async function main() {
 }
 
 main().catch(e => {
-  console.error(`[${PLUGIN_SLUG}] fatal:`, e.message);
+  const detail = e.cause ? `${e.message} (${describeCause(e)})` : e.message;
+  console.error(`[${PLUGIN_SLUG}] fatal:`, detail);
   writeFileSync(
     outFile,
-    `## ${PLUGIN_SLUG} — ${tag}\n\n**Verdict: ERROR**\n\nAnalysis script failed: ${e.message}\n`,
+    `## ${PLUGIN_SLUG} — ${tag}\n\n**Verdict: ERROR**\n\nAnalysis script failed: ${detail}\n`,
     'utf8',
   );
   process.exit(1);
