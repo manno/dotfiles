@@ -83,6 +83,9 @@ bash .github/scripts/test-bump.sh folke/snacks.nvim
   investigation still yields a verdict (noting what it did not reach) rather
   than the "iteration limit" fallback. `CHUNK_SIZE` (8000 chars per tool
   result) and `maxIterations` are the knobs — raising either costs tokens.
+  Both are enforced client-side; z.ai has no say in them. Raising them far
+  is counterproductive: history is never pruned, so every turn re-bills the
+  whole transcript and cost grows with the square of the content fetched.
 - **Unpinnable plugins**: bare dependency strings (e.g.
   `dependencies = { "nvim-lua/plenary.nvim" }`) cannot be pinned
   automatically. Convert them to full spec tables; see the PR body for

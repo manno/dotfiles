@@ -74,6 +74,12 @@ Each job runs `node .github/scripts/analyze-plugin.mjs` (Node.js ESM, no npm dep
 - Budget is 20 iterations. On the final turn the tool definitions are
   withheld so the model must answer in prose, guaranteeing a verdict even
   when it has not finished exploring.
+- `temperature` is 0.2 (GLM defaults to 1.0) so the same diff yields the
+  same verdict across runs. `max_tokens` is 16384 — GLM's `thinking` mode
+  is on by default and its reasoning tokens count against that budget.
+- GLM intermittently returns an assistant turn with neither content nor
+  tool calls. Such a turn is dropped and retried rather than ending the
+  audit; without this the run reports a spurious `WARN`.
 
 #### Tools available to the model
 

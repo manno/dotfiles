@@ -35,6 +35,16 @@ for (const v of ['PLUGIN_SLUG', 'PLUGIN_SLUG_SAFE', 'PLUGIN_OWNER', 'PLUGIN_REPO
 const API_URL = 'https://api.z.ai/api/paas/v4/chat/completions';
 const MODEL = 'glm-4.7';
 
+// glm-4.7 accepts up to 131072. Billing is on tokens actually produced, so a
+// generous ceiling costs nothing; it only has to be high enough that a verdict
+// is never truncated. Note `thinking` defaults to enabled on GLM-4.5+, and
+// those reasoning tokens count against this budget too.
+const MAX_TOKENS = 16384;
+
+// Default is 1.0. A security verdict should be reproducible: the same diff
+// should not come back CLEAN one run and WARN the next.
+const TEMPERATURE = 0.2;
+
 const outFile = `${PLUGIN_SLUG_SAFE}-analysis.md`;
 
 // ── GitHub API via gh CLI ─────────────────────────────────────────────────────
@@ -210,7 +220,8 @@ async function callModel(messages, { allowTools = true } = {}) {
         model: MODEL,
         messages,
         ...(allowTools ? { tools, tool_choice: 'auto' } : {}),
-        max_tokens: 4096,
+        max_tokens: MAX_TOKENS,
+        temperature: TEMPERATURE,
       }),
     });
 
@@ -236,7 +247,9 @@ async function callModel(messages, { allowTools = true } = {}) {
       totalTokens.completion += u.completion_tokens ?? 0;
       totalTokens.total      += u.total_tokens      ?? 0;
     }
-    return data.choices[0].message;
+    // finish_reason lives on the choice, not on the message inside it.
+    const choice = data.choices[0];
+    return { message: choice.message, finishReason: choice.finish_reason };
   }
 
   throw new Error(`z.ai API still rate-limiting after ${maxRetries} retries (max wait ${maxDelay / 60_000}min each)`);
@@ -319,21 +332,27 @@ async function main() {
       });
     }
 
-    const msg = await callModel(messages, { allowTools: !finalTurn });
+    const { message: msg, finishReason } = await callModel(messages, { allowTools: !finalTurn });
+
+    if (finishReason === 'length') {
+      console.error(`[${PLUGIN_SLUG}]   warning: truncated at max_tokens (${MAX_TOKENS}) — report may be incomplete`);
+    }
+
+    const hasToolCalls = !!msg.tool_calls?.length;
+    const text = msg.content?.trim() ?? '';
+
+    // GLM intermittently returns an assistant turn with neither content nor
+    // tool calls. Treat it as a wasted turn and retry rather than concluding
+    // the audit on it; the empty message is not added to the transcript.
+    if (!hasToolCalls && !text) {
+      console.error(`[${PLUGIN_SLUG}]   empty response — retrying`);
+      continue;
+    }
+
     messages.push(msg);
 
-    if (finalTurn) {
-      finalContent = msg.content ?? '';
-      break;
-    }
-
-    const finish = msg.finish_reason ?? (msg.tool_calls?.length ? 'tool_calls' : 'stop');
-    if (finish === 'length') {
-      console.error(`[${PLUGIN_SLUG}]   warning: finish_reason=length — response was truncated`);
-    }
-
-    if (!msg.tool_calls || msg.tool_calls.length === 0) {
-      finalContent = msg.content ?? '';
+    if (finalTurn || !hasToolCalls) {
+      finalContent = text;
       break;
     }
 
@@ -356,8 +375,10 @@ async function main() {
     // prompt cache at a fraction of the uncached input rate.
   }
 
+  // Reachable only if the model returns an empty message — the final turn
+  // withholds the tools, so running out of iterations still yields a verdict.
   if (!finalContent) {
-    finalContent = `**Verdict: WARN**\n\nAnalysis reached the iteration limit (${maxIterations}) without producing a final verdict. Manual review recommended.`;
+    finalContent = '**Verdict: WARN**\n\nThe model returned no verdict text. Manual review recommended.';
   }
 
   console.error(`[${PLUGIN_SLUG}] total tokens — prompt: ${totalTokens.prompt}, completion: ${totalTokens.completion}, total: ${totalTokens.total}`);
