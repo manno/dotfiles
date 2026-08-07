@@ -2,7 +2,7 @@
 # test-bump.sh — local end-to-end test for the plugin-bump workflow.
 #
 # Usage (from repo root):
-#   GITHUB_TOKEN=... bash .github/scripts/test-bump.sh [slug]
+#   GITHUB_TOKEN=... ZAI_API_KEY=... bash .github/scripts/test-bump.sh [slug]
 #
 # Optional argument: a plugin slug to analyze (e.g. folke/snacks.nvim).
 # Without it the script picks the first entry from the matrix.
@@ -15,6 +15,12 @@ set -euo pipefail
 if [ -z "${GITHUB_TOKEN:-}" ]; then
   echo "error: GITHUB_TOKEN is not set."
   echo "  source .envrc, or run: export GITHUB_TOKEN=\$(gh auth token)"
+  exit 1
+fi
+
+if [ -z "${ZAI_API_KEY:-}" ]; then
+  echo "error: ZAI_API_KEY is not set."
+  echo "  source .envrc, or get a key at https://z.ai/manage-apikey/apikey-list"
   exit 1
 fi
 

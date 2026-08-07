@@ -3,11 +3,14 @@
 //
 // Job 2 of the plugin-bump workflow.
 // Performs agentic security analysis of a single Neovim plugin update using
-// the GitHub Models API (OpenAI-compatible) with iterative tool calling.
+// the z.ai GLM API (OpenAI-compatible) with iterative tool calling.
+//
+// GITHUB_TOKEN still backs the `gh api` tool calls below; only inference
+// moved off GitHub (GitHub Models was retired on 2026-07-30).
 //
 // Required env vars:
 //   PLUGIN_SLUG, PLUGIN_SLUG_SAFE, PLUGIN_OWNER, PLUGIN_REPO,
-//   PLUGIN_OLD_SHA, PLUGIN_NEW_SHA, PLUGIN_TAG, GITHUB_TOKEN
+//   PLUGIN_OLD_SHA, PLUGIN_NEW_SHA, PLUGIN_TAG, GITHUB_TOKEN, ZAI_API_KEY
 //
 // Output: writes {PLUGIN_SLUG_SAFE}-analysis.md in the current directory.
 
@@ -22,12 +25,15 @@ const {
   PLUGIN_OLD_SHA: oldSHA,
   PLUGIN_NEW_SHA: newSHA,
   PLUGIN_TAG: tag,
-  GITHUB_TOKEN,
+  ZAI_API_KEY,
 } = process.env;
 
-for (const v of ['PLUGIN_SLUG', 'PLUGIN_SLUG_SAFE', 'PLUGIN_OWNER', 'PLUGIN_REPO', 'PLUGIN_NEW_SHA', 'PLUGIN_TAG', 'GITHUB_TOKEN']) {
+for (const v of ['PLUGIN_SLUG', 'PLUGIN_SLUG_SAFE', 'PLUGIN_OWNER', 'PLUGIN_REPO', 'PLUGIN_NEW_SHA', 'PLUGIN_TAG', 'GITHUB_TOKEN', 'ZAI_API_KEY']) {
   if (!process.env[v]) { console.error(`Missing required env var: ${v}`); process.exit(1); }
 }
+
+const API_URL = 'https://api.z.ai/api/paas/v4/chat/completions';
+const MODEL = 'glm-4.7';
 
 const outFile = `${PLUGIN_SLUG_SAFE}-analysis.md`;
 
@@ -48,6 +54,11 @@ function ghApi(path) {
 
 // ── Tool definitions ──────────────────────────────────────────────────────────
 
+// Chars per tool result. Sized well under the 200k context so a full audit
+// fits without pruning; the old 2000 was a workaround for GitHub Models'
+// 8000-token request cap and cost the model most of its diff context.
+const CHUNK_SIZE = 8000;
+
 const tools = [
   {
     type: 'function',
@@ -61,7 +72,7 @@ const tools = [
     type: 'function',
     function: {
       name: 'get_file_diff',
-      description: 'Get the unified diff patch for a specific file in this update. Large diffs are returned in chunks of 2000 chars. If the result ends with a "... N chars remaining" note, call again with offset set to the next position to read the next chunk.',
+      description: `Get the unified diff patch for a specific file in this update. Large diffs are returned in chunks of ${CHUNK_SIZE} chars. If the result ends with a "... N chars remaining" note, call again with offset set to the next position to read the next chunk.`,
       parameters: {
         type: 'object',
         properties: {
@@ -76,7 +87,7 @@ const tools = [
     type: 'function',
     function: {
       name: 'get_file_content',
-      description: 'Get the full content of a file at the new commit. Use for files where a diff alone is not enough context. Large files are returned in chunks of 2000 chars. If the result ends with a "... N chars remaining" note, call again with offset set to the next position.',
+      description: `Get the full content of a file at the new commit. Use for files where a diff alone is not enough context. Large files are returned in chunks of ${CHUNK_SIZE} chars. If the result ends with a "... N chars remaining" note, call again with offset set to the next position.`,
       parameters: {
         type: 'object',
         properties: {
@@ -104,8 +115,6 @@ const tools = [
 ];
 
 // ── Tool execution ────────────────────────────────────────────────────────────
-
-const CHUNK_SIZE = 2000; // chars per tool result (~500 tokens)
 
 // Return a slice of `text` starting at `offset`, with a continuation hint
 // appended when more content follows. The model can request the next chunk
@@ -177,29 +186,30 @@ function executeTool(name, args) {
   return `Unknown tool: ${name}`;
 }
 
-// ── GitHub Models API ─────────────────────────────────────────────────────────
+// ── z.ai GLM API ──────────────────────────────────────────────────────────────
 
 async function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function callModels(messages) {
+// `allowTools: false` omits the tool definitions entirely, which forces the
+// model to answer in prose instead of requesting more files.
+async function callModel(messages, { allowTools = true } = {}) {
   const maxRetries = 10;
   const maxDelay = 600_000; // cap at 10 min
   let delay = 10_000; // start at 10 s; 429s come in bursts at job startup
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    const res = await fetch('https://models.github.ai/inference/chat/completions', {
+    const res = await fetch(API_URL, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+        'Authorization': `Bearer ${ZAI_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'openai/gpt-4o',
+        model: MODEL,
         messages,
-        tools,
-        tool_choice: 'auto',
+        ...(allowTools ? { tools, tool_choice: 'auto' } : {}),
         max_tokens: 4096,
       }),
     });
@@ -215,7 +225,7 @@ async function callModels(messages) {
 
     if (!res.ok) {
       const body = await res.text();
-      throw new Error(`GitHub Models API ${res.status}: ${body.slice(0, 300)}`);
+      throw new Error(`z.ai API ${res.status}: ${body.slice(0, 300)}`);
     }
 
     const data = await res.json();
@@ -229,7 +239,7 @@ async function callModels(messages) {
     return data.choices[0].message;
   }
 
-  throw new Error(`GitHub Models API still rate-limiting after ${maxRetries} retries (max wait ${maxDelay / 60_000}min each)`);
+  throw new Error(`z.ai API still rate-limiting after ${maxRetries} retries (max wait ${maxDelay / 60_000}min each)`);
 }
 
 // ── Token usage accumulator ───────────────────────────────────────────────────
@@ -273,19 +283,49 @@ Rules:
 - If any changed file returns UNREADABLE_LARGE_FILE, issue **Verdict: WARN** citing that file. Large minified or bundled files copied from an external source cannot be audited and must be treated as suspicious.
 - Do NOT tell the user to review the diff themselves — you are the reviewer; give a conclusion.
 - Keep the report concise: verdict line, 2–4 sentence summary, findings section if WARN/BLOCK.
-- Request at most 3 files per turn. Diffs are returned in 2000-char chunks; use the offset parameter to page through large files.`;
+- Diffs are returned in ${CHUNK_SIZE}-char chunks; use the offset parameter to page through large files.
+- Your turns are limited. Request every file you want in a SINGLE turn — batching many
+  get_file_diff calls into one turn is expected; fetching them one at a time will exhaust
+  your budget before you reach a verdict.
+- Prioritise files that can carry executable behaviour. Tests, documentation, changelogs,
+  and lockfiles are low value — skip them unless nothing else is suspicious.`;
 
 async function main() {
-  const messages = [{ role: 'system', content: systemPrompt }];
+  // GLM rejects a conversation that is nothing but a system message
+  // (error 1214, "messages parameter is illegal") where gpt-4o accepted one.
+  // The system turn defines the role; this user turn starts the work.
+  const messages = [
+    { role: 'system', content: systemPrompt },
+    { role: 'user', content: `Audit the ${PLUGIN_SLUG} update (${rangeDesc}). Start by calling list_changed_files, investigate whatever warrants attention, then give your verdict.` },
+  ];
 
   let finalContent = '';
-  const maxIterations = 10;
+  // Raised from 10 once pruning was removed: the limit is turns, not context
+  // (a large plugin only reached ~21k of the 200k window in 10 turns).
+  const maxIterations = 20;
 
   for (let i = 1; i <= maxIterations; i++) {
     console.error(`[${PLUGIN_SLUG}] iteration ${i}/${maxIterations}...`);
 
-    const msg = await callModels(messages);
+    // On the last turn, withdraw the tools and demand a verdict, so a slow
+    // investigation degrades into a real (if less informed) answer rather
+    // than the "reached the iteration limit" fallback.
+    const finalTurn = i === maxIterations;
+    if (finalTurn) {
+      console.error(`[${PLUGIN_SLUG}]   final turn — forcing a verdict`);
+      messages.push({
+        role: 'user',
+        content: 'You are out of turns. Do not request any more files. Issue your verdict now based on what you have already examined, and say plainly which parts of the diff you did not get to.',
+      });
+    }
+
+    const msg = await callModel(messages, { allowTools: !finalTurn });
     messages.push(msg);
+
+    if (finalTurn) {
+      finalContent = msg.content ?? '';
+      break;
+    }
 
     const finish = msg.finish_reason ?? (msg.tool_calls?.length ? 'tool_calls' : 'stop');
     if (finish === 'length') {
@@ -310,40 +350,10 @@ async function main() {
       });
     }
 
-    // GitHub Models caps the total request body at 8000 tokens. The messages
-    // array grows each iteration: every tool call adds an assistant message
-    // (with tool_calls) and one or more tool messages (one per tool called).
-    // For large plugins this blows the limit after just a few diffs.
-    //
-    // We prune by dropping the oldest assistant+tool block after each
-    // iteration, keeping only messages[0] (the system prompt) and the
-    // KEEP_PAIRS most recent assistant turns with their tool responses.
-    //
-    // The OpenAI API requires that tool results immediately follow the
-    // assistant message that requested them, so we must cut at an assistant
-    // message boundary — never in the middle of a block. We find the index
-    // of the (N - KEEP_PAIRS)th assistant message and splice up to there.
-    //
-    // Example: model called two tools in turn 1, one tool in turn 2.
-    //   [0] user: system prompt              ← always kept
-    //   [1] assistant: tool_calls [a, b]     ← oldest block
-    //   [2] tool: result for a
-    //   [3] tool: result for b
-    //   [4] assistant: tool_calls [c]        ← kept (KEEP_PAIRS = 2 means keep last 2)
-    //   [5] tool: result for c
-    //
-    // Cutting at index 1 (the oldest assistant) gives the correct result.
-    // The naive KEEP_PAIRS * 2 offset would cut at index 3, leaving an
-    // orphaned tool message at [1] and causing a 400 invalid_request_error.
-    const KEEP_PAIRS = 2;
-    const assistantIndices = messages
-      .map((m, i) => (m.role === 'assistant' && i > 0 ? i : -1))
-      .filter(i => i >= 0);
-    if (assistantIndices.length > KEEP_PAIRS) {
-      const cutAt = assistantIndices[assistantIndices.length - KEEP_PAIRS];
-      messages.splice(1, cutAt - 1);
-      console.error(`[${PLUGIN_SLUG}]   pruned history to ${messages.length} messages`);
-    }
+    // No history pruning: GLM-4.7 carries a 200k context, so the full
+    // transcript fits. Keeping every turn also means the message prefix only
+    // ever grows, which is what lets z.ai serve repeat context from its
+    // prompt cache at a fraction of the uncached input rate.
   }
 
   if (!finalContent) {

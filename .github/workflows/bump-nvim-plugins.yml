@@ -9,7 +9,6 @@ on:
 permissions:
   contents: write
   pull-requests: write
-  models: read
 
 jobs:
 
@@ -56,7 +55,7 @@ jobs:
           path: .github/bump/
 
   # ── Job 2: analyze ────────────────────────────────────────────────────────
-  # One job per plugin. Uses GitHub Models API (gpt-4o) with tool calling
+  # One job per plugin. Uses the z.ai GLM API (glm-4.7) with tool calling
   # to examine the actual diff and produce a security verdict.
 
   analyze:
@@ -81,6 +80,7 @@ jobs:
       - name: Analyze ${{ matrix.plugin.slug }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ZAI_API_KEY: ${{ secrets.ZAI_API_KEY }}
           PLUGIN_SLUG: ${{ matrix.plugin.slug }}
           PLUGIN_SLUG_SAFE: ${{ matrix.plugin.slug_safe }}
           PLUGIN_OWNER: ${{ matrix.plugin.owner }}

@@ -3,6 +3,7 @@ README.md
 contrib
 .ssh/authorized_keys
 tmp/
+.envrc
 
 {{- if ne .chezmoi.hostname "ws" }}
 .ssh/rc

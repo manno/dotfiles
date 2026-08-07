@@ -1,3 +1,6 @@
 tmp/
 .github/bump/
 .github/pr-body.md
+
+# local credentials for .github/scripts/test-bump.sh — never commit
+.envrc

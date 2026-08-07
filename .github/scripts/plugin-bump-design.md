@@ -8,7 +8,8 @@ commit SHA, performs an agentic security analysis per plugin, and opens a PR.
 - Pin every lazy.nvim plugin spec to an exact `commit = "sha"` field
 - Compare against the latest **GitHub Release** tag (not HEAD)
 - Security-review each update using a model that can explore the full diff
-- Zero manually-managed secrets beyond `GITHUB_TOKEN` (auto-provided)
+- Keep secrets minimal: `GITHUB_TOKEN` (auto-provided) plus a single
+  inference key, `ZAI_API_KEY`
 
 ## Non-goals
 
@@ -62,10 +63,17 @@ Each job runs `node .github/scripts/analyze-plugin.mjs` (Node.js ESM, no npm dep
 
 #### Implementation
 
-- Uses Node's built-in `fetch` (Node 20) to call the **GitHub Models API**
-  (`https://models.github.ai/inference/chat/completions`, model `openai/gpt-4o`)
+- Uses Node's built-in `fetch` (Node 20) to call the **z.ai GLM API**
+  (`https://api.z.ai/api/paas/v4/chat/completions`, model `glm-4.7`),
+  which is OpenAI-compatible at the chat-completions level
 - Tool calls are executed via the `gh` CLI (pre-installed on Actions runners)
 - No npm install step required
+- The conversation must open with a **user** turn. GLM rejects a system-only
+  message array with error 1214 (`messages parameter is illegal`) where
+  gpt-4o accepted one — the main compatibility gap found when migrating.
+- Budget is 20 iterations. On the final turn the tool definitions are
+  withheld so the model must answer in prose, guaranteeing a verdict even
+  when it has not finished exploring.
 
 #### Tools available to the model
 
@@ -123,13 +131,17 @@ analyze failures).
 
 | Secret | Source | Required for |
 |--------|--------|--------------|
-| `GITHUB_TOKEN` | Auto-provided by Actions | GitHub API, GitHub Models API, `gh pr create` |
+| `GITHUB_TOKEN` | Auto-provided by Actions | GitHub API (releases, diffs, file content), `gh pr create` |
+| `ZAI_API_KEY` | Repository secret (manual) | z.ai GLM API — inference for Job 2 |
 
-The GitHub Models API is accessed with the same `GITHUB_TOKEN`. The workflow
-requests `models: read` permission, which is enough provided the account has
-an active GitHub Copilot subscription.
+Inference moved to z.ai when **GitHub Models was retired on 2026-07-30**; the
+`models: read` permission and the Copilot subscription it required are both
+gone. `GITHUB_TOKEN` still covers every GitHub API call, including the four
+`gh api` tools the model drives during analysis — no repository is cloned.
 
-No additional secrets are needed.
+`ZAI_API_KEY` is the one manually-managed secret. Create a key at
+<https://z.ai/manage-apikey/apikey-list> and add it under
+*Settings → Secrets and variables → Actions*.
 
 ---
 

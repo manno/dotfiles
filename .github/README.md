@@ -25,15 +25,15 @@ conversion). Sets step outputs `has_updates` and `matrix`.
 **Job 2 `analyze`** — `node .github/scripts/analyze-plugin.mjs`
 
 One job per plugin via `strategy.matrix`, `max-parallel: 3`. Uses the
-GitHub Models API (`openai/gpt-4o`, OpenAI-compatible) with iterative tool
-calling to examine the actual diff. Tools call `gh api` for file lists,
-diffs, file content, and commit details. Produces
+z.ai GLM API (`glm-4.7`, OpenAI-compatible) with iterative tool calling to
+examine the actual diff. Tools call `gh api` for file lists, diffs, file
+content, and commit details — no repository is cloned. Produces
 `{slug_safe}-analysis.md` with a `CLEAN` / `WARN` / `BLOCK` verdict.
 
-Token budget: GitHub Models caps requests at 8000 tokens. The script prunes
-old assistant+tool message pairs from history after each iteration, keeping
-only the two most recent pairs plus the system prompt. This allows analysing
-large plugins without hitting the limit.
+Token budget: `glm-4.7` has a 200k context, so the script keeps the full
+transcript for the whole audit. Because history is append-only, the message
+prefix stays stable and repeat context bills at z.ai's cached input rate
+($0.11/M vs $0.60/M).
 
 **Job 3 `pr`** — shell
 
@@ -49,11 +49,18 @@ re-running the job on an existing branch always succeeds.
 permissions:
   contents: write       # commit and push the bump branch
   pull-requests: write  # create / edit PR
-  models: read          # GitHub Models API (requires Copilot subscription)
 ```
 
-No extra secrets. `GITHUB_TOKEN` is auto-provided by Actions and covers all
-three uses (GitHub API, Models API, `gh` CLI).
+`GITHUB_TOKEN` is auto-provided by Actions and covers the GitHub API and
+`gh` CLI uses. Inference needs one manually-added repository secret:
+
+| Secret | Where to get it |
+|--------|-----------------|
+| `ZAI_API_KEY` | <https://z.ai/manage-apikey/apikey-list> |
+
+Add it under *Settings → Secrets and variables → Actions*. Inference moved
+off GitHub Models when that service was retired on 2026-07-30; the
+`models: read` permission and its Copilot-subscription requirement are gone.
 
 ### Local testing
 
@@ -70,17 +77,25 @@ bash .github/scripts/test-bump.sh folke/snacks.nvim
 
 ### Known issues / limits
 
-- GitHub Models caps gpt-4o request bodies at **8000 tokens**. Large plugins
-  with many changed files may still fail if a single diff is enormous.
-  `KEEP_PAIRS` in `analyze-plugin.mjs` controls how many message pairs are
-  retained; lower it to 1 if errors persist.
+- Turn budget, not context, is the binding limit: a large plugin reaches only
+  ~30k of the 200k window. `maxIterations` is 20, and on the final turn the
+  tools are withdrawn and the model is told to conclude, so a slow
+  investigation still yields a verdict (noting what it did not reach) rather
+  than the "iteration limit" fallback. `CHUNK_SIZE` (8000 chars per tool
+  result) and `maxIterations` are the knobs — raising either costs tokens.
 - **Unpinnable plugins**: bare dependency strings (e.g.
   `dependencies = { "nvim-lua/plenary.nvim" }`) cannot be pinned
   automatically. Convert them to full spec tables; see the PR body for
   instructions.
 - Rate limiting (429): `max-parallel: 3` in the workflow and exponential
-  backoff in the script (up to 5 retries, starting at 10 s) handle burst
-  traffic from simultaneous jobs.
+  backoff in the script (up to 10 retries, starting at 10 s, capped at
+  10 min) handle burst traffic from simultaneous jobs. z.ai enforces
+  per-plan concurrency limits — drop `max-parallel` if 429s persist.
+
+- Cost on `glm-4.7` ($0.60/M input, $2.20/M output), measured: a one-file
+  update runs ~$0.003 (3.9k tokens); a large release like
+  `codecompanion.nvim` v19.22.0 runs ~$0.08 (132k tokens). A 6-plugin bump
+  PR lands well under $0.50.
 
 ### Key files
 
