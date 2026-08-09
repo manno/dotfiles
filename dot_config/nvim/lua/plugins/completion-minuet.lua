@@ -66,7 +66,7 @@ return {
   {
     'milanglacier/minuet-ai.nvim',
     branch = "main",
-    commit = "d29dec4c36be2b41aa10e70938b7b09a03f0bdba",
+    commit = "479487c34041f53aad3184597428e42d9f3333b5",
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
       require('minuet').setup {
