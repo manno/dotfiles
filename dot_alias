@@ -68,6 +68,7 @@ qwhich ctags && alias ctags-r='ctags --recurse=yes'
 qwhich indent && alias indent='indent -ce -br -brs -nut -i4 -l120'
 qwhich mpv && alias mplayeridentify='mpv -noconfig all -vo null -ao null -frames 0 -identify'
 qwhich rg  && alias rg="rg --hidden --sort=path --glob '!.git'"
+qwhich tree && alias tree='tree --gitignore'
 
 # debian aliases
 #
@@ -76,21 +77,6 @@ if [[ -f /etc/os-release ]] && grep -qi "ubuntu\|debian" /etc/os-release; then
     alias acs='apt-cache search'
     alias acS='apt-cache show'
     alias fr='fakeroot'
-fi
-
-# screen aliases
-#
-if qwhich screen; then
-    alias screen='/usr/bin/screen -e "^Ff" -dUR -T xterm'
-    alias screenssh='F=~/tmp/env; [ -f $F ] && (source $F;  rm $F) || (export|grep SSH > $F)'
-fi
-
-if qwhich tmux; then
-  alias screen='tmux attach'
-fi
-
-if qwhich byobu; then
-    alias byobu='/usr/bin/byobu -e "^Ff"'
 fi
 
 # core file aliases
