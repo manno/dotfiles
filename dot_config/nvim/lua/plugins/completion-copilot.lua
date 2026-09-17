@@ -5,7 +5,7 @@ return {
   -- Autocompletion
   {
     "zbirenbaum/copilot.lua",
-    commit = "d0e977db90b9487bd3a572529929edad73aa0ece",
+    commit = "159cb3da09e528bcd667d1aeb746ffa845094cab",
     cmd = "Copilot",
     event = "InsertEnter",
     opts = {
