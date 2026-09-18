@@ -237,7 +237,8 @@ qwhich nvim && alias vi=nvim && alias vim=nvim  # Neovim
 **Development Tools**:
 ```zsh
 alias g='git --no-pager'            # Git shorthand
-alias nogo='":!*_test.go" ":!*fake*.go" ":!vendor/*"'  # Go exclusions
+alias gitnogengo='":!*_test.go" ":!*_mock.go" ":!mock_*.go" ":!*fake*.go" ":!*.pb.go" ":!zz_generated*.go" ":!vendor/*"'  # git pathspec: exclude test/vendor/generated Go files
+alias nogengo='**/*.go~*_test.go~*_mock.go~mock_*.go~*fake*.go~*.pb.go~zz_generated*.go~vendor/*~vendor/**/*(.)'  # same, as a real extended-glob for editors
 ```
 
 **System Utilities**:
