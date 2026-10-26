@@ -20,7 +20,7 @@ vim.opt.rtp:prepend(lazypath)
 return require("lazy").setup({
   {
     'nvim-treesitter/nvim-treesitter',
-    commit = "9a168f6357ed21c3a636e1727bc7d382abc451b8",
+    commit = "29212d826054bb2948fa9d3a99eca9bf6a050eb2",
     branch = 'main',
     build = ':TSUpdate',
     lazy = false,
@@ -174,7 +174,7 @@ return require("lazy").setup({
   {
     'nvim-mini/mini.nvim',
     branch = "main",
-    commit = "ac5dffcc52b8378fbb15efeb0497a83e57a0b01c",
+    commit = "a6e23131010b800ecbab85fa6adc0ff38eae2c2d",
     version = false,
     config = function()
       require('mini.surround').setup()
@@ -347,7 +347,7 @@ return require("lazy").setup({
   {
     'MeanderingProgrammer/render-markdown.nvim',
     branch = "main",
-    commit = "640a3ec6d538bad17c328be373c7cad0293d9589",
+    commit = "8e8795368391036643b622875a6da6a51bcd33f4",
     dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' },            -- if you use the mini.nvim suite
     -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' },        -- if you use standalone mini plugins
     -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
@@ -360,7 +360,7 @@ return require("lazy").setup({
   {
     'lewis6991/gitsigns.nvim', config = function() require('gitsigns').setup() end,
     branch = "main",
-    commit = "8d79f2410c76e62b92e51c28c82e28c1c5a3daeb",
+    commit = "683137003522aebd6948358334164a6ba2ca7cd5",
   },
   {
     "sindrets/diffview.nvim",
@@ -398,7 +398,7 @@ return require("lazy").setup({
   vim.env.NVIM_ASSISTANCE == "true" and { import = "plugins/assistance" } or {},
   {
     'neovim/nvim-lspconfig',
-    commit = "b89138d9af0a96e6048e202a15765fc6b6416bd4",
+    commit = "4d363f93c3581b9212a24f7a830d7590b3f050af",
     dependencies = { 'saghen/blink.cmp' },
   },
 
